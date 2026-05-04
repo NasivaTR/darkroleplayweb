@@ -738,116 +738,9 @@
       border: 0;
       background: #08090d;
     }
-    /* ── IMG SETTINGS BUTTON & MODAL ── */
-    .img-settings-btn {
-      position: fixed;
-      top: 12px;
-      right: 12px;
-      z-index: 90;
-      background: rgba(20,20,30,.85);
-      border: 1px solid var(--border);
-      color: var(--text);
-      border-radius: 8px;
-      padding: 7px 12px;
-      font-family: var(--fb);
-      font-size: .75rem;
-      cursor: pointer;
-      backdrop-filter: blur(8px);
-      transition: border-color .2s, color .2s;
-    }
-    .img-settings-btn:hover { border-color: var(--accent); color: var(--accent); }
-    .img-settings-btn.warn { border-color: #ffcc00; color: #ffcc00; }
-    .img-modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.75);
-      backdrop-filter: blur(6px);
-      z-index: 200;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
-    }
-    .img-modal.open { display: flex; }
-    .img-modal-card {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 1.5rem;
-      max-width: 480px;
-      width: 100%;
-      box-shadow: 0 20px 60px rgba(0,0,0,.6);
-    }
-    .img-modal-title {
-      font-family: var(--fh);
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--accent);
-      margin-bottom: .6rem;
-    }
-    .img-modal-desc {
-      font-size: .8rem;
-      color: var(--dim);
-      line-height: 1.5;
-      margin-bottom: 1rem;
-    }
-    .img-modal-input {
-      width: 100%;
-      background: var(--bg3);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 10px 12px;
-      border-radius: 8px;
-      font-family: var(--fb);
-      font-size: .85rem;
-      outline: none;
-      margin-bottom: .8rem;
-    }
-    .img-modal-input:focus { border-color: var(--accent); }
-    .img-modal-actions { display: flex; gap: .5rem; flex-wrap: wrap; }
-    .img-modal-btn {
-      flex: 1;
-      min-width: 110px;
-      background: var(--bg3);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 9px 14px;
-      border-radius: 8px;
-      font-family: var(--fb);
-      font-size: .8rem;
-      cursor: pointer;
-      transition: all .15s;
-    }
-    .img-modal-btn:hover { border-color: var(--accent); color: var(--accent); }
-    .img-modal-btn.primary { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 700; }
-    .img-modal-btn.primary:hover { background: #00cc6a; border-color: #00cc6a; color: #000; }
-    .img-modal-btn.danger:hover { border-color: var(--danger); color: var(--danger); }
-    .img-modal-hint { font-size: .7rem; color: var(--dim); margin-top: .8rem; line-height: 1.5; }
-    .img-modal-hint code { background: var(--bg3); padding: 1px 5px; border-radius: 4px; color: var(--accent2); }
   </style>
 </head>
 <body>
-
-<!-- ═══════════════════════ GÖRSEL SUNUCUSU AYARI ═══════════════════════ -->
-<button class="img-settings-btn" id="imgSettingsBtn" onclick="openImgModal()" title="Görsel sunucusu URL'sini ayarla">⚙️ Görsel Sunucusu</button>
-<div class="img-modal" id="imgModal" onclick="if(event.target===this)closeImgModal()">
-  <div class="img-modal-card">
-    <div class="img-modal-title">⚙️ Görsel Sunucusu Ayarı</div>
-    <div class="img-modal-desc">
-      Görsellerin yükleneceği sunucu URL'sini gir. Geçerli format: <code>http://sunucun:port/</code> ya da <code>https://sunucun.com/</code>. Sonuna <b>/</b> eklemeyi unutma.
-    </div>
-    <input type="text" id="imgBaseInput" class="img-modal-input" placeholder="örn: http://185.137.98.6/" autocomplete="off" spellcheck="false">
-    <div class="img-modal-actions">
-      <button class="img-modal-btn primary" onclick="saveImgBase()">Kaydet</button>
-      <button class="img-modal-btn" onclick="useDefaultImgBase()">Varsayılan</button>
-      <button class="img-modal-btn danger" onclick="closeImgModal()">Kapat</button>
-    </div>
-    <div class="img-modal-hint">
-      💡 <b>HTTPS sitesinde HTTP host çalışmaz</b> (mixed-content). Site GitHub Pages'te HTTPS olduğu için HTTP görsel host'u tarayıcı tarafından bloklanır. Çözüm: HTTPS üzerinden hizmet veren bir host kullan, ya da bu siteye <code>http://</code> prefix ile gir.
-      <br><br>Ayar tarayıcında saklanır (localStorage).
-    </div>
-  </div>
-</div>
 
 <!-- LIGHTBOX -->
 <div id="lightbox" class="lb-overlay" onclick="closeLightbox()">
@@ -1997,77 +1890,6 @@
 
 <!-- ═══════════════════════ SCRIPT ═══════════════════════ -->
 <script>
-  /* ═══════════════════ IMG_BASE — Görsel Sunucusu Yönetimi ═══════════════════ */
-  const IMG_BASE_DEFAULT = 'http://185.137.98.6/';
-  const IMG_BASE_KEY     = 'oyuncuhesap_img_base';
-  let   IMG_BASE         = '';
-
-  function getStoredImgBase() {
-    try { return localStorage.getItem(IMG_BASE_KEY) || ''; } catch (e) { return ''; }
-  }
-  function setStoredImgBase(v) {
-    try { localStorage.setItem(IMG_BASE_KEY, v); } catch (e) {}
-  }
-  function normalizeBase(v) {
-    v = (v || '').trim();
-    if (!v) return '';
-    if (!/^https?:\/\//i.test(v)) v = 'http://' + v;
-    if (!v.endsWith('/')) v += '/';
-    return v;
-  }
-  function applyImgBase() {
-    document.querySelectorAll('img[data-src]').forEach(img => {
-      const ds = img.getAttribute('data-src');
-      if (!ds) return;
-      img.src = IMG_BASE ? (IMG_BASE + ds) : '';
-      if (!IMG_BASE) img.style.display = 'none';
-      else img.style.display = '';
-    });
-    // İframe (araç kataloğu) varsa → URL parametre olarak gönder
-    const fr = document.getElementById('arac-iframe');
-    if (fr && fr.src && fr.src !== 'about:blank' && !fr.src.endsWith('about:blank')) {
-      const target = 'carshop_catalog_v2.html' + (IMG_BASE ? ('?imgbase=' + encodeURIComponent(IMG_BASE)) : '');
-      if (fr.getAttribute('src') !== target) fr.src = target;
-    }
-    updateSettingsBtn();
-  }
-  function updateSettingsBtn() {
-    const btn = document.getElementById('imgSettingsBtn');
-    if (!btn) return;
-    if (IMG_BASE) {
-      btn.classList.remove('warn');
-      btn.textContent = '⚙️ Görsel: ' + IMG_BASE.replace(/^https?:\/\//,'').replace(/\/$/,'');
-    } else {
-      btn.classList.add('warn');
-      btn.textContent = '⚠️ Görsel Sunucusu Ayarla';
-    }
-  }
-  function openImgModal() {
-    document.getElementById('imgBaseInput').value = IMG_BASE || IMG_BASE_DEFAULT;
-    document.getElementById('imgModal').classList.add('open');
-    setTimeout(() => document.getElementById('imgBaseInput').focus(), 50);
-  }
-  function closeImgModal() {
-    document.getElementById('imgModal').classList.remove('open');
-  }
-  function saveImgBase() {
-    const v = normalizeBase(document.getElementById('imgBaseInput').value);
-    IMG_BASE = v;
-    setStoredImgBase(v);
-    applyImgBase();
-    closeImgModal();
-  }
-  function useDefaultImgBase() {
-    document.getElementById('imgBaseInput').value = IMG_BASE_DEFAULT;
-  }
-
-  // İlk yükleme
-  IMG_BASE = getStoredImgBase();
-  document.addEventListener('DOMContentLoaded', () => {
-    applyImgBase();
-    if (!IMG_BASE) openImgModal();
-  });
-
   const PRICES = {
     cocaine:    { name: 'Cocaine',       id: 25803, price: 38000   },
     joint:      { name: 'Joint',         id: 25801, price: 30000   },
@@ -2110,7 +1932,7 @@
     if (role === 'arac') {
       var fr = document.getElementById('arac-iframe');
       if (fr && (!fr.src || fr.src === 'about:blank' || fr.src.endsWith('about:blank'))) {
-        fr.src = 'carshop_catalog_v2.html' + (IMG_BASE ? ('?imgbase=' + encodeURIComponent(IMG_BASE)) : '');
+        fr.src = 'carshop_catalog_v2.html';
       }
     }
   }
