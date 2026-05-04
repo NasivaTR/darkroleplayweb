@@ -1,0 +1,1661 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DrugLab Economy Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0b0f;
+    --bg2: #111318;
+    --bg3: #181b22;
+    --border: #2a2f3e;
+    --accent: #00ff88;
+    --accent2: #ff4060;
+    --accent3: #ffcc00;
+    --accent4: #00ccff;
+    --text: #e0e6f0;
+    --text2: #7a8499;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Share Tech Mono', monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,255,136,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,136,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container { position: relative; z-index: 1; max-width: 1400px; margin: 0 auto; padding: 20px; }
+
+  .header {
+    text-align: center;
+    padding: 40px 20px 30px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 30px;
+  }
+  .header h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.4rem, 4vw, 2.8rem);
+    font-weight: 900;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent4) 50%, var(--accent2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .header p { color: var(--text2); margin-top: 8px; font-size: 0.85rem; letter-spacing: 2px; }
+
+  .tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 24px;
+    background: var(--bg2);
+    padding: 6px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .tab {
+    flex: 1;
+    min-width: 120px;
+    padding: 10px 16px;
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text2);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+  .tab:hover { color: var(--text); border-color: var(--border); }
+  .tab.active {
+    background: var(--bg3);
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: 0 0 12px rgba(0,255,136,0.15);
+  }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  }
+
+  .card-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .card-title .badge {
+    font-size: 0.65rem;
+    padding: 2px 8px;
+    border-radius: 3px;
+    background: rgba(0,255,136,0.1);
+    border: 1px solid rgba(0,255,136,0.3);
+    color: var(--accent);
+  }
+  .badge.cocaine { background: rgba(192,132,252,0.1); border-color: rgba(192,132,252,0.3); color: #c084fc; }
+  .badge.meth { background: rgba(0,204,255,0.1); border-color: rgba(0,204,255,0.3); color: var(--accent4); }
+  .badge.weed { background: rgba(68,255,136,0.1); border-color: rgba(68,255,136,0.3); color: var(--accent); }
+
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; }
+
+  .input-group { margin-bottom: 12px; }
+  .input-group label {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text2);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+  .input-group input, .input-group select {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.9rem;
+    padding: 8px 12px;
+    border-radius: 5px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .input-group input:focus, .input-group select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 8px rgba(0,255,136,0.1);
+  }
+  .input-group .unit { font-size: 0.7rem; color: var(--text2); margin-top: 3px; }
+
+  .stat-box {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    text-align: center;
+  }
+  .stat-box .label { font-size: 0.65rem; color: var(--text2); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+  .stat-box .value { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--accent); }
+  .stat-box .value.red { color: var(--accent2); }
+  .stat-box .value.yellow { color: var(--accent3); }
+  .stat-box .value.blue { color: var(--accent4); }
+  .stat-box .value.purple { color: #c084fc; }
+
+  .result-banner {
+    background: linear-gradient(135deg, rgba(0,255,136,0.05), rgba(0,204,255,0.05));
+    border: 1px solid rgba(0,255,136,0.2);
+    border-radius: 10px;
+    padding: 24px;
+    text-align: center;
+    margin-top: 20px;
+  }
+  .result-banner .main-value {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    font-weight: 900;
+    color: var(--accent);
+    text-shadow: 0 0 30px rgba(0,255,136,0.4);
+  }
+  .result-banner .main-label { font-size: 0.75rem; color: var(--text2); letter-spacing: 2px; text-transform: uppercase; margin-top: 4px; }
+  .result-banner .sub { margin-top: 16px; display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; }
+  .result-banner .sub-item { text-align: center; }
+  .result-banner .sub-item .sv { font-family: 'Orbitron', sans-serif; font-size: 1rem; font-weight: 700; }
+  .result-banner .sub-item .sl { font-size: 0.65rem; color: var(--text2); letter-spacing: 1px; text-transform: uppercase; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn:hover { background: rgba(0,255,136,0.1); box-shadow: 0 0 15px rgba(0,255,136,0.2); }
+  .btn.red { border-color: var(--accent2); color: var(--accent2); }
+  .btn.red:hover { background: rgba(255,64,96,0.1); }
+  .btn.yellow { border-color: var(--accent3); color: var(--accent3); }
+  .btn.yellow:hover { background: rgba(255,204,0,0.1); }
+  .btn.blue { border-color: var(--accent4); color: var(--accent4); }
+  .btn.blue:hover { background: rgba(0,204,255,0.1); }
+
+  .timeline { position: relative; padding-left: 24px; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px; top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 16px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 14px;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -20px; top: 50%;
+    transform: translateY(-50%);
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--accent);
+  }
+  .timeline-item .time { font-family: 'Orbitron', sans-serif; font-size: 0.75rem; color: var(--accent); margin-bottom: 4px; }
+  .timeline-item .desc { font-size: 0.8rem; color: var(--text2); }
+  .timeline-item .profit { font-size: 0.85rem; color: var(--accent3); float: right; font-family: 'Orbitron', sans-serif; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  th {
+    text-align: left;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 1px;
+    color: var(--text2);
+    text-transform: uppercase;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  td { padding: 9px 12px; border-bottom: 1px solid rgba(42,47,62,0.5); }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+  .green { color: var(--accent); }
+  .red { color: var(--accent2); }
+  .yellow { color: var(--accent3); }
+  .blue { color: var(--accent4); }
+  .purple { color: #c084fc; }
+
+  .section-header {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text2);
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .config-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(42,47,62,0.5);
+  }
+  .config-row:last-child { border-bottom: none; }
+  .config-row .name { flex: 1; font-size: 0.8rem; }
+  .config-row .config-id { font-size: 0.7rem; color: var(--text2); min-width: 60px; }
+  .config-row input {
+    width: 120px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.85rem;
+    padding: 5px 10px;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.2s;
+    text-align: right;
+  }
+  .config-row input:focus { border-color: var(--accent); }
+
+  /* XML import area */
+  .xml-drop {
+    border: 2px dashed var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--text2);
+    font-size: 0.8rem;
+  }
+  .xml-drop:hover { border-color: var(--accent4); color: var(--accent4); background: rgba(0,204,255,0.04); }
+  .xml-drop.drag-over { border-color: var(--accent); background: rgba(0,255,136,0.06); }
+
+  .notif {
+    position: fixed;
+    bottom: 30px; right: 30px;
+    background: var(--bg2);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s;
+    pointer-events: none;
+  }
+  .notif.show { opacity: 1; transform: translateY(0); }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+  .divider { height: 1px; background: var(--border); margin: 20px 0; }
+  .flex { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+  .ml-auto { margin-left: auto; }
+  .mb-0 { margin-bottom: 0 !important; }
+
+  .grow-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 0.7rem;
+    font-family: 'Orbitron', sans-serif;
+    background: rgba(68,255,136,0.1);
+    border: 1px solid rgba(68,255,136,0.3);
+    color: var(--accent);
+  }
+
+  /* 12h target callout */
+  .target-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .target-box {
+    flex: 1;
+    min-width: 160px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    text-align: center;
+  }
+  .target-box .tl { font-size: 0.65rem; color: var(--text2); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
+  .target-box .tv { font-family: 'Orbitron', sans-serif; font-size: 1rem; font-weight: 700; }
+
+  @media (max-width: 600px) {
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .result-banner .sub { gap: 16px; }
+    .target-row { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>⚗ DrugLab Economy Calculator</h1>
+    <p>// UNTURNED RP — ECONOMY SİSTEM ANALİZİ &amp; HESAPLAYICI //</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('calculator',this)">💰 Hesaplayıcı</button>
+    <button class="tab" onclick="switchTab('breakdown',this)">📊 Kar Analizi</button>
+    <button class="tab" onclick="switchTab('timeline',this)">⏱ Zaman Çizelgesi</button>
+    <button class="tab" onclick="switchTab('config',this)">⚙ Fiyat Editörü</button>
+    <button class="tab" onclick="switchTab('xml',this)">📄 XML Config</button>
+    <button class="tab" onclick="switchTab('flow',this)">💸 Para Akışı</button>
+  </div>
+
+  <!-- ===================== CALCULATOR PANEL ===================== -->
+  <div class="panel active" id="panel-calculator">
+
+    <div class="target-row">
+      <div class="target-box">
+        <div class="tl">🧪 Meth — 12 Saat Hedef</div>
+        <div class="tv blue">~800.000 ₺</div>
+      </div>
+      <div class="target-box">
+        <div class="tl">❄ Cocaine — 12 Saat Hedef</div>
+        <div class="tv purple">~600.000 ₺</div>
+      </div>
+      <div class="target-box">
+        <div class="tl">🌿 Joint — 12 Saat Hedef</div>
+        <div class="tv green">~400.000 ₺</div>
+      </div>
+      <div class="target-box">
+        <div class="tl">📦 Paketleme</div>
+        <div class="tv yellow">Eşdeğer Fiyat</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🧪 Ürün Seç &amp; Miktar Belirle</div>
+      <div class="grid-2">
+        <div>
+          <div class="input-group">
+            <label>Ürün Tipi</label>
+            <select id="calc-product" onchange="updateCalc()">
+              <option value="cocaine">Cocaine (Kokain)</option>
+              <option value="cocaine_brick">Cocaine Brick (Kokain Kolisi)</option>
+              <option value="meth">Meth</option>
+              <option value="meth_brick">Meth Brick (Meth Kolisi)</option>
+              <option value="joint">Joint</option>
+              <option value="bag_joints">Bag of Joints (Joint Kolisi)</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label>Üretmek İstediğin Miktar</label>
+            <input type="number" id="calc-amount" value="10" min="1" max="9999" oninput="updateCalc()">
+            <div class="unit">adet ürün</div>
+          </div>
+          <div class="input-group">
+            <label>Ekim Yuvası Sayısı</label>
+            <input type="number" id="calc-slots" value="10" min="1" max="10" oninput="updateCalc()">
+            <div class="unit">max 10 yuva (oyuncu başı)</div>
+          </div>
+        </div>
+        <div id="calc-info-box"></div>
+      </div>
+    </div>
+
+    <div id="calc-results"></div>
+  </div>
+
+  <!-- ===================== BREAKDOWN PANEL ===================== -->
+  <div class="panel" id="panel-breakdown">
+    <div class="card">
+      <div class="card-title">📊 Tüm Ürünler — Kar Karşılaştırması</div>
+      <div id="breakdown-table"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">💎 En İyi Strateji Önerileri</div>
+      <div id="strategy-tips"></div>
+    </div>
+  </div>
+
+  <!-- ===================== TIMELINE PANEL ===================== -->
+  <div class="panel" id="panel-timeline">
+    <div class="card">
+      <div class="card-title">⏱ Üretim Zaman Çizelgesi</div>
+      <div class="grid-2 mb-0">
+        <div class="input-group">
+          <label>Ürün</label>
+          <select id="tl-product" onchange="updateTimeline()">
+            <option value="cocaine">Cocaine</option>
+            <option value="cocaine_brick">Cocaine Brick</option>
+            <option value="meth">Meth</option>
+            <option value="meth_brick">Meth Brick</option>
+            <option value="joint">Joint</option>
+            <option value="bag_joints">Bag of Joints</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>Kaç Tur Üretim</label>
+          <input type="number" id="tl-rounds" value="3" min="1" max="20" oninput="updateTimeline()">
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div id="timeline-content"></div>
+    </div>
+  </div>
+
+  <!-- ===================== CONFIG / PRICE EDITOR ===================== -->
+  <div class="panel" id="panel-config">
+    <div class="card">
+      <div class="card-title">⚙ Fiyat Editörü
+        <div class="flex ml-auto">
+          <button class="btn red" onclick="resetPrices()">↺ Sıfırla</button>
+          <button class="btn yellow" onclick="saveConfig()">💾 Kaydet</button>
+          <button class="btn blue" onclick="exportXML()">⬇ XML İndir</button>
+          <label class="btn" style="cursor:pointer">
+            ⬆ XML Yükle
+            <input type="file" accept=".xml" onchange="importXML(event)" style="display:none">
+          </label>
+        </div>
+      </div>
+
+      <div class="section-header">Ham Malzeme Maliyetleri (Mağaza Alım Fiyatı)</div>
+      <div id="cost-editor"></div>
+
+      <div class="divider"></div>
+      <div class="section-header">Ekipman Maliyetleri</div>
+      <div id="equip-editor"></div>
+
+      <div class="divider"></div>
+      <div class="section-header">Blackmarket Satış Fiyatları (Kara Para)</div>
+      <div id="price-editor"></div>
+
+      <div class="divider"></div>
+      <div class="section-header">Sistem Parametreleri</div>
+      <div id="sys-editor"></div>
+    </div>
+  </div>
+
+  <!-- ===================== PARA AKIŞI ===================== -->
+  <div class="panel" id="panel-flow">
+
+    <div class="card">
+      <div class="card-title">💸 Para Akışı — Kim Ne Alıyor?</div>
+      <!-- Akış diyagramı -->
+      <div style="display:flex; gap:0; align-items:stretch; flex-wrap:wrap; margin-bottom:20px">
+        <div style="flex:1; min-width:140px; background:var(--bg3); border:1px solid var(--border); border-radius:8px 0 0 8px; padding:16px; text-align:center">
+          <div style="font-size:1.6rem; margin-bottom:6px">🧪</div>
+          <div style="font-family:'Orbitron',sans-serif; font-size:0.7rem; color:var(--accent); letter-spacing:1px">OYUNCU</div>
+          <div style="font-size:0.72rem; color:var(--text2); margin-top:6px">Ürün üretir &amp; satar</div>
+        </div>
+        <div style="display:flex; align-items:center; padding:0 8px; color:var(--text2); font-size:1.4rem">→</div>
+        <div style="flex:1; min-width:140px; background:rgba(255,204,0,0.07); border:1px solid rgba(255,204,0,0.25); padding:16px; text-align:center">
+          <div style="font-size:1.6rem; margin-bottom:6px">🏴‍☠️</div>
+          <div style="font-family:'Orbitron',sans-serif; font-size:0.7rem; color:var(--accent3); letter-spacing:1px">BLACK MARKET</div>
+          <div style="font-size:0.72rem; color:var(--text2); margin-top:6px">Kara para verir — <span id="flow-bm-cut" style="color:var(--accent2)"></span></div>
+        </div>
+        <div style="display:flex; align-items:center; padding:0 8px; color:var(--text2); font-size:1.4rem">→</div>
+        <div style="flex:1; min-width:140px; background:rgba(0,204,255,0.07); border:1px solid rgba(0,204,255,0.25); padding:16px; text-align:center">
+          <div style="font-size:1.6rem; margin-bottom:6px">🏛️</div>
+          <div style="font-family:'Orbitron',sans-serif; font-size:0.7rem; color:var(--accent4); letter-spacing:1px">EMLAKÇI</div>
+          <div style="font-size:0.72rem; color:var(--text2); margin-top:6px">Kara → temiz — <span id="flow-est-cut" style="color:var(--accent2)"></span></div>
+        </div>
+        <div style="display:flex; align-items:center; padding:0 8px; color:var(--text2); font-size:1.4rem">→</div>
+        <div style="flex:1; min-width:140px; background:rgba(0,255,136,0.07); border:1px solid rgba(0,255,136,0.25); border-radius:0 8px 8px 0; padding:16px; text-align:center">
+          <div style="font-size:1.6rem; margin-bottom:6px">💰</div>
+          <div style="font-family:'Orbitron',sans-serif; font-size:0.7rem; color:var(--accent); letter-spacing:1px">NET KAR</div>
+          <div style="font-size:0.72rem; color:var(--text2); margin-top:6px">Elinde kalan temiz para</div>
+        </div>
+      </div>
+      <div style="background:var(--bg3); border:1px solid var(--border); border-radius:6px; padding:12px 16px; font-size:0.8rem; line-height:1.9; color:var(--text2)">
+        <span style="color:var(--accent); font-family:'Orbitron',sans-serif; font-size:0.7rem">// FORMÜL</span><br>
+        <span style="color:var(--text)">Net Kar</span> = BM Fiyatı × (1 − BM%) × (1 − Emlakçı%) − Malzeme Maliyeti<br>
+        <span style="color:var(--text)">Toplam kesinti:</span>
+        <span id="flow-total-cut" style="color:var(--accent2); font-family:'Orbitron',sans-serif"></span> —
+        yani her <span style="color:var(--accent3)">100 ₺</span> kara paradan elinde
+        <span id="flow-keep" style="color:var(--accent); font-family:'Orbitron',sans-serif"></span> kalır (malzeme öncesi).
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📋 Tüm Ürünler — Kesinti Tablosu</div>
+      <div id="flow-table"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔍 Adım Adım Para Akışı</div>
+      <div class="input-group" style="max-width:320px; margin-bottom:20px">
+        <label>Ürün Seç</label>
+        <select id="flow-product" onchange="updateFlowDetail()">
+          <option value="cocaine">Cocaine</option>
+          <option value="cocaine_brick">Cocaine Brick</option>
+          <option value="meth">Meth</option>
+          <option value="meth_brick">Meth Brick</option>
+          <option value="joint">Joint</option>
+          <option value="bag_joints">Bag of Joints</option>
+        </select>
+      </div>
+      <div id="flow-detail"></div>
+    </div>
+
+  </div>
+
+  <!-- ===================== XML CONFIG ===================== -->
+  <div class="panel" id="panel-xml">
+    <div class="card">
+      <div class="card-title">📄 XML Config — Aktif Değerler
+        <div class="flex ml-auto">
+          <button class="btn blue" onclick="exportXML()">⬇ XML İndir</button>
+          <label class="btn" style="cursor:pointer">
+            ⬆ XML Yükle
+            <input type="file" accept=".xml" onchange="importXML(event)" style="display:none">
+          </label>
+        </div>
+      </div>
+      <p style="font-size:0.78rem; color:var(--text2); margin-bottom:16px; line-height:1.6">
+        Mevcut konfigürasyonu XML olarak dışa aktarabilir, daha önce kaydedilen bir XML dosyasını geri yükleyebilirsin.
+        XML formatı tüm fiyatları, maliyetleri ve sistem parametrelerini içerir.
+      </p>
+      <div id="xml-preview" style="background:var(--bg3); border:1px solid var(--border); border-radius:6px; padding:16px; font-size:0.72rem; overflow:auto; max-height:400px; white-space:pre; color:var(--text2)">
+        XML önizlemesi için "XML İndir" sekmesini açın veya fiyat editöründen değer güncelleyin.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">⏱ Crafting Süreleri (Lab XML)</div>
+      <div id="xml-table"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">🔬 Tarif Zinciri</div>
+      <div id="recipe-chain"></div>
+    </div>
+  </div>
+</div>
+
+<div class="notif" id="notif">✓ KAYDEDİLDİ</div>
+
+<script>
+// ============================================================
+// DATA MODEL — Dengeli Fiyatlar (12h Hedefleri)
+// Meth: ~800.000/12s | Cocaine: ~600.000/12s | Joint: ~400.000/12s
+// ============================================================
+const DEFAULT_CONFIG = {
+  costs: {
+    cloth:      { name: 'Cloth',                    id: 66,    cost: 500  },
+    chemicals:  { name: 'Chemicals',                id: 75,    cost: 1500 },
+    sod_perm:   { name: 'Sodium Permanganate',      id: 25504, cost: 1000 },
+    acetone:    { name: 'Acetone',                  id: 25500, cost: 1500 },
+    hcl:        { name: 'Hydrochloric Acid',        id: 25501, cost: 1500 },
+    lye:        { name: 'Lye',                      id: 25502, cost: 1500 },
+    grinder:    { name: 'Grinder',                  id: 25507, cost: 500  },
+    pot_perm:   { name: 'Potassium Permanganate',   id: 25503, cost: 2000 },
+  },
+  equip: {
+    hammer:      { name: 'Hammer',      id: 138,   cost: 500  },
+    cocaine_lab: { name: 'Cocaine Lab', id: 25410, cost: 2500 },
+    meth_fridge: { name: 'Meth Fridge', id: 25610, cost: 2700 },
+    metal_pan:   { name: 'Metal Pan',   id: 25514, cost: 1000 },
+    weed_lab:    { name: 'Weed Lab',    id: 25412, cost: 5000 },
+    meth_lab:    { name: 'Meth Lab',    id: 25411, cost: 7500 },
+  },
+  // Paket fiyatları = birim fiyat × adet (eşdeğer fiyatlandırma)
+  prices: {
+    cocaine:    { name: 'Cocaine',        id: 25803, price: 38000   },
+    joint:      { name: 'Joint',          id: 25801, price: 30000   },
+    coke_brick: { name: 'Cocaine Brick',  id: 25513, price: 950000  }, // = 25 × 38000
+    meth:       { name: 'Meth',           id: 25515, price: 55000   },
+    bag_joints: { name: 'Bag of Joints',  id: 25508, price: 150000  }, // = 5 × 30000
+    meth_brick: { name: 'Meth Brick',     id: 25516, price: 1375000 }, // = 25 × 55000
+  },
+  system: {
+    blackmarket_cut: { name: 'Blackmarket Kesinti (%)', value: 30 },
+    estate_cut:      { name: 'Emlakçı Kesinti (%)',     value: 40 },
+    grow_slots:      { name: 'Max Ekim Yuvası (oyuncu başı)', value: 10 },
+    lab_usages:      { name: 'Lab Kullanım Sayısı (Usages)', value: 20 },
+  },
+  grow: {
+    meth:    { name: 'Meth (ID: 25701)',    hours: 2, free: false },
+    cocaine: { name: 'Cocaine (ID: 25702)', hours: 3, free: true  },
+    weed:    { name: 'Weed (ID: 25700)',    hours: 3, free: true  },
+  },
+  // Crafting süreleri — paketleme = sadece kolileme (10 saniye)
+  crafting: {
+    cocaine: [
+      { name: 'Kağıt Yap (66x3 → 25511)',                            sec: 3  },
+      { name: 'Bant Yap (66x4 + 75x1 → 69)',                         sec: 5  },
+      { name: 'Kokain Yap (25512x2 + 66x2 → 25803)',                 sec: 60 },
+      { name: 'Kokain Kolile (25803x25 + 25511x5 + 69x1 → 25513)',   sec: 10 },
+    ],
+    meth: [
+      { name: 'Kağıt Yap (66x3 → 25511)',                            sec: 3   },
+      { name: 'Bant Yap (66x4 + 75x1 → 69)',                         sec: 5   },
+      { name: 'Meth Hammadde Yap → 25701',                           sec: 300 },
+      { name: 'Meth İşle (25805x1 + 66x2 → 25515)',                  sec: 120 },
+      { name: 'Meth Kolile (25515x25 + 25511x5 + 69x1 → 25516)',     sec: 10  },
+    ],
+    weed: [
+      { name: 'Kağıt Yap (66x3 → 25511)',                            sec: 3  },
+      { name: 'Bant Yap (66x4 + 75x1 → 69)',                         sec: 5  },
+      { name: 'Ot İşle (25509x1 + 25507x1 → 25800)',                 sec: 60 },
+      { name: 'Joint Yap (25800x2 + 25511x1 → 25801)',               sec: 60 },
+      { name: 'Joint Kolile (25801x5 + 66x2 → 25508)',               sec: 10 },
+    ],
+  }
+};
+
+let CONFIG = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+
+// ============================================================
+// UTILITY
+// ============================================================
+function fmt(n)  { return Math.round(n).toLocaleString('tr-TR') + ' ₺'; }
+function fmtN(n) { return Math.round(n).toLocaleString('tr-TR'); }
+function fmtH(secs) {
+  const h = Math.floor(secs / 3600);
+  const m = Math.floor((secs % 3600) / 60);
+  const s = secs % 60;
+  if (h > 0) return `${h}s ${m}d ${s}sn`;
+  if (m > 0) return `${m}d ${s}sn`;
+  return `${s}sn`;
+}
+
+// ============================================================
+// PRODUCT DEFINITIONS
+// ============================================================
+function getProduct(key) {
+  const C = CONFIG;
+  const bm_cut  = C.system.blackmarket_cut.value / 100;
+  const est_cut = C.system.estate_cut.value / 100;
+
+  const products = {
+
+    // --- COCAINE ---
+    // Her seed (25702) → büyür → 25512×2 (2 plant/seed)
+    // 10 slot × 2 = 20 plant → 2 plant/cocaine = 10 cocaine/tur
+    // Grow PARALEL → tur süresi = grow_hours (craft ~10dk, negligible)
+    cocaine: () => {
+      const grow_hours  = C.grow.cocaine.hours;
+      const slots       = C.system.grow_slots.value;
+      const per_batch   = slots;               // 10 slot × 2 yield / 2 per recipe = 10
+      const round_hours = grow_hours;          // craft süresi negligible, grow bottleneck
+      const mat_cost    = 2 * C.costs.cloth.cost;
+      const bm_price    = C.prices.cocaine.price;
+      const bm_net      = bm_price * (1 - bm_cut);
+      const estate_net  = bm_net * (1 - est_cut);
+      const profit      = estate_net - mat_cost;
+      return {
+        name: 'Cocaine', key: 'cocaine', type: 'cocaine',
+        grow_hours, grow_free: true, round_hours,
+        per_batch,
+        material_cost: mat_cost, bm_price, bm_net, estate_net, profit,
+        profit_per_hour: (profit * per_batch) / round_hours,
+        profit_per_day:  (profit * per_batch) * (24 / round_hours),
+        crafting_sec: 60,
+        steps: [
+          `Seed: 25702 (ÜCRETSİZ) → büyür 3s → 25512×2 (her seedten 2 plant)`,
+          `10 slot × 2 = 20 plant → 2 plant/cocaine = ${per_batch} cocaine/tur`,
+          `[Kokain Yap] 2× Plant + 2× Cloth → Cocaine (60s) — craft grow sırasında`,
+          `Tur = ${grow_hours}s (grow) | Craft overhead: ${per_batch*60/60}dk << 3s`,
+          `BM: ${fmt(bm_price)} | −%${C.system.blackmarket_cut.value} BM −%${C.system.estate_cut.value} Emlak → ${fmt(estate_net)}`,
+          `Net Kar: ${fmt(profit)}/adet | Tur karı: ${fmt(profit * per_batch)}`,
+        ]
+      };
+    },
+    cocaine_brick: () => {
+      const grow_hours   = C.grow.cocaine.hours;
+      const slots        = C.system.grow_slots.value;
+      const cocaine_per_cycle = slots;               // 10 cocaine per grow cycle
+      const cloth_coke   = 2 * 25;
+      const paper_cloth  = 3 * 5;
+      const tape_cloth   = 4;
+      const tape_chem    = 1;
+      const cloth_total  = cloth_coke + paper_cloth + tape_cloth;
+      const mat_cost     = cloth_total * C.costs.cloth.cost + tape_chem * C.costs.chemicals.cost;
+      const grow_cycles  = Math.ceil(25 / cocaine_per_cycle);   // ceil(25/10) = 3
+      const round_hours  = grow_cycles * grow_hours;            // 3 × 3h = 9h
+      const per_batch    = Math.max(Math.floor(cocaine_per_cycle / 25), 1); // 1
+      const bm_price     = C.prices.coke_brick.price;
+      const bm_net       = bm_price * (1 - bm_cut);
+      const estate_net   = bm_net * (1 - est_cut);
+      const profit       = estate_net - mat_cost;
+      return {
+        name: 'Cocaine Brick', key: 'cocaine_brick', type: 'cocaine',
+        grow_hours: round_hours, grow_free: true, round_hours,
+        per_batch,
+        material_cost: mat_cost, bm_price, bm_net, estate_net, profit,
+        profit_per_hour: (profit * per_batch) / round_hours,
+        profit_per_day:  (profit * per_batch) * (24 / round_hours),
+        crafting_sec: 60 * 25 + 10,
+        steps: [
+          `${grow_cycles} tur ekim × ${cocaine_per_cycle} cocaine/tur = 25 cocaine (${round_hours}s)`,
+          `Cloth: ${cloth_total}× = ${fmt(cloth_total * C.costs.cloth.cost)} | Chemicals: ${tape_chem}× = ${fmt(tape_chem * C.costs.chemicals.cost)}`,
+          `Paketle (10s): 25× Cocaine + 5× Kağıt + 1× Bant → Brick`,
+          `BM: ${fmt(bm_price)} (= 25 × ${fmt(C.prices.cocaine.price)}) | Net: ${fmt(estate_net)}`,
+        ]
+      };
+    },
+
+    // --- METH ---
+    // Seed (25701) = Lab'da "Yap" ile üretilir (300s/adet) — ÜCRETSİZ DEĞİL
+    // Sonra ekilir, 2s büyür → 25805×2 (2 grown meth/seed)
+    // İşle: 25805×1 + Cloth×2 → 25515 (Meth) [120s]
+    // 10 slot: 10 Yap (50dk) → ekil → büyür 2s → 20× İşle (40dk interleaved)
+    // Tur süresi: 10×300 + 7200 + 2×120 = 10440s ≈ 2.9s (4 tur/12s)
+    meth: () => {
+      const grow_hours  = C.grow.meth.hours;
+      const slots       = C.system.grow_slots.value;
+      const mat_craft   =
+        2 * C.costs.pot_perm.cost  +
+        2 * C.costs.acetone.cost   +
+        1 * C.costs.hcl.cost       +
+        1 * C.costs.lye.cost       +
+        1 * C.costs.sod_perm.cost  +
+        1 * C.equip.metal_pan.cost;
+      const cloth_cost  = 2 * C.costs.cloth.cost;
+      const mat_cost    = mat_craft + cloth_cost;
+      // Tur: slots×Yap(300s) + grow(7200s) + son 2× İşle(240s) — interleaved
+      const round_s     = slots * 300 + 7200 + 240;
+      const round_hours = round_s / 3600;             // ~2.9s for 10 slots
+      const per_batch   = slots * 2;                  // 10 seed × 2 yield = 20 meth/tur
+      const bm_price    = C.prices.meth.price;
+      const bm_net      = bm_price * (1 - bm_cut);
+      const estate_net  = bm_net * (1 - est_cut);
+      const profit      = estate_net - mat_cost;
+      return {
+        name: 'Meth', key: 'meth', type: 'meth',
+        grow_hours, grow_free: false, round_hours,
+        per_batch,
+        material_cost: mat_cost, bm_price, bm_net, estate_net, profit,
+        profit_per_hour: (profit * per_batch) / round_hours,
+        profit_per_day:  (profit * per_batch) * (24 / round_hours),
+        crafting_sec: 420, // Yap(300) + İşle(120) per item
+        steps: [
+          `[Yap] ${slots}× seed (25701): ${slots}×300s = ${Math.round(slots*300/60)}dk (sırayla)`,
+          `Hammadde/seed: 2×KP + 2×Aseton + HCl + Lye + NaP + Pan = ${fmt(mat_craft)}`,
+          `Grow: Her seed 2s büyür → 25805×2 (ekim lab'dan bağımsız, paralel!)`,
+          `[İşle] 25805×1 + Cloth×2 → Meth (120s) — ${per_batch} İşle toplam: ${Math.round(per_batch*2)}dk`,
+          `Tur süresi: ≈${round_hours.toFixed(1)}s | ${per_batch} meth/tur | Cloth: −${fmt(cloth_cost)}/adet`,
+          `BM: ${fmt(bm_price)} | Net: ${fmt(estate_net)} | Malzeme: −${fmt(mat_cost)} | Kar: ${fmt(profit)}`,
+        ]
+      };
+    },
+
+    // --- METH BRICK (kolileme) ---
+    meth_brick: () => {
+      const grow_hours   = C.grow.meth.hours;
+      const slots        = C.system.grow_slots.value;
+      const meth_per_cycle = slots * 2;              // 20 meth/tur (10 seed × 2)
+      const single_round_h = (slots * 300 + 7200 + 240) / 3600;
+      const mat_per_meth =
+        2 * C.costs.pot_perm.cost  +
+        2 * C.costs.acetone.cost   +
+        1 * C.costs.hcl.cost       +
+        1 * C.costs.lye.cost       +
+        1 * C.costs.sod_perm.cost  +
+        1 * C.equip.metal_pan.cost +
+        2 * C.costs.cloth.cost;
+      const paper_cloth  = 3 * 5;
+      const tape_cloth   = 4;
+      const tape_chem    = 1;
+      const mat_cost     =
+        25 * mat_per_meth +
+        paper_cloth * C.costs.cloth.cost +
+        tape_cloth  * C.costs.cloth.cost +
+        tape_chem   * C.costs.chemicals.cost;
+      const grow_cycles  = Math.ceil(25 / meth_per_cycle);   // ceil(25/20) = 2
+      const round_hours  = grow_cycles * single_round_h;     // 2 × 2.9 ≈ 5.8s
+      const per_batch    = Math.max(Math.floor(meth_per_cycle / 25), 1); // 1
+      const bm_price     = C.prices.meth_brick.price;
+      const bm_net       = bm_price * (1 - bm_cut);
+      const estate_net   = bm_net * (1 - est_cut);
+      const profit       = estate_net - mat_cost;
+      return {
+        name: 'Meth Brick', key: 'meth_brick', type: 'meth',
+        grow_hours: round_hours, grow_free: false, round_hours,
+        per_batch,
+        material_cost: mat_cost, bm_price, bm_net, estate_net, profit,
+        profit_per_hour: (profit * per_batch) / round_hours,
+        profit_per_day:  (profit * per_batch) * (24 / round_hours),
+        crafting_sec: 25 * 420 + 10,
+        steps: [
+          `${grow_cycles} tur × ${meth_per_cycle} meth/tur = ${grow_cycles*meth_per_cycle} meth (25 kullanılır)`,
+          `Tur süresi: ${single_round_h.toFixed(1)}s × ${grow_cycles} = ${round_hours.toFixed(1)}s toplam`,
+          `25× meth malzeme: ${fmt(mat_cost)}`,
+          `Paketle (10s): 25× Meth + 5× Kağıt + 1× Bant → Brick`,
+          `BM: ${fmt(bm_price)} (= 25 × ${fmt(C.prices.meth.price)}) | Net Kar: ${fmt(profit)}`,
+        ]
+      };
+    },
+
+    // --- JOINT ---
+    // Her seed (25700) → büyür → 25509×2 (2 weed/seed)
+    // 10 slot × 2 = 20 weed → 2 weed/joint → 10 joint/tur
+    // 1 joint = 2× İşle(60s) + Kağıt(3s) + Joint(60s) = 183s
+    // 10 joint batch craft ≈ 30.5dk << 3s büyüme → grow bottleneck → 4 tur/12s
+    joint: () => {
+      const grow_hours   = C.grow.weed.hours;
+      const slots        = C.system.grow_slots.value;
+      const per_batch    = slots;              // 10 slot × 2 yield / 2 weed per joint = 10 joint/tur
+      const round_hours  = grow_hours;        // craft ~30dk negligible vs 3s grow
+      const mat_cloth    = 3 * C.costs.cloth.cost;
+      const grinder_cost = 2 * C.costs.grinder.cost;
+      const mat_cost     = mat_cloth + grinder_cost; // grinder dahil (consumeItem=true)
+      const bm_price     = C.prices.joint.price;
+      const bm_net       = bm_price * (1 - bm_cut);
+      const estate_net   = bm_net * (1 - est_cut);
+      const profit       = estate_net - mat_cost;
+      return {
+        name: 'Joint', key: 'joint', type: 'weed',
+        grow_hours, grow_free: true, round_hours,
+        per_batch,
+        material_cost: mat_cost, bm_price, bm_net, estate_net, profit,
+        profit_per_hour: (profit * per_batch) / round_hours,
+        profit_per_day:  (profit * per_batch) * (24 / round_hours),
+        crafting_sec: 183, // 2×İşle(60) + Kağıt(3) + Joint(60) per joint
+        steps: [
+          `Seed: 25700 (ÜCRETSİZ) → büyür 3s → 25509×2 (her seedten 2 weed)`,
+          `10 slot × 2 = 20 weed → 2 weed/joint = ${per_batch} joint/tur`,
+          `[İşle×2] 25509×1 + Grinder → Proc.Weed (60s×2) — Grinder tüketilir!`,
+          `[Kağıt] 3× Cloth → Kağıt (3s) | [Joint] 2× ProcWeed + Kağıt → Joint (60s)`,
+          `Malzeme/joint: Cloth ${fmt(mat_cloth)} + Grinder×2 ${fmt(grinder_cost)} = ${fmt(mat_cost)}`,
+          `BM: ${fmt(bm_price)} | Net: ${fmt(estate_net)} | Kar: ${fmt(profit)}/adet`,
+        ]
+      };
+    },
+
+    // --- BAG OF JOINTS (kolileme) ---
+    bag_joints: () => {
+      const grow_hours      = C.grow.weed.hours;
+      const slots           = C.system.grow_slots.value;
+      const joints_per_cycle = slots;                             // 10 joint/tur
+      const per_batch       = Math.max(Math.floor(joints_per_cycle / 5), 1); // 2 bag/tur
+      const grow_cycles     = Math.ceil(5 / joints_per_cycle);   // ceil(5/10) = 1
+      const round_hours     = grow_cycles * grow_hours;          // 1 × 3h = 3h
+      // 5 joint = 10 weed → 10×Grinder + 5×Kağıt(3cloth) + 2×cloth(paket)
+      const grinder_cost    = 10 * C.costs.grinder.cost;
+      const cloth_papers    = 3 * 5;
+      const cloth_pack      = 2;
+      const mat_cost        = (cloth_papers + cloth_pack) * C.costs.cloth.cost + grinder_cost;
+      const bm_price        = C.prices.bag_joints.price;
+      const bm_net          = bm_price * (1 - bm_cut);
+      const estate_net      = bm_net * (1 - est_cut);
+      const profit          = estate_net - mat_cost;
+      return {
+        name: 'Bag of Joints', key: 'bag_joints', type: 'weed',
+        grow_hours: round_hours, grow_free: true, round_hours,
+        per_batch,
+        material_cost: mat_cost, bm_price, bm_net, estate_net, profit,
+        profit_per_hour: (profit * per_batch) / round_hours,
+        profit_per_day:  (profit * per_batch) * (24 / round_hours),
+        crafting_sec: 5 * 183 + 10, // 5 joint × 183s + Paketle 10s
+        steps: [
+          `${per_batch} bag/tur (${joints_per_cycle} joint/tur ÷ 5/bag)`,
+          `5 joint = 10 weed = 10 İşle + 10× Grinder (tüketilir) + 5× Kağıt`,
+          `Malzeme: Cloth ${fmt((cloth_papers+cloth_pack)*C.costs.cloth.cost)} + Grinder ${fmt(grinder_cost)} = ${fmt(mat_cost)}`,
+          `Paketle (10s): 5× Joint + 2× Cloth → Bag`,
+          `BM: ${fmt(bm_price)} (= 5 × ${fmt(C.prices.joint.price)}) | Net Kar: ${fmt(profit)}`,
+        ]
+      };
+    }
+  };
+
+  return products[key] ? products[key]() : null;
+}
+
+// ============================================================
+// CALCULATOR TAB
+// ============================================================
+function updateCalc() {
+  const key    = document.getElementById('calc-product').value;
+  const amount = parseInt(document.getElementById('calc-amount').value) || 1;
+  CONFIG.system.grow_slots.value = parseInt(document.getElementById('calc-slots').value) || 10;
+
+  const p = getProduct(key);
+  if (!p) return;
+
+  const bm_cut  = CONFIG.system.blackmarket_cut.value;
+  const est_cut = CONFIG.system.estate_cut.value;
+
+  document.getElementById('calc-info-box').innerHTML = `
+    <div class="stat-box" style="margin-bottom:10px">
+      <div class="label">Büyüme Süresi</div>
+      <div class="value blue">${p.grow_hours} Saat</div>
+    </div>
+    <div class="stat-box" style="margin-bottom:10px">
+      <div class="label">Hammadde Ücretsiz?</div>
+      <div class="value ${p.grow_free ? '' : 'red'}">${p.grow_free ? 'EVET (Ücretsiz Büyür)' : 'HAYIR (Craft Gerekli)'}</div>
+    </div>
+    <div class="stat-box" style="margin-bottom:10px">
+      <div class="label">BM Fiyatı (Kara Para)</div>
+      <div class="value yellow">${fmt(p.bm_price)}</div>
+    </div>
+    <div class="stat-box">
+      <div class="label">Net (BM %${bm_cut} + Emlak %${est_cut} sonrası)</div>
+      <div class="value">${fmt(p.estate_net)}</div>
+    </div>
+  `;
+
+  const total_bm     = p.bm_price * amount;
+  const total_net    = p.estate_net * amount;
+  const total_cost   = p.material_cost * amount;
+  const total_profit = total_net - total_cost;
+  const total_hours  = p.grow_hours * Math.ceil(amount / (p.per_batch || 1));
+  const roi          = p.material_cost > 0 ? ((p.profit / p.material_cost) * 100).toFixed(0) + '%' : '∞ (Ücretsiz)';
+
+  document.getElementById('calc-results').innerHTML = `
+    <div class="result-banner">
+      <div class="main-value">${fmt(total_profit)}</div>
+      <div class="main-label">Tahmini Net Kar — ${amount}× ${p.name}</div>
+      <div class="sub">
+        <div class="sub-item">
+          <div class="sv yellow">${fmt(total_bm)}</div>
+          <div class="sl">Kara Para (ham)</div>
+        </div>
+        <div class="sub-item">
+          <div class="sv">${fmt(total_net)}</div>
+          <div class="sl">Temizlenen Para</div>
+        </div>
+        <div class="sub-item">
+          <div class="sv red">${fmt(total_cost)}</div>
+          <div class="sl">Malzeme Maliyeti</div>
+        </div>
+        <div class="sub-item">
+          <div class="sv blue">${total_hours} Saat</div>
+          <div class="sl">Tahmini Toplam Süre</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-4" style="margin-top:20px">
+      <div class="stat-box">
+        <div class="label">Saatlik Kar</div>
+        <div class="value">${fmt(p.profit_per_hour)}</div>
+      </div>
+      <div class="stat-box">
+        <div class="label">Günlük Kar (24h)</div>
+        <div class="value">${fmt(p.profit_per_day)}</div>
+      </div>
+      <div class="stat-box">
+        <div class="label">ROI</div>
+        <div class="value ${p.material_cost > 0 ? '' : 'yellow'}">${roi}</div>
+      </div>
+      <div class="stat-box">
+        <div class="label">Crafting Süresi (1 adet)</div>
+        <div class="value blue">${fmtH(p.crafting_sec)}</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:20px">
+      <div class="card-title">📋 Üretim Adımları — ${p.name}</div>
+      <div class="timeline">
+        ${p.steps.map((s, i) => `
+          <div class="timeline-item">
+            <div class="time">ADIM ${i + 1}</div>
+            <div class="desc">${s}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+// ============================================================
+// BREAKDOWN TAB
+// ============================================================
+function updateBreakdown() {
+  const keys  = ['cocaine', 'cocaine_brick', 'meth', 'meth_brick', 'joint', 'bag_joints'];
+  const prods = keys.map(k => getProduct(k)).filter(Boolean);
+  prods.sort((a, b) => b.profit_per_hour - a.profit_per_hour);
+
+  const tc = { cocaine: 'purple', meth: 'blue', weed: 'green' };
+
+  document.getElementById('breakdown-table').innerHTML = `
+    <table>
+      <thead>
+        <tr>
+          <th>#</th><th>Ürün</th><th>Tip</th>
+          <th>BM Fiyatı</th><th>Net (Temizlenmiş)</th>
+          <th>Malzeme</th><th>Kar / Adet</th>
+          <th>Kar / Saat</th><th>Büyüme</th><th>ROI</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${prods.map((p, i) => `
+          <tr>
+            <td>${['🥇','🥈','🥉','4.','5.','6.'][i] || (i+1)+'.'}</td>
+            <td class="${tc[p.type]}">${p.name}</td>
+            <td><span class="${tc[p.type]}">${p.type.toUpperCase()}</span></td>
+            <td class="yellow">${fmt(p.bm_price)}</td>
+            <td class="green">${fmt(p.estate_net)}</td>
+            <td class="red">${p.material_cost > 0 ? fmt(p.material_cost) : '—'}</td>
+            <td class="${p.profit >= 0 ? 'green' : 'red'}">${fmt(p.profit)}</td>
+            <td class="${p.profit_per_hour >= 0 ? 'green' : 'red'}">${fmt(p.profit_per_hour)}</td>
+            <td>${p.grow_hours}s ${p.grow_free ? '<span class="grow-badge">ÜCRETSİZ</span>' : ''}</td>
+            <td>${p.material_cost > 0 ? ((p.profit / p.material_cost) * 100).toFixed(0) + '%' : '∞'}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
+
+  const sorted_by_profit = [...prods].sort((a, b) => b.profit - a.profit);
+  const best      = prods[0];
+  const best_free = prods.filter(p => p.grow_free).sort((a, b) => b.profit_per_hour - a.profit_per_hour)[0];
+
+  document.getElementById('strategy-tips').innerHTML = `
+    <div class="grid-3">
+      <div class="stat-box" style="border-color:var(--accent3); padding:16px">
+        <div class="label">⚡ En Yüksek Saatlik Kar</div>
+        <div class="value yellow" style="font-size:0.9rem; margin:8px 0">${best.name}</div>
+        <div style="font-size:0.8rem; color:var(--accent)">${fmt(best.profit_per_hour)} / saat</div>
+      </div>
+      <div class="stat-box" style="border-color:var(--accent); padding:16px">
+        <div class="label">🌿 En Karlı Ücretsiz Ürün</div>
+        <div class="value" style="font-size:0.9rem; margin:8px 0">${best_free?.name || '—'}</div>
+        <div style="font-size:0.8rem; color:var(--accent)">${best_free ? fmt(best_free.profit_per_hour) + ' / saat' : ''}</div>
+      </div>
+      <div class="stat-box" style="border-color:var(--accent4); padding:16px">
+        <div class="label">💎 En Yüksek Tek Kazanç</div>
+        <div class="value blue" style="font-size:0.9rem; margin:8px 0">${sorted_by_profit[0].name}</div>
+        <div style="font-size:0.8rem; color:var(--accent4)">${fmt(sorted_by_profit[0].profit)} / adet</div>
+      </div>
+    </div>
+    <div style="margin-top:16px; background:var(--bg3); border:1px solid var(--border); border-radius:8px; padding:14px; font-size:0.82rem; line-height:1.8; color:var(--text2)">
+      <span style="color:var(--accent); font-family:'Orbitron',sans-serif; font-size:0.7rem; letter-spacing:1px">// TAVSİYE</span><br>
+      → <span style="color:var(--text)">12 Saat Hedefleri (10 yuva, hasat+craft+satış dahil):</span>
+        ${(() => {
+          const tgts = [
+            { key:'meth',    label:'Meth'    },
+            { key:'cocaine', label:'Cocaine' },
+            { key:'joint',   label:'Joint'   },
+          ].map(t => {
+            const pr  = getProduct(t.key);
+            const cbh = (pr.crafting_sec * (pr.per_batch || 1)) / 3600;
+            const n   = Math.floor((12 - cbh) / pr.grow_hours);
+            const val = n * (pr.per_batch || 1) * pr.profit;
+            return `${t.label} ~${Math.round(val/1000)}K`;
+          }).join(' | ');
+          return tgts;
+        })()}<br>
+      → <span style="color:var(--text)">Paketler (Brick/Bag)</span> = aynı birim fiyat, sadece kolileme maliyeti (minimaldir).<br>
+      → <span style="color:var(--text)">Cocaine ve Weed</span> hammaddesi ücretsiz büyüdüğü için başlangıç yatırımı düşük.<br>
+      → Emlakçı ve BM kesintileri toplamda <span style="color:var(--accent2)">%${Math.round((1 - (1 - CONFIG.system.blackmarket_cut.value/100) * (1 - CONFIG.system.estate_cut.value/100)) * 100)}</span>
+         — kazancın bu kadarı kesilir.
+    </div>
+  `;
+}
+
+// ============================================================
+// TIMELINE TAB
+// ============================================================
+function updateTimeline() {
+  const key    = document.getElementById('tl-product').value;
+  const rounds = parseInt(document.getElementById('tl-rounds').value) || 1;
+  const p      = getProduct(key);
+  if (!p) return;
+
+  const tc = { cocaine: 'purple', meth: 'blue', weed: 'green' };
+  let html = '', cumProfit = 0;
+
+  const batch       = p.per_batch || 1;
+  const round_h     = p.round_hours || p.grow_hours;   // gerçek tur süresi (paralel model)
+  const rounds_in_12h = Math.floor(12 / round_h);
+  const isMeth      = p.key === 'meth' || p.key === 'meth_brick';
+  const craft_min   = Math.round(p.crafting_sec * batch / 60);
+
+  for (let r = 1; r <= rounds; r++) {
+    const round_profit = p.profit * batch;
+    const ready_h      = r * round_h;
+    cumProfit += round_profit;
+    const over12 = ready_h > 12
+      ? ` <span style="color:var(--accent2); font-size:0.72rem">⚠ 12s dışı</span>`
+      : ``;
+    html += `
+      <div class="timeline-item">
+        <div class="profit ${tc[p.type]}">${fmt(cumProfit)}</div>
+        <div class="time">TUR ${r} — Saat ${ready_h.toFixed(2)}${over12}</div>
+        <div class="desc">
+          Tur: ${round_h.toFixed(2)}s | Craft: ~${craft_min}dk (grow sırasında) |
+          Bu tur: <span style="color:var(--accent3)">${fmt(round_profit)}</span> |
+          ${batch}× ${p.name}
+        </div>
+      </div>
+    `;
+  }
+
+  const profit_12h = rounds_in_12h * batch * p.profit;
+  const total_h    = rounds * round_h;
+  document.getElementById('timeline-content').innerHTML = `
+    <div class="section-header">
+      ${rounds} TUR SONUCU
+      <span style="color:var(--accent); font-family:'Orbitron',sans-serif">${fmt(cumProfit)} toplam kar</span>
+    </div>
+    <div class="timeline">${html}</div>
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:16px">
+      <div class="stat-box">
+        <div class="label">Toplam Süre</div>
+        <div class="value blue">${total_h.toFixed(2)} Saat</div>
+      </div>
+      <div class="stat-box">
+        <div class="label">Toplam Kar</div>
+        <div class="value">${fmt(cumProfit)}</div>
+      </div>
+      <div class="stat-box">
+        <div class="label">Saatlik Ortalama</div>
+        <div class="value">${fmt(cumProfit / Math.max(total_h, 0.1))}</div>
+      </div>
+      <div class="stat-box" style="border-color:var(--accent3)44">
+        <div class="label">12s Tam Tur</div>
+        <div class="value yellow">${rounds_in_12h} tur = ${fmt(profit_12h)}</div>
+      </div>
+    </div>
+    <div style="background:rgba(255,200,50,0.06); border:1px solid rgba(255,200,50,0.18); border-radius:6px; padding:10px 14px; font-size:0.78rem; margin-top:10px; line-height:1.8; color:var(--text2)">
+      <span style="color:var(--accent3); font-family:'Orbitron',sans-serif; font-size:0.68rem">// PARALEL GROW MODELİ</span>
+      Her tohumdan <b>×2 ürün</b> gelir. Ekim yuvası lab'dan <b>tamamen bağımsız</b> — büyürken lab çalışabilir.
+      ${isMeth
+        ? `Meth'te lab seed "Yap" yapmalı (${batch/2}×300s=${Math.round(batch/2*5)}dk) sonra ekilir, 2s büyür → İşle. Tur: ≈${round_h.toFixed(1)}s.`
+        : `Craft (~${craft_min}dk) büyüme (${p.grow_hours}s) sırasında tamamlanır, tur süresine eklenmez.`
+      }
+      12s → <span style="color:var(--accent)">${rounds_in_12h} tur × ${batch} adet = ${fmtN(rounds_in_12h * batch)} ${p.name}</span>
+    </div>
+  `;
+}
+
+// ============================================================
+// CONFIG EDITOR
+// ============================================================
+function buildConfigEditor() {
+  function makeRows(obj, section) {
+    return Object.entries(obj).map(([k, v]) => `
+      <div class="config-row">
+        <div class="name">${v.name}</div>
+        <div class="config-id">ID: ${v.id ?? '—'}</div>
+        <input type="number" value="${v.cost ?? v.price ?? v.value ?? v.hours}"
+          data-section="${section}" data-key="${k}"
+          oninput="updateConfigVal(this)">
+      </div>
+    `).join('');
+  }
+  document.getElementById('cost-editor').innerHTML  = makeRows(CONFIG.costs,  'costs');
+  document.getElementById('equip-editor').innerHTML = makeRows(CONFIG.equip,  'equip');
+  document.getElementById('price-editor').innerHTML = makeRows(CONFIG.prices, 'prices');
+  document.getElementById('sys-editor').innerHTML   = makeRows(CONFIG.system, 'system');
+}
+
+function updateConfigVal(el) {
+  const section = el.dataset.section;
+  const key     = el.dataset.key;
+  const val     = parseFloat(el.value) || 0;
+  const obj     = CONFIG[section][key];
+  if      ('cost'  in obj) obj.cost  = val;
+  else if ('price' in obj) obj.price = val;
+  else if ('value' in obj) obj.value = val;
+  else if ('hours' in obj) obj.hours = val;
+  refreshAll();
+  updateXmlPreview();
+}
+
+function refreshAll() {
+  updateCalc();
+  if (document.getElementById('panel-breakdown').classList.contains('active')) updateBreakdown();
+  if (document.getElementById('panel-timeline').classList.contains('active'))  updateTimeline();
+}
+
+function saveConfig() {
+  localStorage.setItem('druglab_config', JSON.stringify(CONFIG));
+  showNotif('✓ KAYDEDİLDİ');
+}
+
+function resetPrices() {
+  CONFIG = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+  buildConfigEditor();
+  refreshAll();
+  updateXmlPreview();
+  showNotif('↺ SIFIRLANDI');
+}
+
+function showNotif(msg) {
+  const n = document.getElementById('notif');
+  n.textContent = msg;
+  n.classList.add('show');
+  setTimeout(() => n.classList.remove('show'), 2200);
+}
+
+// ============================================================
+// XML EXPORT / IMPORT
+// ============================================================
+function buildXmlString(cfg) {
+  const e = (s) => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  let x = `<?xml version="1.0" encoding="utf-8"?>\n`;
+  x += `<!-- DrugLab Economy Calculator — Config Export -->\n`;
+  x += `<DrugLabConfig version="1.0">\n`;
+
+  // Costs
+  x += `  <Costs>\n`;
+  for (const [k, v] of Object.entries(cfg.costs)) {
+    x += `    <Item key="${e(k)}" name="${e(v.name)}" id="${e(v.id)}" cost="${e(v.cost)}"/>\n`;
+  }
+  x += `  </Costs>\n`;
+
+  // Equip
+  x += `  <Equip>\n`;
+  for (const [k, v] of Object.entries(cfg.equip)) {
+    x += `    <Item key="${e(k)}" name="${e(v.name)}" id="${e(v.id)}" cost="${e(v.cost)}"/>\n`;
+  }
+  x += `  </Equip>\n`;
+
+  // Prices
+  x += `  <Prices>\n`;
+  for (const [k, v] of Object.entries(cfg.prices)) {
+    x += `    <Item key="${e(k)}" name="${e(v.name)}" id="${e(v.id)}" price="${e(v.price)}"/>\n`;
+  }
+  x += `  </Prices>\n`;
+
+  // System
+  x += `  <System>\n`;
+  for (const [k, v] of Object.entries(cfg.system)) {
+    x += `    <Item key="${e(k)}" name="${e(v.name)}" value="${e(v.value)}"/>\n`;
+  }
+  x += `  </System>\n`;
+
+  // Grow
+  x += `  <Grow>\n`;
+  for (const [k, v] of Object.entries(cfg.grow)) {
+    x += `    <Item key="${e(k)}" name="${e(v.name)}" hours="${e(v.hours)}" free="${e(v.free)}"/>\n`;
+  }
+  x += `  </Grow>\n`;
+
+  x += `</DrugLabConfig>\n`;
+  return x;
+}
+
+function exportXML() {
+  const xmlStr = buildXmlString(CONFIG);
+  const blob   = new Blob([xmlStr], { type: 'application/xml' });
+  const url    = URL.createObjectURL(blob);
+  const a      = document.createElement('a');
+  a.href       = url;
+  a.download   = 'druglab-config.xml';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showNotif('⬇ XML İNDİRİLDİ');
+}
+
+function importXML(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const parser = new DOMParser();
+      const doc    = parser.parseFromString(e.target.result, 'application/xml');
+      const err    = doc.querySelector('parsererror');
+      if (err) { showNotif('✗ XML HATALI'); return; }
+
+      // Parse costs
+      doc.querySelectorAll('Costs > Item').forEach(node => {
+        const k = node.getAttribute('key');
+        if (CONFIG.costs[k]) CONFIG.costs[k].cost = parseFloat(node.getAttribute('cost')) || 0;
+      });
+      // Parse equip
+      doc.querySelectorAll('Equip > Item').forEach(node => {
+        const k = node.getAttribute('key');
+        if (CONFIG.equip[k]) CONFIG.equip[k].cost = parseFloat(node.getAttribute('cost')) || 0;
+      });
+      // Parse prices
+      doc.querySelectorAll('Prices > Item').forEach(node => {
+        const k = node.getAttribute('key');
+        if (CONFIG.prices[k]) CONFIG.prices[k].price = parseFloat(node.getAttribute('price')) || 0;
+      });
+      // Parse system
+      doc.querySelectorAll('System > Item').forEach(node => {
+        const k = node.getAttribute('key');
+        if (CONFIG.system[k]) CONFIG.system[k].value = parseFloat(node.getAttribute('value')) || 0;
+      });
+      // Parse grow
+      doc.querySelectorAll('Grow > Item').forEach(node => {
+        const k = node.getAttribute('key');
+        if (CONFIG.grow[k]) CONFIG.grow[k].hours = parseFloat(node.getAttribute('hours')) || 1;
+      });
+
+      buildConfigEditor();
+      refreshAll();
+      updateXmlPreview();
+      showNotif('⬆ XML YÜKLENDİ');
+    } catch (ex) {
+      showNotif('✗ YÜKLEME HATASI');
+    }
+  };
+  reader.readAsText(file);
+  // Reset file input so same file can be re-imported
+  event.target.value = '';
+}
+
+// ============================================================
+// XML PANEL
+// ============================================================
+function updateXmlPreview() {
+  const el = document.getElementById('xml-preview');
+  if (el) {
+    el.textContent = buildXmlString(CONFIG);
+  }
+}
+
+function buildXmlTable() {
+  const labs = [
+    { name: 'Kokain Laboratuvarı', type: 'cocaine', color: 'purple', recipes: CONFIG.crafting.cocaine },
+    { name: 'Meth Laboratuvarı',   type: 'meth',    color: 'blue',   recipes: CONFIG.crafting.meth    },
+    { name: 'Ot Laboratuvarı',     type: 'weed',    color: 'green',  recipes: CONFIG.crafting.weed    },
+  ];
+
+  document.getElementById('xml-table').innerHTML = `
+    <table>
+      <thead><tr><th>Lab</th><th>Tarif / Adım</th><th>İşlem Süresi</th><th>Not</th></tr></thead>
+      <tbody>
+        ${labs.flatMap(lab =>
+          lab.recipes.map((r, i) => `
+            <tr>
+              ${i === 0 ? `<td rowspan="${lab.recipes.length}" class="${lab.color}"
+                style="vertical-align:top; font-family:'Orbitron',sans-serif; font-size:0.7rem">${lab.name}</td>` : ''}
+              <td>${r.name}</td>
+              <td class="yellow">${fmtH(r.sec)}</td>
+              <td class="green" style="font-size:0.72rem">${r.name.includes('Kolile') ? '📦 Sadece kolileme' : ''}</td>
+            </tr>
+          `)
+        ).join('')}
+      </tbody>
+    </table>
+  `;
+
+  const typeColors = { cocaine: '#c084fc', meth: '#00ccff', weed: '#44ff88' };
+  const typeNames  = { cocaine: 'Kokain Zinciri', meth: 'Meth Zinciri', weed: 'Ot Zinciri' };
+
+  document.getElementById('recipe-chain').innerHTML = `
+    <div class="grid-3">
+      ${['cocaine','meth','weed'].map(type => {
+        const recipes  = CONFIG.crafting[type];
+        const totalSec = recipes.reduce((s, r) => s + r.sec, 0);
+        const color    = typeColors[type];
+        return `
+          <div class="stat-box" style="text-align:left; border-color:${color}33">
+            <div class="label" style="color:${color}">${typeNames[type]}</div>
+            <div style="margin-top:10px">
+              ${recipes.map((r, i) => `
+                <div style="font-size:0.75rem; padding:4px 0; border-bottom:1px solid var(--border);
+                  display:flex; justify-content:space-between; gap:8px">
+                  <span style="color:var(--text2)">${i+1}. ${r.name.split('(')[0].trim()}</span>
+                  <span style="color:${color}; white-space:nowrap">${fmtH(r.sec)}</span>
+                </div>
+              `).join('')}
+            </div>
+            <div style="margin-top:10px; font-family:'Orbitron',sans-serif; font-size:0.8rem; color:${color}">
+              Toplam craft: ${fmtH(totalSec)}
+            </div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
+
+  updateXmlPreview();
+}
+
+// ============================================================
+// PARA AKIŞI TAB
+// ============================================================
+function updateFlow() {
+  const bm_cut  = CONFIG.system.blackmarket_cut.value;
+  const est_cut = CONFIG.system.estate_cut.value;
+  const total_cut_pct = Math.round((1 - (1 - bm_cut/100) * (1 - est_cut/100)) * 100);
+  const keep_pct = (100 - total_cut_pct);
+
+  const bmEl  = document.getElementById('flow-bm-cut');
+  const estEl = document.getElementById('flow-est-cut');
+  const tcEl  = document.getElementById('flow-total-cut');
+  const kpEl  = document.getElementById('flow-keep');
+  if (bmEl)  bmEl.textContent  = '%' + bm_cut + ' keser';
+  if (estEl) estEl.textContent = '%' + est_cut + ' keser';
+  if (tcEl)  tcEl.textContent  = '%' + total_cut_pct;
+  if (kpEl)  kpEl.textContent  = keep_pct + ' ₺';
+
+  const keys  = ['cocaine','cocaine_brick','meth','meth_brick','joint','bag_joints'];
+  const prods = keys.map(k => getProduct(k)).filter(Boolean);
+  const tc    = { cocaine: 'purple', meth: 'blue', weed: 'green' };
+
+  document.getElementById('flow-table').innerHTML = `
+    <table>
+      <thead>
+        <tr>
+          <th>Ürün</th>
+          <th>BM Fiyatı (Kara Para)</th>
+          <th>BM Keser (%${bm_cut})</th>
+          <th>BM Sonrası</th>
+          <th>Emlakçı Keser (%${est_cut})</th>
+          <th>Temiz Para</th>
+          <th>Malzeme</th>
+          <th>Net Kar</th>
+          <th>Oyuncu Payı</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${prods.map(p => {
+          const bm_fee   = p.bm_price * (bm_cut / 100);
+          const after_bm = p.bm_price - bm_fee;
+          const est_fee  = after_bm * (est_cut / 100);
+          const player_pct = ((p.estate_net / p.bm_price) * 100).toFixed(1);
+          return `
+          <tr>
+            <td class="${tc[p.type]}">${p.name}</td>
+            <td class="yellow">${fmt(p.bm_price)}</td>
+            <td class="red">−${fmt(bm_fee)}</td>
+            <td>${fmt(after_bm)}</td>
+            <td class="red">−${fmt(est_fee)}</td>
+            <td class="green">${fmt(p.estate_net)}</td>
+            <td class="red">${p.material_cost > 0 ? '−'+fmt(p.material_cost) : '—'}</td>
+            <td class="${p.profit >= 0 ? 'green' : 'red'}">${fmt(p.profit)}</td>
+            <td class="yellow">${player_pct}%</td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>
+  `;
+
+  updateFlowDetail();
+}
+
+function updateFlowDetail() {
+  const key = document.getElementById('flow-product') && document.getElementById('flow-product').value;
+  if (!key) return;
+  const p = getProduct(key);
+  if (!p) return;
+
+  const bm_cut   = CONFIG.system.blackmarket_cut.value;
+  const est_cut  = CONFIG.system.estate_cut.value;
+  const bm_fee   = p.bm_price * (bm_cut / 100);
+  const after_bm = p.bm_price - bm_fee;
+  const est_fee  = after_bm * (est_cut / 100);
+  const tc = { cocaine: '#c084fc', meth: '#00ccff', weed: '#44ff88' };
+  const color = tc[p.type];
+
+  const steps = [
+    {
+      icon: '🧪', actor: 'OYUNCU',
+      action: p.name + ' üretilir',
+      giren:  'Hammadde + emek',
+      cikan:  'Ürün hazır',
+      kesinti: 'Malzeme maliyeti: ' + (p.material_cost > 0 ? fmt(p.material_cost) : 'Ücretsiz'),
+      color: 'var(--accent)'
+    },
+    {
+      icon: '🏴‍☠️', actor: 'BLACK MARKET',
+      action: 'Ürünü satın alır, kara para öder',
+      giren:  'Ürün teslim edilir',
+      cikan:  fmt(p.bm_price) + ' kara para alırsın',
+      kesinti: 'BM %' + bm_cut + ' keser → ' + fmt(bm_fee) + ' gider | Kalan: ' + fmt(after_bm),
+      color: 'var(--accent3)'
+    },
+    {
+      icon: '🏛️', actor: 'EMLAKÇI',
+      action: 'Kara parayı temiz paraya çevirir',
+      giren:  fmt(after_bm) + ' kara para',
+      cikan:  fmt(p.estate_net) + ' temiz para alırsın',
+      kesinti: 'Emlakçı %' + est_cut + ' keser → ' + fmt(est_fee) + ' gider',
+      color: 'var(--accent4)'
+    },
+    {
+      icon: '💰', actor: 'OYUNCU',
+      action: 'Temiz paradan malzeme gideri düşülür',
+      giren:  fmt(p.estate_net) + ' temiz para',
+      cikan:  fmt(p.profit) + ' net kar',
+      kesinti: 'BM (' + fmt(bm_fee) + ') + Emlakçı (' + fmt(est_fee) + ') + Malzeme (' + (p.material_cost > 0 ? fmt(p.material_cost) : '0 ₺') + ') = ' + fmt(bm_fee + est_fee + p.material_cost) + ' toplam gider',
+      color: 'var(--accent)'
+    }
+  ];
+
+  document.getElementById('flow-detail').innerHTML = `
+    <div style="display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap">
+      <div class="stat-box" style="flex:1; min-width:120px; border-color:${color}44">
+        <div class="label">BM Fiyatı</div>
+        <div class="value yellow">${fmt(p.bm_price)}</div>
+      </div>
+      <div class="stat-box" style="flex:1; min-width:120px">
+        <div class="label">BM Keser (%${bm_cut})</div>
+        <div class="value red">−${fmt(bm_fee)}</div>
+      </div>
+      <div class="stat-box" style="flex:1; min-width:120px">
+        <div class="label">Emlakçı Keser (%${est_cut})</div>
+        <div class="value red">−${fmt(est_fee)}</div>
+      </div>
+      <div class="stat-box" style="flex:1; min-width:120px">
+        <div class="label">Malzeme</div>
+        <div class="value red">${p.material_cost > 0 ? '−'+fmt(p.material_cost) : '—'}</div>
+      </div>
+      <div class="stat-box" style="flex:1; min-width:120px; border-color:var(--accent)44">
+        <div class="label">Net Kar</div>
+        <div class="value ${p.profit >= 0 ? '' : 'red'}">${fmt(p.profit)}</div>
+      </div>
+    </div>
+    <div class="timeline">
+      ${steps.map((s, i) => `
+        <div class="timeline-item">
+          <div style="float:right; font-family:'Orbitron',sans-serif; font-size:0.75rem; color:${s.color}">${s.icon} ${s.actor}</div>
+          <div class="time" style="color:${s.color}">AŞAMA ${i+1} — ${s.action}</div>
+          <div class="desc" style="margin-top:6px; line-height:1.7">
+            <span style="color:var(--text2)">Giren:</span> <span style="color:var(--text)">${s.giren}</span> &nbsp;|&nbsp;
+            <span style="color:var(--text2)">Çıkan:</span> <span style="color:${s.color}">${s.cikan}</span><br>
+            <span style="color:var(--accent2); font-size:0.75rem">→ ${s.kesinti}</span>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+    <div style="background:rgba(255,64,96,0.06); border:1px solid rgba(255,64,96,0.2); border-radius:6px; padding:12px 16px; font-size:0.8rem; margin-top:12px; line-height:1.9">
+      <span style="color:var(--accent2); font-family:'Orbitron',sans-serif; font-size:0.7rem">// ÖZET</span><br>
+      <span style="color:var(--text2)">BM + Emlakçı toplam keser:</span>
+      <span style="color:var(--accent2); font-family:'Orbitron',sans-serif"> ${fmt(bm_fee + est_fee)}</span>
+      <span style="color:var(--text2)"> (BM fiyatının </span>
+      <span style="color:var(--accent2)"> ${((bm_fee + est_fee) / p.bm_price * 100).toFixed(1)}%</span><span style="color:var(--text2)">'i)</span><br>
+      <span style="color:var(--text2)">Oyuncuya BM fiyatının</span>
+      <span style="color:var(--accent); font-family:'Orbitron',sans-serif"> ${((p.estate_net / p.bm_price) * 100).toFixed(1)}%</span>
+      <span style="color:var(--text2)">'i temiz para olarak kalır (malzeme öncesi).</span>
+    </div>
+  `;
+}
+
+// ============================================================
+// TAB SWITCHING
+// ============================================================
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  if (btn) btn.classList.add('active');
+
+  if (name === 'breakdown') updateBreakdown();
+  if (name === 'timeline')  updateTimeline();
+  if (name === 'config')    buildConfigEditor();
+  if (name === 'xml')       buildXmlTable();
+  if (name === 'flow')      updateFlow();
+}
+
+// ============================================================
+// INIT
+// ============================================================
+(function init() {
+  const saved = localStorage.getItem('druglab_config');
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      // Merge with defaults to ensure new keys exist
+      CONFIG = Object.assign(JSON.parse(JSON.stringify(DEFAULT_CONFIG)), parsed);
+    } catch (e) { /* use DEFAULT_CONFIG */ }
+  }
+  updateCalc();
+})();
+</script>
+</body>
+</html>
