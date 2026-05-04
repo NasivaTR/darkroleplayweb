@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DrugLab — Oyuncu Hesap</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:        #0a0a0f;
+      --bg2:       #111118;
+      --bg3:       #1a1a25;
+      --border:    #2a2a3a;
+      --accent:    #00ff88;
+      --accent2:   #0088ff;
+      --danger:    #ff3355;
+      --text:      #e0e0e0;
+      --dim:       #888;
+      --fh:        'Orbitron', monospace;
+      --fb:        'Share Tech Mono', monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--fb);
+      min-height: 100vh;
+    }
+
+    /* ── SCREEN SYSTEM ── */
+    .screen { display: none; }
+    .screen.active { display: block; }
+    #screen-role { display: none; }
+    #screen-role.active {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 2rem 1.5rem;
+    }
+
+    /* ── ROLE SELECT ── */
+    .logo {
+      font-family: var(--fh);
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: var(--accent);
+      text-shadow: 0 0 24px rgba(0,255,136,.45);
+      margin-bottom: .4rem;
+      text-align: center;
+    }
+    .logo-sub {
+      color: var(--dim);
+      font-size: .9rem;
+      margin-bottom: 2.5rem;
+      text-align: center;
+    }
+    .role-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.25rem;
+      width: 100%;
+      max-width: 720px;
+    }
+    .role-card {
+      background: var(--bg3);
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      padding: 2rem 1.25rem;
+      cursor: pointer;
+      text-align: center;
+      transition: transform .18s, box-shadow .18s, border-color .18s;
+      user-select: none;
+    }
+    .role-card:hover { transform: translateY(-4px); }
+    .role-card.oyuncu-card:hover  { border-color: var(--accent);  box-shadow: 0 0 22px rgba(0,255,136,.2); }
+    .role-card.bm-card:hover      { border-color: var(--danger);  box-shadow: 0 0 22px rgba(255,51,85,.2); }
+    .role-card.emlak-card:hover   { border-color: var(--accent2); box-shadow: 0 0 22px rgba(0,136,255,.2); }
+    .role-icon  { font-size: 2.8rem; margin-bottom: .9rem; }
+    .role-name  { font-family: var(--fh); font-size: 1.05rem; font-weight: 700; margin-bottom: .6rem; }
+    .oyuncu-card .role-name { color: var(--accent); }
+    .bm-card    .role-name  { color: var(--danger); }
+    .emlak-card .role-name  { color: var(--accent2); }
+    .role-desc  { color: var(--dim); font-size: .83rem; line-height: 1.55; }
+
+    /* ── PAGE LAYOUT ── */
+    .page-wrap {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 1.5rem 1.25rem 3rem;
+    }
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.75rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .page-title { font-family: var(--fh); font-size: 1.25rem; font-weight: 700; }
+
+    .btn-back {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--dim);
+      padding: .4rem .9rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: var(--fb);
+      font-size: .8rem;
+      transition: border-color .15s, color .15s;
+    }
+    .btn-back:hover { border-color: var(--accent); color: var(--accent); }
+
+    .btn-clear {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--dim);
+      padding: .3rem .8rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: var(--fb);
+      font-size: .78rem;
+      transition: border-color .15s, color .15s;
+      float: right;
+    }
+    .btn-clear:hover { border-color: var(--danger); color: var(--danger); }
+
+    /* ── SECTIONS ── */
+    .section {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.1rem 1.2rem;
+      margin-bottom: 1.1rem;
+    }
+    .section-title {
+      font-family: var(--fh);
+      font-size: .78rem;
+      letter-spacing: 1px;
+      color: var(--dim);
+      margin-bottom: 1rem;
+    }
+
+    /* ── DRUG ROWS ── */
+    .drug-row {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      margin-bottom: .65rem;
+    }
+    .drug-row:last-child { margin-bottom: 0; }
+    .drug-label { flex: 1; font-size: .88rem; }
+    .drug-unit  { color: var(--dim); font-size: .78rem; width: 100px; text-align: right; flex-shrink: 0; }
+    .drug-input {
+      width: 86px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-family: var(--fb);
+      font-size: .88rem;
+      padding: .38rem .55rem;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .drug-input:focus { outline: none; border-color: var(--accent); }
+    .drug-sub { width: 115px; text-align: right; font-size: .88rem; color: var(--accent); flex-shrink: 0; }
+
+    /* ── FLOW STEPS (Oyuncu) ── */
+    .flow-steps { display: flex; flex-direction: column; gap: .45rem; }
+    .flow-step {
+      display: flex;
+      align-items: center;
+      gap: .85rem;
+      padding: .65rem .9rem;
+      background: var(--bg2);
+      border-radius: 8px;
+      border-left: 3px solid var(--border);
+    }
+    .flow-step.step-bm    { border-left-color: var(--danger); }
+    .flow-step.step-emlak { border-left-color: var(--accent2); }
+    .flow-step.step-net   { border-left-color: var(--accent); }
+    .step-ico  { font-size: .85rem; min-width: 22px; }
+    .step-text { flex: 1; font-size: .88rem; }
+    .step-amt  { font-family: var(--fh); font-size: .9rem; white-space: nowrap; }
+    .step-bm   .step-amt  { color: var(--danger); }
+    .step-emlak .step-amt { color: var(--accent2); }
+    .step-net  .step-amt  { color: var(--accent); }
+
+    /* ── RESULT TABLE ── */
+    .result-section {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.2rem;
+      margin-bottom: 1.1rem;
+    }
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: .55rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .result-row:last-child { border-bottom: none; }
+    .rl { color: var(--dim); font-size: .87rem; }
+    .rv { font-family: var(--fh); font-size: .88rem; }
+    .rv.green  { color: var(--accent); }
+    .rv.red    { color: var(--danger); }
+    .rv.blue   { color: var(--accent2); }
+    .result-row.total .rl { color: var(--text); font-family: var(--fh); font-size: .85rem; }
+    .result-row.total .rv { font-size: 1.1rem; color: var(--accent); }
+
+    /* ── BIG TOTAL ── */
+    .big-total {
+      background: linear-gradient(135deg, rgba(0,255,136,.08), rgba(0,255,136,.03));
+      border: 2px solid var(--accent);
+      border-radius: 12px;
+      padding: 1.4rem 1.5rem;
+      text-align: center;
+      margin-bottom: 1.1rem;
+    }
+    .big-total.bm-theme {
+      background: linear-gradient(135deg, rgba(255,51,85,.08), rgba(255,51,85,.03));
+      border-color: var(--danger);
+    }
+    .big-total.emlak-theme {
+      background: linear-gradient(135deg, rgba(0,136,255,.08), rgba(0,136,255,.03));
+      border-color: var(--accent2);
+    }
+    .bt-label { color: var(--dim); font-size: .82rem; margin-bottom: .45rem; letter-spacing: 1px; }
+    .bt-value {
+      font-family: var(--fh);
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--accent);
+      text-shadow: 0 0 16px rgba(0,255,136,.35);
+    }
+    .bm-theme    .bt-value { color: var(--danger);  text-shadow: 0 0 16px rgba(255,51,85,.35); }
+    .emlak-theme .bt-value { color: var(--accent2); text-shadow: 0 0 16px rgba(0,136,255,.35); }
+
+    /* ── INFO BOX ── */
+    .info-box {
+      background: rgba(0,136,255,.06);
+      border: 1px solid rgba(0,136,255,.25);
+      border-radius: 8px;
+      padding: .9rem 1rem;
+      font-size: .83rem;
+      color: var(--dim);
+      line-height: 1.6;
+      margin-bottom: 1.1rem;
+    }
+    .info-box b { color: var(--text); }
+
+    /* ── LARGE INPUT (Emlakçı) ── */
+    .large-input-wrap { text-align: center; margin: 1.25rem 0; }
+    .large-input-label { color: var(--dim); font-size: .82rem; margin-bottom: .5rem; }
+    .large-input {
+      background: var(--bg2);
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-family: var(--fh);
+      font-size: 1.75rem;
+      padding: .9rem 1.2rem;
+      text-align: center;
+      width: 100%;
+      max-width: 380px;
+      transition: border-color .15s;
+    }
+    .large-input:focus { outline: none; border-color: var(--accent2); }
+
+    /* ── PRICE TABLE ── */
+    .pt-toggle {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--dim);
+      padding: .45rem .9rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: var(--fb);
+      font-size: .8rem;
+      width: 100%;
+      text-align: left;
+      margin-bottom: .5rem;
+      transition: border-color .15s, color .15s;
+    }
+    .pt-toggle:hover { border-color: var(--accent); color: var(--accent); }
+    .price-table { display: none; width: 100%; border-collapse: collapse; font-size: .83rem; }
+    .price-table.open { display: table; }
+    .price-table th {
+      color: var(--dim);
+      padding: .4rem .5rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--fh);
+      font-size: .72rem;
+    }
+    .price-table td { padding: .38rem .5rem; border-bottom: 1px solid rgba(42,42,58,.5); font-size: .83rem; }
+    .price-table td.right { text-align: right; }
+    .price-table td.green { color: var(--accent); }
+    .price-table td.blue  { color: var(--accent2); }
+    .price-table td.dim   { color: var(--dim); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 500px) {
+      .drug-unit { display: none; }
+      .drug-sub  { width: 95px; }
+      .bt-value  { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════ ROL SEÇİMİ ═══════════════════════ -->
+<div id="screen-role" class="screen active">
+  <div class="logo">⬡ DRUGLAB</div>
+  <div class="logo-sub">Oyuncu Hesap Makinesi — Dolandırılma Kontrol Aracı</div>
+  <div class="role-cards">
+    <div class="role-card oyuncu-card" onclick="selectRole('oyuncu')">
+      <div class="role-icon">👤</div>
+      <div class="role-name">Oyuncu</div>
+      <div class="role-desc">
+        Elindeki ürünlerin gerçek değerini gör.<br>
+        BM ve Emlakçı'da <b>ne alacağını</b> önceden hesapla,<br>dolandırılma.
+      </div>
+    </div>
+    <div class="role-card bm-card" onclick="selectRole('bm')">
+      <div class="role-icon">💰</div>
+      <div class="role-name">Black Market</div>
+      <div class="role-desc">
+        Oyuncudan gelen ürünler için<br>
+        kara para hesapla.<br>
+        Payını ve oyuncuya ne vereceğini gör.
+      </div>
+    </div>
+    <div class="role-card emlak-card" onclick="selectRole('emlak')">
+      <div class="role-icon">🏛️</div>
+      <div class="role-name">Emlakçı</div>
+      <div class="role-desc">
+        Oyuncunun kara parasını<br>
+        normal paraya çevir.<br>
+        Payını ve ödeyeceğini hesapla.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ OYUNCU ═══════════════════════ -->
+<div id="screen-oyuncu" class="screen">
+  <div class="page-wrap">
+
+    <div class="page-header">
+      <div class="page-title" style="color:var(--accent)">👤 Oyuncu Hesabı</div>
+      <button class="btn-back" onclick="goBack()">⟵ Rol Değiştir</button>
+    </div>
+
+    <div class="info-box">
+      <b>Nasıl kullanılır?</b> Elindeki ürünlerin adetini gir.
+      Sistem Black Market'in <b>%30 kesintisini</b> ve Emlakçı'nın <b>%40 kesintisini</b>
+      otomatik hesaplar → sana kalacak <b>net parayı</b> gösterir.
+    </div>
+
+    <!-- Ürün girişi -->
+    <div class="section">
+      <div class="section-title">
+        — ÜRÜN ADEDİ GİR
+        <button class="btn-clear" onclick="clearInputs('q')">Temizle</button>
+      </div>
+      <div class="drug-row">
+        <div class="drug-label">Cocaine</div>
+        <div class="drug-unit">38,000 ₺/adet</div>
+        <input class="drug-input" type="number" id="q-cocaine"    min="0" value="0" oninput="calcOyuncu()">
+        <div class="drug-sub" id="qs-cocaine">0 ₺</div>
+      </div>
+      <div class="drug-row">
+        <div class="drug-label">Cocaine Brick</div>
+        <div class="drug-unit">950,000 ₺/adet</div>
+        <input class="drug-input" type="number" id="q-coke_brick" min="0" value="0" oninput="calcOyuncu()">
+        <div class="drug-sub" id="qs-coke_brick">0 ₺</div>
+      </div>
+      <div class="drug-row">
+        <div class="drug-label">Meth</div>
+        <div class="drug-unit">55,000 ₺/adet</div>
+        <input class="drug-input" type="number" id="q-meth"       min="0" value="0" oninput="calcOyuncu()">
+        <div class="drug-sub" id="qs-meth">0 ₺</div>
+      </div>
+      <div class="drug-row">
+        <div class="drug-label">Meth Brick</div>
+        <div class="drug-unit">1,375,000 ₺/adet</div>
+        <input class="drug-input" type="number" id="q-meth_brick" min="0" value="0" oninput="calcOyuncu()">
+        <div class="drug-sub" id="qs-meth_brick">0 ₺</div>
+      </div>
+      <div class="drug-row">
+        <div class="drug-label">Joint</div>
+        <div class="drug-unit">30,000 ₺/adet</div>
+        <input class="drug-input" type="number" id="q-joint"      min="0" value="0" oninput="calcOyuncu()">
+        <div class="drug-sub" id="qs-joint">0 ₺</div>
+      </div>
+      <div class="drug-row">
+        <div class="drug-label">Bag of Joints</div>
+        <div class="drug-unit">150,000 ₺/adet</div>
+        <input class="drug-input" type="number" id="q-bag_joints" min="0" value="0" oninput="calcOyuncu()">
+        <div class="drug-sub" id="qs-bag_joints">0 ₺</div>
+      </div>
+    </div>
+
+    <!-- Para akışı -->
+    <div class="section">
+      <div class="section-title">— PARA AKIŞI</div>
+      <div class="flow-steps">
+        <div class="flow-step">
+          <div class="step-ico">📦</div>
+          <div class="step-text">Toplam BM Değeri (kara para)</div>
+          <div class="step-amt" id="fl-gross" style="color:var(--text)">0 ₺</div>
+        </div>
+        <div class="flow-step step-bm">
+          <div class="step-ico">✂</div>
+          <div class="step-text">Black Market Kesintisi (−%30)</div>
+          <div class="step-amt" id="fl-bm-cut">−0 ₺</div>
+        </div>
+        <div class="flow-step step-bm">
+          <div class="step-ico">💸</div>
+          <div class="step-text">BM'den aldığın kara para</div>
+          <div class="step-amt" id="fl-after-bm">0 ₺</div>
+        </div>
+        <div class="flow-step step-emlak">
+          <div class="step-ico">✂</div>
+          <div class="step-text">Emlakçı Kesintisi (−%40)</div>
+          <div class="step-amt" id="fl-emlak-cut">−0 ₺</div>
+        </div>
+        <div class="flow-step step-net">
+          <div class="step-ico">✓</div>
+          <div class="step-text"><b>Sana kalan net para</b></div>
+          <div class="step-amt" id="fl-net">0 ₺</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="big-total">
+      <div class="bt-label">NET KAZANCINIZ</div>
+      <div class="bt-value" id="oyuncu-net">0 ₺</div>
+    </div>
+
+    <!-- Fiyat tablosu -->
+    <div class="section">
+      <button class="pt-toggle" onclick="togglePT('oyuncu')">▼ Ürün Fiyat Tablosu (doğrulama için)</button>
+      <table class="price-table" id="pt-oyuncu">
+        <thead>
+          <tr>
+            <th>Ürün</th>
+            <th>BM Fiyatı</th>
+            <th>BM Sonrası (%70)</th>
+            <th>Net Kazanç (%42)</th>
+          </tr>
+        </thead>
+        <tbody id="pt-oyuncu-body"></tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════ BLACK MARKET ═══════════════════════ -->
+<div id="screen-bm" class="screen">
+  <div class="page-wrap">
+
+    <div class="page-header">
+      <div class="page-title" style="color:var(--danger)">💰 Black Market</div>
+      <button class="btn-back" onclick="goBack()">⟵ Rol Değiştir</button>
+    </div>
+
+    <div class="info-box" style="border-color:rgba(255,51,85,.3);background:rgba(255,51,85,.05)">
+      Oyuncudan aldığın ürün adetlerini gir.
+      Sistem toplam kara para değerini, <b>senin payını (%30)</b> ve
+      <b>oyuncuya vermen gereken kara para</b> miktarını hesaplar.
+    </div>
+
+    <div class="section">
+      <div class="section-title">
+        — OYUNCUDAN GELEN ÜRÜNLER
+        <button class="btn-clear" onclick="clearInputs('bq')">Temizle</button>
+      </div>
+      <div class="drug-row">
+        <div class="drug-label">Cocaine</div>
+        <div class="drug-unit">38,000 ₺</div>
+        <input class="drug-input" type="number" id="bq-cocaine"    min="0" value="0" oninput="calcBM()">
+        <div class="drug-sub" id="bqs-cocaine">0 ₺</div>
+      </div>
+      <div class="drug-row">
+        <div class="drug-label">Cocaine Brick</div>
+        <div class="drug-unit">950,000 ₺</div>
+        <input class="drug-input" type="number" id="bq-coke_brick" min="0" value="0" oninput="calcBM()">
+        <div class="drug-sub" id="bqs-coke_brick">0 ₺</div>
+      </div>
+      <div class="drug-row">
+        <div class="drug-label">Meth</div>
+        <div class="drug-unit">55,000 ₺</div>
+        <input class="drug-input" type="number" id="bq-meth"       min="0" value="0" oninput="calcBM()">
+        <div class="drug-sub" id="bqs-meth">0 ₺</div>
+      </div>
+      <div class="drug-row">
+        <div class="drug-label">Meth Brick</div>
+        <div class="drug-unit">1,375,000 ₺</div>
+        <input class="drug-input" type="number" id="bq-meth_brick" min="0" value="0" oninput="calcBM()">
+        <div class="drug-sub" id="bqs-meth_brick">0 ₺</div>
+      </div>
+      <div class="drug-row">
+        <div class="drug-label">Joint</div>
+        <div class="drug-unit">30,000 ₺</div>
+        <input class="drug-input" type="number" id="bq-joint"      min="0" value="0" oninput="calcBM()">
+        <div class="drug-sub" id="bqs-joint">0 ₺</div>
+      </div>
+      <div class="drug-row">
+        <div class="drug-label">Bag of Joints</div>
+        <div class="drug-unit">150,000 ₺</div>
+        <input class="drug-input" type="number" id="bq-bag_joints" min="0" value="0" oninput="calcBM()">
+        <div class="drug-sub" id="bqs-bag_joints">0 ₺</div>
+      </div>
+    </div>
+
+    <div class="result-section">
+      <div class="result-row">
+        <div class="rl">Toplam Kara Para Değeri</div>
+        <div class="rv blue" id="bm-gross">0 ₺</div>
+      </div>
+      <div class="result-row">
+        <div class="rl">Senin Payın (+%30)</div>
+        <div class="rv green" id="bm-my-cut">+0 ₺</div>
+      </div>
+      <div class="result-row total">
+        <div class="rl">OYUNCUYA VERİLECEK (Kara Para)</div>
+        <div class="rv" id="bm-give">0 ₺</div>
+      </div>
+    </div>
+
+    <div class="big-total bm-theme">
+      <div class="bt-label">OYUNCUYA VERİLECEK KARA PARA</div>
+      <div class="bt-value" id="bm-total">0 ₺</div>
+    </div>
+
+    <div class="section">
+      <button class="pt-toggle" onclick="togglePT('bm')">▼ Kara Para Fiyat Listesi</button>
+      <table class="price-table" id="pt-bm">
+        <thead>
+          <tr>
+            <th>Ürün</th>
+            <th>Kara Para Fiyatı</th>
+            <th>Item ID</th>
+          </tr>
+        </thead>
+        <tbody id="pt-bm-body"></tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════ EMLAKÇI ═══════════════════════ -->
+<div id="screen-emlak" class="screen">
+  <div class="page-wrap">
+
+    <div class="page-header">
+      <div class="page-title" style="color:var(--accent2)">🏛️ Emlakçı</div>
+      <button class="btn-back" onclick="goBack()">⟵ Rol Değiştir</button>
+    </div>
+
+    <div class="info-box" style="border-color:rgba(0,136,255,.3);background:rgba(0,136,255,.05)">
+      Oyuncunun sana getirdiği <b>kara para miktarını</b> gir.
+      Sistem senin payını <b>(%40)</b> ve oyuncuya ödeyeceğin
+      <b>normal parayı</b> hesaplar.
+    </div>
+
+    <div class="section">
+      <div class="section-title">— GELEN KARA PARA MİKTARI</div>
+      <div class="large-input-wrap">
+        <div class="large-input-label">Kara Para Miktarı (₺)</div>
+        <input class="large-input" type="number" id="emlak-in" min="0" value="0" oninput="calcEmlak()">
+      </div>
+    </div>
+
+    <div class="result-section">
+      <div class="result-row">
+        <div class="rl">Gelen Kara Para</div>
+        <div class="rv blue" id="emlak-gross">0 ₺</div>
+      </div>
+      <div class="result-row">
+        <div class="rl">Senin Payın (+%40)</div>
+        <div class="rv green" id="emlak-my-cut">+0 ₺</div>
+      </div>
+      <div class="result-row total">
+        <div class="rl">OYUNCUYA VERİLECEK (Normal Para)</div>
+        <div class="rv" id="emlak-give">0 ₺</div>
+      </div>
+    </div>
+
+    <div class="big-total emlak-theme">
+      <div class="bt-label">OYUNCUYA VERİLECEK NORMAL PARA</div>
+      <div class="bt-value" id="emlak-total">0 ₺</div>
+    </div>
+
+    <div class="info-box" style="border-color:rgba(0,136,255,.3);background:rgba(0,136,255,.05);margin-top:.5rem;">
+      <b>Formül:</b> Kara Para × 0.60 = Oyuncuya verilecek normal para
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════ SCRIPT ═══════════════════════ -->
+<script>
+  const PRICES = {
+    cocaine:    { name: 'Cocaine',       id: 25803, price: 38000   },
+    joint:      { name: 'Joint',         id: 25801, price: 30000   },
+    coke_brick: { name: 'Cocaine Brick', id: 25513, price: 950000  },
+    meth:       { name: 'Meth',          id: 25515, price: 55000   },
+    bag_joints: { name: 'Bag of Joints', id: 25508, price: 150000  },
+    meth_brick: { name: 'Meth Brick',    id: 25516, price: 1375000 },
+  };
+
+  const BM_CUT    = 0.30;
+  const EMLAK_CUT = 0.40;
+  const KEYS = ['cocaine', 'coke_brick', 'meth', 'meth_brick', 'joint', 'bag_joints'];
+
+  /* ── helpers ── */
+  function fmt(n) {
+    return Math.round(n).toLocaleString('tr-TR') + ' ₺';
+  }
+  function qty(id) {
+    const el = document.getElementById(id);
+    return el ? Math.max(0, parseInt(el.value) || 0) : 0;
+  }
+  function setText(id, val) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val;
+  }
+
+  /* ── navigation ── */
+  function selectRole(role) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-' + role).classList.add('active');
+    if (role === 'oyuncu') { buildPT('oyuncu'); calcOyuncu(); }
+    if (role === 'bm')     { buildPT('bm');     calcBM(); }
+    if (role === 'emlak')  { calcEmlak(); }
+  }
+
+  function goBack() {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-role').classList.add('active');
+  }
+
+  function clearInputs(prefix) {
+    KEYS.forEach(k => {
+      const el = document.getElementById(prefix + '-' + k);
+      if (el) el.value = 0;
+    });
+    if (prefix === 'q')  calcOyuncu();
+    if (prefix === 'bq') calcBM();
+  }
+
+  /* ── OYUNCU ── */
+  function calcOyuncu() {
+    let gross = 0;
+    KEYS.forEach(k => {
+      const sub = qty('q-' + k) * PRICES[k].price;
+      gross += sub;
+      setText('qs-' + k, sub > 0 ? fmt(sub) : '0 ₺');
+    });
+
+    const bmCut    = gross * BM_CUT;
+    const afterBM  = gross * (1 - BM_CUT);
+    const emlakCut = afterBM * EMLAK_CUT;
+    const net      = afterBM * (1 - EMLAK_CUT);
+
+    setText('fl-gross',     fmt(gross));
+    setText('fl-bm-cut',    '−' + fmt(bmCut));
+    setText('fl-after-bm',  fmt(afterBM));
+    setText('fl-emlak-cut', '−' + fmt(emlakCut));
+    setText('fl-net',       fmt(net));
+    setText('oyuncu-net',   fmt(net));
+  }
+
+  /* ── BLACK MARKET ── */
+  function calcBM() {
+    let gross = 0;
+    KEYS.forEach(k => {
+      const sub = qty('bq-' + k) * PRICES[k].price;
+      gross += sub;
+      setText('bqs-' + k, sub > 0 ? fmt(sub) : '0 ₺');
+    });
+
+    const myCut = gross * BM_CUT;
+    const give  = gross * (1 - BM_CUT);
+
+    setText('bm-gross',  fmt(gross));
+    setText('bm-my-cut', '+' + fmt(myCut));
+    setText('bm-give',   fmt(give));
+    setText('bm-total',  fmt(give));
+  }
+
+  /* ── EMLAKÇI ── */
+  function calcEmlak() {
+    const gross  = Math.max(0, parseInt(document.getElementById('emlak-in').value) || 0);
+    const myCut  = gross * EMLAK_CUT;
+    const give   = gross * (1 - EMLAK_CUT);
+
+    setText('emlak-gross',  fmt(gross));
+    setText('emlak-my-cut', '+' + fmt(myCut));
+    setText('emlak-give',   fmt(give));
+    setText('emlak-total',  fmt(give));
+  }
+
+  /* ── PRICE TABLES ── */
+  function buildPT(page) {
+    if (page === 'oyuncu') {
+      const tbody = document.getElementById('pt-oyuncu-body');
+      tbody.innerHTML = '';
+      KEYS.forEach(k => {
+        const p = PRICES[k];
+        const tr = document.createElement('tr');
+        tr.innerHTML =
+          `<td>${p.name}</td>` +
+          `<td class="right dim">${fmt(p.price)}</td>` +
+          `<td class="right blue">${fmt(p.price * 0.70)}</td>` +
+          `<td class="right green">${fmt(p.price * 0.42)}</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+
+    if (page === 'bm') {
+      const tbody = document.getElementById('pt-bm-body');
+      tbody.innerHTML = '';
+      KEYS.forEach(k => {
+        const p = PRICES[k];
+        const tr = document.createElement('tr');
+        tr.innerHTML =
+          `<td>${p.name}</td>` +
+          `<td class="right green">${fmt(p.price)}</td>` +
+          `<td class="right dim">${p.id}</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+  }
+
+  function togglePT(page) {
+    document.getElementById('pt-' + page).classList.toggle('open');
+  }
+</script>
+</body>
+</html>
