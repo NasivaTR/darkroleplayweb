@@ -788,25 +788,6 @@ input::placeholder { color: var(--text3); }
 
 <script>
 /* ============================================================
-   IMG_BASE — Görsel sunucusu URL'si
-   Öncelik: ?imgbase= URL parametresi > localStorage > '' (boş)
-============================================================ */
-const IMG_BASE_KEY = 'oyuncuhesap_img_base';
-let IMG_BASE = (function() {
-  try {
-    const params = new URLSearchParams(location.search);
-    const fromUrl = params.get('imgbase');
-    if (fromUrl) return fromUrl;
-    return localStorage.getItem(IMG_BASE_KEY) || '';
-  } catch (e) { return ''; }
-})();
-function imgUrl(rel) {
-  if (!rel) return '';
-  if (/^https?:\/\//i.test(rel)) return rel; // zaten tam URL
-  return IMG_BASE ? (IMG_BASE + rel) : '';
-}
-
-/* ============================================================
    CONFIG — Dealer toggle başlangıç durumu
    true = açık göster, false = gizli
 ============================================================ */
@@ -1102,7 +1083,7 @@ function render() {
     return `
     <div class="card${isSel ? ' selected' : ''}" data-key="${carKey(r)}" style="animation-delay:${Math.min(i*22, 600)}ms" onclick="selectCar('${carKey(r).replace(/'/g, "\\'")}')">
       <div class="car-img-wrap">
-        <img class="car-img" src="${imgUrl(r.icon)}" alt="${r.name}" loading="lazy" onerror="this.style.display='none'">
+        <img class="car-img" src="${r.icon}" alt="${r.name}" loading="lazy" onerror="this.style.display='none'">
         <span class="speed-pill">⚡ ${r.speed}</span>
       </div>
       <div class="card-body">
@@ -1129,7 +1110,7 @@ function selectCar(key) {
   const mImg = document.getElementById('mImg');
   const mFb  = document.getElementById('mImgFallback');
   mImg.style.display = 'block'; mFb.style.display = 'none';
-  mImg.src = imgUrl(r.icon);
+  mImg.src = r.icon;
 
   document.getElementById('mTitle').textContent = r.name;
 
@@ -1204,8 +1185,7 @@ document.getElementById('sortFilter').addEventListener('change', e => { activeSo
 /* ============================================================
    XML LOADER — aynı klasördeki CarShopUI.configuration.xml dosyasını okur
 ============================================================ */
-const XML_FILE_REL = 'CarShopUI.configuration.xml';
-function xmlUrl() { return IMG_BASE ? (IMG_BASE + XML_FILE_REL) : ''; }
+const XML_FILE = 'http://185.137.98.6/CarShopUI.configuration.xml';
 
 function setDataStatus(state, text, clickable) {
   const el = document.getElementById('dataStatus');
@@ -1285,14 +1265,10 @@ function applyParsedData(parsed) {
 }
 
 async function loadXmlData(manualReload) {
-  const baseUrl = xmlUrl();
-  if (!baseUrl) {
-    setDataStatus('warn', 'Görsel sunucusu ayarlı değil', false);
-    return;
-  }
   setDataStatus('loading', 'XML yükleniyor…', false);
   try {
-    const url = baseUrl + (manualReload ? ('?t=' + Date.now()) : '');
+    // file:// üzerinde fetch genelde başarısız olur — yine de dene
+    const url = XML_FILE + (manualReload ? ('?t=' + Date.now()) : '');
     const res = await fetch(url, { cache: 'no-store' });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const txt = await res.text();
