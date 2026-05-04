@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DrugLab — Oyuncu Hesap</title>
+  <title>Dark Roleplay — Sunucu Rehberi</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -49,6 +49,13 @@
       text-shadow: 0 0 24px rgba(0,255,136,.45);
       margin-bottom: .4rem;
       text-align: center;
+    }
+    .logo img {
+      height: 72px;
+      width: auto;
+      display: block;
+      margin: 0 auto .4rem;
+      filter: drop-shadow(0 0 18px rgba(0,255,136,.35));
     }
     .logo-sub {
       color: var(--dim);
@@ -404,56 +411,724 @@
       box-shadow: 0 0 22px rgba(255,204,0,.2); }
     .rehber-card .role-name { color: #ffcc00; }
 
+    .sunucu-card { background: var(--bg3); border: 2px solid #1a2a4a; border-radius: 14px;
+      padding: 2rem 1.25rem; cursor: pointer; text-align: center;
+      transition: transform .18s, box-shadow .18s, border-color .18s; user-select: none; }
+    .sunucu-card:hover { transform: translateY(-4px); border-color: #5588ff;
+      box-shadow: 0 0 22px rgba(85,136,255,.2); }
+    .sunucu-card .role-name { color: #5588ff; }
+
+    /* guide images */
+    .g-img { width: 100%; border-radius: 8px; margin-top: .6rem; display: block; border: 1px solid var(--border); }
+    .g-imgs { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px,1fr)); gap: .5rem; margin-top: .6rem; }
+    .g-imgs img { width: 100%; border-radius: 7px; border: 1px solid var(--border); }
+    .g-cmd {
+      display: inline-block;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      font-family: var(--fb);
+      font-size: .82rem;
+      color: var(--accent);
+      padding: .15rem .5rem;
+      margin: .15rem 0;
+    }
+    .g-yt {
+      display: flex;
+      align-items: center;
+      gap: .55rem;
+      background: rgba(255,0,0,.06);
+      border: 1px solid rgba(255,0,0,.2);
+      border-radius: 7px;
+      padding: .55rem .8rem;
+      color: #ff4444;
+      font-size: .83rem;
+      text-decoration: none;
+      margin-top: .6rem;
+    }
+    .g-yt:hover { background: rgba(255,0,0,.12); }
+    .g-list { list-style: none; padding: 0; }
+    .g-list li { padding: .35rem 0; border-bottom: 1px solid rgba(42,42,58,.5); font-size: .85rem; line-height: 1.55; }
+    .g-list li:last-child { border-bottom: none; }
+    .g-list b { color: var(--text); }
+    .g-highlight { color: var(--accent2); }
+
+    /* ── LIGHTBOX ── */
+    .lb-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.93);
+      z-index: 9999;
+      cursor: zoom-out;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      flex-direction: column;
+      gap: .75rem;
+    }
+    .lb-overlay.open { display: flex; }
+    .lb-overlay img {
+      max-width: 95vw;
+      max-height: 85vh;
+      border-radius: 10px;
+      object-fit: contain;
+      box-shadow: 0 0 60px rgba(0,0,0,.8);
+    }
+    .lb-close {
+      color: var(--dim);
+      font-size: .8rem;
+      letter-spacing: 1px;
+    }
+    .g-img, .g-imgs img { cursor: zoom-in; transition: opacity .15s; }
+    .g-img:hover, .g-imgs img:hover { opacity: .82; }
+    .g-zoomhint { font-size: .72rem; color: var(--dim); text-align: center; margin-top: .2rem; }
+
+    /* ── İLLEGAL CARD ── */
+    .illegal-card {
+      background: var(--bg3);
+      border: 2px solid #3a1510;
+      border-radius: 14px;
+      padding: 2rem 1.25rem;
+      cursor: pointer;
+      text-align: center;
+      transition: transform .18s, box-shadow .18s, border-color .18s;
+      user-select: none;
+    }
+    .illegal-card:hover { transform: translateY(-4px); border-color: #ff6622;
+      box-shadow: 0 0 22px rgba(255,102,34,.25); }
+    .illegal-card .role-name { color: #ff6622; }
+
+    /* ── NPC GROUP LABELS ── */
+    .npc-group-label {
+      font-family: var(--fh);
+      font-size: .68rem;
+      letter-spacing: 1.5px;
+      color: var(--dim);
+      padding: .3rem .1rem .55rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: .75rem;
+    }
+    .npc-group-illegal {
+      color: var(--danger);
+      border-bottom-color: rgba(255,51,85,.3);
+      margin-top: .9rem;
+    }
+
+    /* ── SHOPIER BUTTON ── */
+    .shopier-wrap {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+    .shopier-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      background: linear-gradient(135deg, #ff6b35, #f7c59f);
+      color: #1a0a00;
+      font-family: var(--fh);
+      font-size: .9rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+      padding: .75rem 1.75rem;
+      border-radius: 10px;
+      text-decoration: none;
+      animation: shopier-pulse 2.2s ease-in-out infinite;
+      transition: transform .15s;
+    }
+    .shopier-btn:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 0 36px rgba(255,107,53,.85), 0 0 70px rgba(255,107,53,.45);
+    }
+    @keyframes shopier-pulse {
+      0%, 100% { box-shadow: 0 0 20px rgba(255,107,53,.5), 0 0 40px rgba(255,107,53,.25); }
+      50%       { box-shadow: 0 0 32px rgba(255,107,53,.82), 0 0 62px rgba(255,107,53,.45); }
+    }
+    .shopier-copy {
+      background: transparent;
+      border: 1px solid rgba(255,107,53,.4);
+      color: rgba(255,107,53,.8);
+      font-family: var(--fb);
+      font-size: .78rem;
+      padding: .5rem .9rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: border-color .15s, color .15s;
+    }
+    .shopier-copy:hover { border-color: rgba(255,107,53,.8); color: #ff6b35; }
+
+    /* ── İLLEGAL HESAP NAV ── */
+    .illegal-calc-nav {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem 1.1rem 1.1rem;
+      margin-bottom: 1.25rem;
+    }
+    .icn-title {
+      font-family: var(--fh);
+      font-size: .78rem;
+      color: var(--dim);
+      letter-spacing: 1px;
+      margin-bottom: .85rem;
+      padding-bottom: .5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .icn-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: .65rem;
+    }
+    @media (max-width: 460px) { .icn-cards { grid-template-columns: 1fr; } }
+    .icn-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: .8rem .7rem;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color .15s, transform .15s;
+      user-select: none;
+    }
+    .icn-card:hover { transform: translateY(-2px); }
+    .icn-card.oyuncu:hover { border-color: var(--accent); }
+    .icn-card.bm:hover     { border-color: var(--danger); }
+    .icn-card.emlak:hover  { border-color: var(--accent2); }
+    .icn-icon  { font-size: 1.5rem; margin-bottom: .35rem; }
+    .icn-label { font-family: var(--fh); font-size: .75rem; font-weight: 700; margin-bottom: .2rem; }
+    .icn-card.oyuncu .icn-label { color: var(--accent); }
+    .icn-card.bm     .icn-label { color: var(--danger); }
+    .icn-card.emlak  .icn-label { color: var(--accent2); }
+    .icn-desc  { font-size: .71rem; color: var(--dim); line-height: 1.4; }
+
+    /* ── FİXED SHOPİER ── */
+    .shopier-fixed {
+      position: fixed;
+      bottom: 1.25rem;
+      right: 1.25rem;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: .35rem;
+    }
+    .shopier-fixed-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .45rem;
+      background: linear-gradient(135deg, #ffd700, #ff8c00);
+      color: #1a0800;
+      font-family: var(--fh);
+      font-size: .85rem;
+      font-weight: 900;
+      letter-spacing: .5px;
+      padding: .7rem 1.25rem;
+      border-radius: 50px;
+      text-decoration: none;
+      animation: sfp 2s ease-in-out infinite;
+      transition: transform .15s;
+    }
+    .shopier-fixed-btn:hover { transform: scale(1.05); }
+    @keyframes sfp {
+      0%, 100% { box-shadow: 0 4px 20px rgba(255,200,0,.45), 0 0 40px rgba(255,140,0,.2); }
+      50%       { box-shadow: 0 4px 32px rgba(255,200,0,.75), 0 0 60px rgba(255,140,0,.45); }
+    }
+    .shopier-fixed-tip {
+      font-family: var(--fb);
+      font-size: .7rem;
+      color: rgba(255,210,0,.65);
+      background: rgba(0,0,0,.6);
+      border: 1px solid rgba(255,200,0,.18);
+      border-radius: 20px;
+      padding: .2rem .7rem;
+      cursor: pointer;
+      transition: color .15s, border-color .15s;
+    }
+    .shopier-fixed-tip:hover { color: #ffd700; border-color: rgba(255,200,0,.5); }
+
+    /* ── SYSINFO PANEL ── */
+    .sysinfo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: .75rem;
+      width: 100%;
+      max-width: 720px;
+      margin-bottom: 1.5rem;
+    }
+    .sysinfo-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: .85rem .95rem;
+    }
+    .sysinfo-icon  { font-size: 1.2rem; margin-bottom: .3rem; }
+    .sysinfo-title { font-family: var(--fh); font-size: .75rem; font-weight: 700; margin-bottom: .25rem; }
+    .sysinfo-desc  { font-size: .73rem; color: var(--dim); line-height: 1.55; }
+
+    /* ── KAZANÇ BİLGİSİ ── */
+    .kazanc-box {
+      background: rgba(255,204,0,.04);
+      border: 1px solid rgba(255,204,0,.2);
+      border-radius: 9px;
+      padding: .8rem .95rem;
+      margin-top: .85rem;
+    }
+    .kazanc-box-title { font-family: var(--fh); font-size: .75rem; color: #ffcc00; margin-bottom: .45rem; }
+    .kazanc-items { list-style: none; padding: 0; margin: 0; }
+    .kazanc-items li { padding: .18rem 0; font-size: .79rem; color: var(--text); }
+    .kazanc-items li::before { content: "• "; color: #ffcc00; }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 500px) {
       .drug-unit { display: none; }
       .drug-sub  { width: 95px; }
       .bt-value  { font-size: 1.5rem; }
+      .sysinfo-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── ARAÇ KATALOĞU CARD ── */
+    .arac-card {
+      background: var(--bg3);
+      border: 2px solid #1a2845;
+      border-radius: 14px;
+      padding: 2rem 1.25rem;
+      cursor: pointer;
+      text-align: center;
+      transition: transform .18s, box-shadow .18s, border-color .18s;
+      user-select: none;
+    }
+    .arac-card:hover { transform: translateY(-4px); border-color: #6c9bff;
+      box-shadow: 0 0 22px rgba(108,155,255,.25); }
+    .arac-card .role-name { color: #6c9bff; }
+
+    /* ── ARAÇ KATALOĞU SCREEN (iframe) ── */
+    #screen-arac.active {
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      background: #08090d;
+      display: flex;
+      flex-direction: column;
+    }
+    .arac-topbar {
+      display: flex;
+      align-items: center;
+      gap: .8rem;
+      padding: .55rem .9rem;
+      background: rgba(10,10,15,.85);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(10px);
+      flex-shrink: 0;
+    }
+    .arac-topbar .btn-back { margin: 0; }
+    .arac-topbar-title {
+      font-family: var(--fh);
+      color: #6c9bff;
+      font-size: .9rem;
+      font-weight: 700;
+      letter-spacing: .5px;
+    }
+    .arac-iframe {
+      flex: 1;
+      width: 100%;
+      border: 0;
+      background: #08090d;
     }
   </style>
 </head>
 <body>
 
+<!-- LIGHTBOX -->
+<div id="lightbox" class="lb-overlay" onclick="closeLightbox()">
+  <img id="lb-img" src="" alt="">
+  <div class="lb-close">✕ Kapat (herhangi bir yere tıkla)</div>
+</div>
+
 <!-- ═══════════════════════ ROL SEÇİMİ ═══════════════════════ -->
 <div id="screen-role" class="screen active">
-  <div class="logo">⬡ DRUGLAB</div>
-  <div class="logo-sub">Oyuncu Hesap Makinesi — Dolandırılma Kontrol Aracı</div>
+  <div class="logo">
+    <img src="https://i.imgur.com/bcOmcyf.png" alt="Dark Roleplay" onerror="this.style.display='none'">
+  </div>
+  <div class="logo-sub">Dark Roleplay Sunucu Rehberi</div>
+
   <div class="role-cards">
-    <div class="role-card oyuncu-card" onclick="selectRole('oyuncu')">
-      <div class="role-icon">👤</div>
-      <div class="role-name">Oyuncu</div>
+    <div class="role-card sunucu-card" onclick="selectRole('sunucu')">
+      <div class="role-icon">🌐</div>
+      <div class="role-name">Sunucu Rehberi</div>
       <div class="role-desc">
-        Elindeki ürünlerin gerçek değerini gör.<br>
-        BM ve Emlakçı'da <b>ne alacağını</b> önceden hesapla,<br>dolandırılma.
+        Market, galeri, ev, garaj,<br>
+        mekanik, tıbbi sistem ve NPC'ler.<br>
+        <b>Genel sunucu sistemleri</b>
       </div>
     </div>
-    <div class="role-card bm-card" onclick="selectRole('bm')">
-      <div class="role-icon">💰</div>
-      <div class="role-name">Black Market</div>
+    <div class="role-card illegal-card" onclick="selectRole('illegal')">
+      <div class="role-icon">💀</div>
+      <div class="role-name">İllegal Sistem</div>
       <div class="role-desc">
-        Oyuncudan gelen ürünler için<br>
-        kara para hesapla.<br>
-        Payını ve oyuncuya ne vereceğini gör.
+        Ot, Koko, Meth nasıl yapılır?<br>
+        İllegal NPC'ler, adım adım rehber,<br>
+        <b>sıfırdan üretim kılavuzu</b>
       </div>
     </div>
-    <div class="role-card emlak-card" onclick="selectRole('emlak')">
-      <div class="role-icon">🏛️</div>
-      <div class="role-name">Emlakçı</div>
+    <div class="role-card arac-card" onclick="selectRole('arac')">
+      <div class="role-icon">🚗</div>
+      <div class="role-name">Araç Kataloğu</div>
       <div class="role-desc">
-        Oyuncunun kara parasını<br>
-        normal paraya çevir.<br>
-        Payını ve ödeyeceğini hesapla.
+        Tüm araçlar, fiyatlar, renkler<br>
+        ve ID'ler. Galeri ve Bayi fiyatları<br>
+        <b>canlı sunucu verisi</b>
       </div>
     </div>
-    <div class="role-card rehber-card" onclick="selectRole('rehber')">
-      <div class="role-icon">📖</div>
-      <div class="role-name">Üretim Rehberi</div>
-      <div class="role-desc">
-        Malzeme fiyatları, tarif adımları,<br>
-        büyüme süreleri ve lab ekipmanı.<br>
-        <b>Ne, nasıl, kaça?</b>
+  </div>
+
+
+</div>
+
+<!-- ═══════════════════════ SUNUCU REHBERİ ═══════════════════════ -->
+<div id="screen-sunucu" class="screen">
+  <div class="page-wrap">
+
+    <div class="page-header">
+      <div class="page-title" style="color:#5588ff">🌐 Sunucu Rehberi</div>
+      <button class="btn-back" onclick="goBack()">⟵ Geri</button>
+    </div>
+
+    <!-- MARKET -->
+    <div class="guide-card" id="gc-market">
+      <div class="guide-card-head" onclick="toggleGuide('gc-market')">
+        <div class="gch-icon">🛒</div>
+        <div class="gch-title">Market Sistemi</div>
+        <div class="gch-badge badge-green">Yiyecek &amp; İçecek</div>
+        <div class="gch-arrow">▼</div>
+      </div>
+      <div class="guide-card-body">
+        <ul class="g-list">
+          <li>Yemekler <b>Market NPC'leri</b> ya da <b>yemekçi oyuncular</b> aracılığıyla alınır.</li>
+          <li>💡 Yemekçi oyunculardan daha <b>ucuza</b> alabilirsiniz!</li>
+        </ul>
+        <div class="g-imgs">
+          <img src="http://185.137.98.6/marketgorsel1.png" alt="Market 1" onerror="this.style.display='none'">
+          <img src="http://185.137.98.6/marketgorsel2.png" alt="Market 2" onerror="this.style.display='none'">
+          <img src="http://185.137.98.6/marketgorsel3.png" alt="Market 3" onerror="this.style.display='none'">
+        </div>
       </div>
     </div>
+
+    <!-- MEDICAL + SOYMA -->
+    <div class="guide-card" id="gc-medical">
+      <div class="guide-card-head" onclick="toggleGuide('gc-medical')">
+        <div class="gch-icon">🚨</div>
+        <div class="gch-title">🏥 Medical &amp; Taşıma / Soyma Sistemi</div>
+        <div class="gch-badge badge-red">RP Sistemi</div>
+        <div class="gch-arrow">▼</div>
+      </div>
+      <div class="guide-card-body">
+        <ul class="g-list">
+          <li>🚨 <b>Taşımak için:</b> Oyuncunun yanına gel → <span class="g-cmd">C</span> ile surrender yaptır → taşımaya başla. Bırakmak için tekrar <span class="g-cmd">C</span>.</li>
+          <li>🚗 <b>Araça bindirmek:</b> Oyuncuyu taşırken araca bin → oyuncu otomatik biner. İndirmek için araçtan in → <span class="g-cmd">C</span> ile point yap.</li>
+          <li>🔪 <b>Soymak için:</b> Oyuncunun yaralı olması gerekir → <span class="g-cmd">/robwounded</span> komutuyla 5 saniye içinde soy.</li>
+          <li>🏥 <b>Medical:</b> Düşen oyuncu → hastaneye götür veya <span class="g-cmd">E</span> tuşuyla oyuncu hastaneye gidebilir.</li>
+        </ul>
+        <a class="g-yt" href="https://youtu.be/0ec_KuY_WQg" target="_blank">▶️ Video Anlatım: Medical &amp; Taşıma Sistemi</a>
+      </div>
+    </div>
+
+    <!-- GALERİ -->
+    <div class="guide-card" id="gc-galeri">
+      <div class="guide-card-head" onclick="toggleGuide('gc-galeri')">
+        <div class="gch-icon">🚗</div>
+        <div class="gch-title">Galeri Sistemi (Araç Alım)</div>
+        <div class="gch-badge badge-blue">Araç</div>
+        <div class="gch-arrow">▼</div>
+      </div>
+      <div class="guide-card-body">
+        <ul class="g-list">
+          <li>Haritada galeri konumuna git → içerideki <b>yeşil noktaya</b> gel.</li>
+          <li><span class="g-cmd">/carshop</span> komutuyla galeriye giriş yap.</li>
+          <li>Seçtiğin aracı satın al → araç otomatik olarak <b>garajına eklenir</b>.</li>
+          <li>Garajına giderek araçını dilediğin zaman çıkarabilirsin.</li>
+        </ul>
+        <img src="http://185.137.98.6/galerigorsel1.png" alt="Galeri" class="g-img" onerror="this.style.display='none'">
+        <a class="g-yt" href="https://youtu.be/tzj8NppaA1E" target="_blank">▶️ Video Anlatım: Galeri Sistemi</a>
+      </div>
+    </div>
+
+    <!-- EV -->
+    <div class="guide-card" id="gc-ev">
+      <div class="guide-card-head" onclick="toggleGuide('gc-ev')">
+        <div class="gch-icon">🏠</div>
+        <div class="gch-title">Ev Sistemi</div>
+        <div class="gch-badge badge-blue">Konut</div>
+        <div class="gch-arrow">▼</div>
+      </div>
+      <div class="guide-card-body">
+        <ul class="g-list">
+          <li>Özel binalarda <b>asansörler</b> farklı katlara çıkarır.</li>
+          <li>Her katta satın alınabilir daireler bulunur.</li>
+          <li>Dairenin önündeki <b>tabelaya vur</b> → satın alma menüsü açılır.</li>
+          <li>Satın aldıktan sonra istediğin gibi <b>özelleştirebilirsin</b>.</li>
+          <li>💡 Oda sayısı arttıkça fiyat da artar.</li>
+        </ul>
+        <a class="g-yt" href="https://youtu.be/4JyB1pwCuss" target="_blank">▶️ Video Anlatım: Ev Sistemi</a>
+      </div>
+    </div>
+
+    <!-- MEKANİK -->
+    <div class="guide-card" id="gc-mekanik">
+      <div class="guide-card-head" onclick="toggleGuide('gc-mekanik')">
+        <div class="gch-icon">🔧</div>
+        <div class="gch-title">Mekanik Sistemi</div>
+        <div class="gch-badge badge-green">Araç Bakım</div>
+        <div class="gch-arrow">▼</div>
+      </div>
+      <div class="guide-card-body">
+        <ul class="g-list">
+          <li>Haritada <b>2 adet</b> mekanik alanı var (aynı işlev).</li>
+          <li>İçeride kırmızı renkli iki İngiliz anahtarı görürsün.</li>
+          <li>Alanın <b>ortasına araçla gel</b> → araçtan in → <span class="g-cmd">C</span> tuşuyla <b>point</b> yap.</li>
+          <li>Menüden: lastik, akü, genel tamir, araç rengi değiştirilebilir.</li>
+        </ul>
+        <img src="http://185.137.98.6/mekanikgorsel1.png" alt="Mekanik" class="g-img" onerror="this.style.display='none'">
+        <a class="g-yt" href="https://youtu.be/wyBUAewwRrY" target="_blank">▶️ Video Anlatım: Mekanik Sistemi</a>
+      </div>
+    </div>
+
+    <!-- GARAJ -->
+    <div class="guide-card" id="gc-garaj">
+      <div class="guide-card-head" onclick="toggleGuide('gc-garaj')">
+        <div class="gch-icon">🚧</div>
+        <div class="gch-title">Garaj Sistemi</div>
+        <div class="gch-badge badge-blue">Araç</div>
+        <div class="gch-arrow">▼</div>
+      </div>
+      <div class="guide-card-body">
+        <ul class="g-list">
+          <li>Haritada <b>park alanı (garaj)</b> bulunan bölgeye gir.</li>
+          <li>Sol üst köşede <span class="g-highlight">"Garaj bölgesine girdiniz"</span> yazısı belirir.</li>
+          <li><span class="g-cmd">/garaj</span> komutuyla sol tarafta menü açılır → araçını seç ve çıkar.</li>
+        </ul>
+        <a class="g-yt" href="https://youtu.be/3kVyYWBKhE4" target="_blank">▶️ Video Anlatım: Garaj Sistemi</a>
+      </div>
+    </div>
+
+    <!-- NPCler -->
+    <div class="guide-card" id="gc-npc">
+      <div class="guide-card-head" onclick="toggleGuide('gc-npc')">
+        <div class="gch-icon">🛞</div>
+        <div class="gch-title">NPC Listesi</div>
+        <div class="gch-badge badge-blue">11 Normal · 2 İllegal</div>
+        <div class="gch-arrow">▼</div>
+      </div>
+      <div class="guide-card-body">
+
+        <div class="npc-group-label">👮 NORMAL NPC'LER</div>
+
+        <div class="guide-card" style="border-color:rgba(42,42,58,.8);margin-bottom:.7rem" id="gc-npc-ciftci">
+          <div class="guide-card-head" onclick="toggleGuide('gc-npc-ciftci')" style="padding:.65rem .9rem">
+            <div class="gch-icon">🌾</div>
+            <div class="gch-title" style="font-size:.82rem">Çiftçi NPC</div>
+            <div class="gch-badge badge-green">Sağ kısım</div>
+            <div class="gch-arrow">▼</div>
+          </div>
+          <div class="guide-card-body">
+            <p style="font-size:.84rem;color:var(--dim);margin-bottom:.5rem">Tohumlar ve plot satıyor. Büyüyen ekinleri buradan satabilirsiniz. Kasabanın sağ kısmında bulunuyor.</p>
+            <div class="g-imgs">
+              <img src="http://185.137.98.6/ciftcigorsel1" alt="" onerror="this.style.display='none'">
+              <img src="http://185.137.98.6/ciftcigorsel2" alt="" onerror="this.style.display='none'">
+            </div>
+          </div>
+        </div>
+
+        <div class="guide-card" style="border-color:rgba(42,42,58,.8);margin-bottom:.7rem" id="gc-npc-kiyafet">
+          <div class="guide-card-head" onclick="toggleGuide('gc-npc-kiyafet')" style="padding:.65rem .9rem">
+            <div class="gch-icon">👕</div>
+            <div class="gch-title" style="font-size:.82rem">Kıyafetçi NPC (2 adet)</div>
+            <div class="gch-arrow">▼</div>
+          </div>
+          <div class="guide-card-body">
+            <p style="font-size:.84rem;color:var(--dim);margin-bottom:.5rem"><b>Normal Kıyafetçi:</b> Herkese hitap eden kıyafetler satar.</p>
+            <div class="g-imgs">
+              <img src="http://185.137.98.6/kiyafet1.png" alt="" onerror="this.style.display='none'">
+              <img src="http://185.137.98.6/kiyafet2.png" alt="" onerror="this.style.display='none'">
+            </div>
+            <p style="font-size:.84rem;color:var(--dim);margin:.6rem 0 .4rem"><b>Lüks Kıyafetçi:</b> Takım elbise vb. zengin kesime hitap eden kıyafetler.</p>
+            <div class="g-imgs">
+              <img src="http://185.137.98.6/kiyafet3.png" alt="" onerror="this.style.display='none'">
+              <img src="http://185.137.98.6/kiyafet4.png" alt="" onerror="this.style.display='none'">
+            </div>
+          </div>
+        </div>
+
+        <div class="guide-card" style="border-color:rgba(42,42,58,.8);margin-bottom:.7rem" id="gc-npc-maden">
+          <div class="guide-card-head" onclick="toggleGuide('gc-npc-maden')" style="padding:.65rem .9rem">
+            <div class="gch-icon">⛏️</div>
+            <div class="gch-title" style="font-size:.82rem">Maden NPC</div>
+            <div class="gch-badge badge-blue">Maden girişi</div>
+            <div class="gch-arrow">▼</div>
+          </div>
+          <div class="guide-card-body">
+            <p style="font-size:.84rem;color:var(--dim);margin-bottom:.5rem">Kazma ve kafa lambası satıyor. Madenden topladığın cevherleri buradan satabilirsiniz. Madenin hemen girişinde.</p>
+            <div class="g-imgs">
+              <img src="http://185.137.98.6/maden1.png" alt="" onerror="this.style.display='none'">
+              <img src="http://185.137.98.6/maden2.png" alt="" onerror="this.style.display='none'">
+            </div>
+          </div>
+        </div>
+
+        <div class="guide-card" style="border-color:rgba(42,42,58,.8);margin-bottom:.7rem" id="gc-npc-polis">
+          <div class="guide-card-head" onclick="toggleGuide('gc-npc-polis')" style="padding:.65rem .9rem">
+            <div class="gch-icon">👮</div>
+            <div class="gch-title" style="font-size:.82rem">Polis Tec̀hizat NPC</div>
+            <div class="gch-badge badge-red">Karakol üst kat</div>
+            <div class="gch-arrow">▼</div>
+          </div>
+          <div class="guide-card-body">
+            <p style="font-size:.84rem;color:var(--dim);margin-bottom:.5rem">Polis mesleğindeki kişilerin tec̀hizatını alabileceği NPC. Karakolda üst katta sola döndüğünüzde önünüze çıkan ilk odada.</p>
+            <div class="g-imgs">
+              <img src="http://185.137.98.6/polis1.png" alt="" onerror="this.style.display='none'">
+              <img src="http://185.137.98.6/polis2.png" alt="" onerror="this.style.display='none'">
+            </div>
+          </div>
+        </div>
+
+        <div class="guide-card" style="border-color:rgba(42,42,58,.8);margin-bottom:.7rem" id="gc-npc-balik">
+          <div class="guide-card-head" onclick="toggleGuide('gc-npc-balik')" style="padding:.65rem .9rem">
+            <div class="gch-icon">🐟</div>
+            <div class="gch-title" style="font-size:.82rem">Balıkçı NPC</div>
+            <div class="gch-arrow">▼</div>
+          </div>
+          <div class="guide-card-body">
+            <p style="font-size:.84rem;color:var(--dim);margin-bottom:.5rem">Olta ve balıkçılık malzemeleri satıyor. Tuttuğun balıkları buradan satabilirsin.</p>
+            <div class="g-imgs">
+              <img src="http://185.137.98.6/balik1.png" alt="" onerror="this.style.display='none'">
+              <img src="http://185.137.98.6/balik2.png" alt="" onerror="this.style.display='none'">
+            </div>
+          </div>
+        </div>
+
+        <div class="guide-card" style="border-color:rgba(42,42,58,.8);margin-bottom:.7rem" id="gc-npc-hirdavat">
+          <div class="guide-card-head" onclick="toggleGuide('gc-npc-hirdavat')" style="padding:.65rem .9rem">
+            <div class="gch-icon">🔧</div>
+            <div class="gch-title" style="font-size:.82rem">Hırdavatçı NPC</div>
+            <div class="gch-arrow">▼</div>
+          </div>
+          <div class="guide-card-body">
+            <p style="font-size:.84rem;color:var(--dim);margin-bottom:.5rem">Carjack, benzin bidonu ve diğer araç gereçler satıyor.</p>
+            <div class="g-imgs">
+              <img src="http://185.137.98.6/hirdavat1.png" alt="" onerror="this.style.display='none'">
+              <img src="http://185.137.98.6/hirdavat2.png" alt="" onerror="this.style.display='none'">
+            </div>
+          </div>
+        </div>
+
+        <div class="guide-card" style="border-color:rgba(42,42,58,.8);margin-bottom:.7rem" id="gc-npc-mobilyaci">
+          <div class="guide-card-head" onclick="toggleGuide('gc-npc-mobilyaci')" style="padding:.65rem .9rem">
+            <div class="gch-icon">🛋️</div>
+            <div class="gch-title" style="font-size:.82rem">Mobilyacı NPC</div>
+            <div class="gch-arrow">▼</div>
+          </div>
+          <div class="guide-card-body">
+            <div class="g-imgs">
+              <img src="http://185.137.98.6/mobilyaci1.png" alt="" onerror="this.style.display='none'">
+              <img src="http://185.137.98.6/mobilyaci2.png" alt="" onerror="this.style.display='none'">
+            </div>
+          </div>
+        </div>
+
+        <div class="guide-card" style="border-color:rgba(42,42,58,.8);margin-bottom:.7rem" id="gc-npc-oak">
+          <div class="guide-card-head" onclick="toggleGuide('gc-npc-oak')" style="padding:.65rem .9rem">
+            <div class="gch-icon">🌲</div>
+            <div class="gch-title" style="font-size:.82rem">Oduncu &amp; Avcı &amp; Kasap NPC</div>
+            <div class="gch-badge badge-green">Yeşil bina</div>
+            <div class="gch-arrow">▼</div>
+          </div>
+          <div class="guide-card-body">
+            <ul class="g-list">
+              <li>🪓 <b>Oduncu:</b> Klasik odun işi</li>
+              <li>🎯 <b>Avcı:</b> Av silahı satıyor <span style="color:var(--dim);font-size:.78rem">(bu silahla adam soyamazsınız 🙂)</span></li>
+              <li>🥩 <b>Kasap:</b> Ölen hayvanlardan düşen ürynler satılıyor</li>
+            </ul>
+            <div class="g-imgs">
+              <img src="http://185.137.98.6/oak1.png" alt="" onerror="this.style.display='none'">
+              <img src="http://185.137.98.6/oak2.png" alt="" onerror="this.style.display='none'">
+            </div>
+          </div>
+        </div>
+
+        <div class="guide-card" style="border-color:rgba(42,42,58,.8);margin-bottom:.7rem" id="gc-npc-banka">
+          <div class="guide-card-head" onclick="toggleGuide('gc-npc-banka')" style="padding:.65rem .9rem">
+            <div class="gch-icon">🏦</div>
+            <div class="gch-title" style="font-size:.82rem">Banka NPC</div>
+            <div class="gch-arrow">▼</div>
+          </div>
+          <div class="guide-card-body">
+            <p style="font-size:.84rem;color:var(--dim)">Oyunda nakit para akışını sağlar. ATM yerine iş görür (sunucuda ATM de var, bu ekstra opsiyon).</p>
+          </div>
+        </div>
+
+        <div class="guide-card" style="border-color:rgba(42,42,58,.8);margin-bottom:.7rem" id="gc-npc-doktor">
+          <div class="guide-card-head" onclick="toggleGuide('gc-npc-doktor')" style="padding:.65rem .9rem">
+            <div class="gch-icon">👨‍⚕️</div>
+            <div class="gch-title" style="font-size:.82rem">Doktor NPC</div>
+            <div class="gch-arrow">▼</div>
+          </div>
+          <div class="guide-card-body">
+            <p style="font-size:.84rem;color:var(--dim);margin-bottom:.4rem"><b>Plaza:</b></p>
+            <div class="g-imgs">
+              <img src="http://185.137.98.6/doktor1.png" alt="" onerror="this.style.display='none'">
+              <img src="http://185.137.98.6/doktor2.png" alt="" onerror="this.style.display='none'">
+              <img src="http://185.137.98.6/doktor3.png" alt="" onerror="this.style.display='none'">
+            </div>
+            <p style="font-size:.84rem;color:var(--dim);margin:.6rem 0 .4rem"><b>Hastane:</b></p>
+            <div class="g-imgs">
+              <img src="http://185.137.98.6/doktor4.png" alt="" onerror="this.style.display='none'">
+              <img src="http://185.137.98.6/doktor5.png" alt="" onerror="this.style.display='none'">
+              <img src="http://185.137.98.6/doktor6.png" alt="" onerror="this.style.display='none'">
+            </div>
+          </div>
+        </div>
+
+        <div class="npc-group-label npc-group-illegal">🚨 İLLEGAL SİSTEM NPC'LERİ</div>
+
+        <div class="guide-card" style="border-color:rgba(255,51,85,.3);margin-bottom:.7rem" id="gc-npc-illegal-malzeme">
+          <div class="guide-card-head" onclick="toggleGuide('gc-npc-illegal-malzeme')" style="padding:.65rem .9rem">
+            <div class="gch-icon">🧪</div>
+            <div class="gch-title" style="font-size:.82rem">İllegal Malzeme NPC</div>
+            <div class="gch-badge badge-red">Kimyasal satıcı</div>
+            <div class="gch-arrow">▼</div>
+          </div>
+          <div class="guide-card-body">
+            <p style="font-size:.84rem;color:var(--dim);margin-bottom:.5rem">Meth ve Kokain için gereken kimyasallar bu NPC'den alınır (Acetone, HCl, Lye, Potassium Permanganate, Sodium Permanganate).</p>
+            <img src="http://185.137.98.6/illegalmalzeme1.png" alt="İllegal Malzeme NPC" class="g-img" onerror="this.style.display='none'">
+            <p class="g-zoomhint">Resme tıkla → yakınlaştır</p>
+          </div>
+        </div>
+
+        <div class="guide-card" style="border-color:rgba(255,51,85,.3)" id="gc-npc-tezgah-sunucu">
+          <div class="guide-card-head" onclick="toggleGuide('gc-npc-tezgah-sunucu')" style="padding:.65rem .9rem">
+            <div class="gch-icon">🛠️</div>
+            <div class="gch-title" style="font-size:.82rem">Tezgah NPC'leri (Çalışma Masası)</div>
+            <div class="gch-badge badge-red">Lab satın al</div>
+            <div class="gch-arrow">▼</div>
+          </div>
+          <div class="guide-card-body">
+            <p style="font-size:.84rem;color:var(--dim);margin-bottom:.5rem">Cocaine Lab, Weed Lab ve Meth Lab çalışma masaları bu NPC'den satın alınır.</p>
+            <div class="g-imgs">
+              <img src="http://185.137.98.6/tezgah1.png" alt="Tezgah NPC 1" onerror="this.style.display='none'">
+              <img src="http://185.137.98.6/tezgah2.png" alt="Tezgah NPC 2" onerror="this.style.display='none'">
+              <img src="http://185.137.98.6/tezgah3.png" alt="Tezgah NPC 3" onerror="this.style.display='none'">
+            </div>
+            <p class="g-zoomhint">Resimlere tıkla → yakınlaştır</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -717,17 +1392,325 @@
   </div>
 </div>
 
-<!-- ═══════════════════════ REHBER ═══════════════════════ -->
-<div id="screen-rehber" class="screen">
+<!-- ═══════════════════════ İLLEGAL SİSTEM ═══════════════════════ -->
+<div id="screen-illegal" class="screen">
   <div class="page-wrap">
-
     <div class="page-header">
-      <div class="page-title" style="color:#ffcc00">📖 Üretim Rehberi</div>
+      <div class="page-title" style="color:#ff6622">💀 İllegal Sistem</div>
       <button class="btn-back" onclick="goBack()">⟵ Geri</button>
     </div>
 
+    <!-- HESAP ARAÇLARI -->
+    <div class="illegal-calc-nav">
+      <div class="icn-title">💰 Hesap Araçları — Kazancını Hesapla</div>
+      <p style="font-size:.73rem;color:var(--dim);margin-bottom:.75rem">BM ve Emlakçı kesintilerini hesapla, dolandırılma. Karta tıkla.</p>
+      <div class="icn-cards">
+        <div class="icn-card oyuncu" onclick="selectRole('oyuncu', true)">
+          <div class="icn-icon">👤</div>
+          <div class="icn-label">Oyuncu</div>
+          <div class="icn-desc">Ürün değerini öğren, net kazancı gör</div>
+        </div>
+        <div class="icn-card bm" onclick="selectRole('bm', true)">
+          <div class="icn-icon">💰</div>
+          <div class="icn-label">Black Market</div>
+          <div class="icn-desc">%30 kesersin, oyuncuya geri kalanı ver</div>
+        </div>
+        <div class="icn-card emlak" onclick="selectRole('emlak', true)">
+          <div class="icn-icon">🏛️</div>
+          <div class="icn-label">Emlakçı</div>
+          <div class="icn-desc">%40 kesersin, kara parayı temizle</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ÜRETİM REHBERLERİ -->
+    <!-- OT NASIL YAPILIR -->
+    <div class="guide-card" id="gc-illegal-ot">
+      <div class="guide-card-head" onclick="toggleGuide('gc-illegal-ot')">
+        <div class="gch-icon">🌱</div>
+        <div class="gch-title">Ot (Weed) Nasıl Yapılır?</div>
+        <div class="gch-badge badge-blue">Joint → 30,000 ₺</div>
+        <div class="gch-arrow">▼</div>
+      </div>
+      <div class="guide-card-body">
+        <div class="info-box" style="background:rgba(0,136,255,.04);border-color:rgba(0,136,255,.2);margin-bottom:.8rem">
+          Ot <b>bedava toplanabilir!</b> Haritada işaretli bölgeye git → <span class="g-cmd">/topla</span> komuduyla Ot topla → Plot'a yerleştir → Büyüt → Lab'da işle → BlackMarket'te sat.
+        </div>
+        <div class="recipe-steps">
+          <div class="recipe-step">
+            <div class="rs-num">1</div>
+            <div class="rs-body">
+              <div><b>Ot Topla</b> — Haritadaki işaretli bölge</div>
+              <div class="rs-free">⭐ Ücretsiz — <span class="g-cmd">/topla</span> komutu ile</div>
+            </div>
+          </div>
+          <div class="recipe-step">
+            <div class="rs-num">2</div>
+            <div class="rs-body">
+              <div><b>Çalışma Masası Al</div>
+              <div class="rs-tag">Tezgah NPC'sinden (2. görseldeki NPC) satın al</div>
+            </div>
+          </div>
+          <div class="recipe-step">
+            <div class="rs-num">3</div>
+            <div class="rs-body">
+              <div><b>Büyütme Malzemeleri Al</b></div>
+              <div class="rs-tag">İllegal Malzeme NPC'sinden (3. görsel) Ot için gereken itemleri al</div>
+            </div>
+          </div>
+          <div class="recipe-step">
+            <div class="rs-num">4</div>
+            <div class="rs-body">
+              <div><b>Plot'a Ek &amp; Büyüt</b></div>
+              <div class="rs-tag">Plot: Çiftçi NPC'sinden alınır. Weed tohumu (25700) plot'a ekle → <b>3 saat</b> sonra 2× Weed (25509)</div>
+              <div class="rs-free">⭐ Büyüme bedava, sadece bekleme süresi</div>
+            </div>
+          </div>
+          <div class="recipe-step">
+            <div class="rs-num">5</div>
+            <div class="rs-body">
+              <div><b>Çalışma Masası'nda İşle</b> — Weed Lab</div>
+              <ul class="ing-list">
+                <li><span class="ing-name">1× Weed (25509)</span><span class="ing-free">ücretsiz</span></li>
+                <li><span class="ing-name">1× Grinder</span><span class="ing-cost consume">500 ₺ (tüketilir!)</span></li>
+              </ul>
+              <div class="rs-time">⏱ 60sn → 1× İşlenmiş Ot (25800)</div>
+            </div>
+          </div>
+          <div class="recipe-step">
+            <div class="rs-num">6</div>
+            <div class="rs-body">
+              <div><b>Joint Yap</b> — Weed Lab</div>
+              <ul class="ing-list">
+                <li><span class="ing-name">2× İşlenmiş Ot + 1× Kağıt</span><span class="ing-cost">2×500 + 1,500 = 2,500 ₺</span></li>
+              </ul>
+              <div class="rs-time">⏱ 60sn → 1× Joint (25801)</div>
+            </div>
+          </div>
+          <div class="recipe-step">
+            <div class="rs-num">7</div>
+            <div class="rs-body">
+              <div><b>BlackMarket'te Sat → Emlakçı'ya Git</b></div>
+              <div class="rs-tag">BM: 30,000 ₺ kara para → Emlakçı: ×0.60 → <b style="color:var(--accent)">Net: 12,600 ₺/joint</b></div>
+            </div>
+          </div>
+        </div>
+        <div class="kazanc-box">
+          <div class="kazanc-box-title">💰 Kazanç Bilgisi</div>
+          <ul class="kazanc-items">
+            <li>Joint satışı → <b>Kara Para</b> (BM: 30,000 ₺/adet)</li>
+            <li>Kara Para → Temiz Para (Emlakçı: %60 oranında ödeme)</li>
+            <li><b>Net kazanç:</b> BM fiyatının <b>%42'si</b> sana kalır → ~12,600 ₺/joint</li>
+            <li>📍 <b>Bölge:</b> Haritada işaretli yeşil alan — <span class="g-cmd">/topla</span></li>
+          </ul>
+        </div>
+        <div class="g-imgs" style="margin-top:.8rem">
+          <img src="http://185.137.98.6/ot1.png" alt="Ot 1" onerror="this.style.display='none'">
+          <img src="http://185.137.98.6/ot2.png" alt="Ot 2" onerror="this.style.display='none'">
+          <img src="http://185.137.98.6/illegalmalzeme1.png" alt="Malzeme NPC" onerror="this.style.display='none'">
+        </div>
+        <p class="g-zoomhint">Resimlere tıkla → yakınlaştır</p>
+      </div>
+    </div>
+
+    <!-- KOKO NASIL YAPILIR -->
+    <div class="guide-card" id="gc-illegal-koko">
+      <div class="guide-card-head" onclick="toggleGuide('gc-illegal-koko')">
+        <div class="gch-icon">🌿</div>
+        <div class="gch-title">Koko (Cocaine) Nasıl Yapılır?</div>
+        <div class="gch-badge badge-green">Cocaine → 38,000 ₺</div>
+        <div class="gch-arrow">▼</div>
+      </div>
+      <div class="guide-card-body">
+        <div class="info-box" style="background:rgba(0,255,136,.04);border-color:rgba(0,255,136,.2);margin-bottom:.8rem">
+          Koko da <b>bedava toplanabilir!</b> Haritada işaretli bölgeye git → <span class="g-cmd">/topla</span> ile Koko topla → Plot'a ekle → Büyüt → Lab'da işle → BlackMarket'te sat.
+        </div>
+        <div class="recipe-steps">
+          <div class="recipe-step">
+            <div class="rs-num">1</div>
+            <div class="rs-body">
+              <div><b>Koko Topla</b> — Haritadaki işaretli bölge</div>
+              <div class="rs-free">⭐ Ücretsiz — <span class="g-cmd">/topla</span> komutu ile</div>
+            </div>
+          </div>
+          <div class="recipe-step">
+            <div class="rs-num">2</div>
+            <div class="rs-body">
+              <div><b>Çalışma Masası Al</b> (Cocaine Lab)</div>
+              <div class="rs-tag">Tezgah NPC'sinden (2. görseldeki NPC) satın al</div>
+            </div>
+          </div>
+          <div class="recipe-step">
+            <div class="rs-num">3</div>
+            <div class="rs-body">
+              <div><b>Büyütme Malzemeleri Al</b></div>
+              <div class="rs-tag">İllegal Malzeme NPC'sinden (3. görsel) Koko için gereken eşyaları al</div>
+            </div>
+          </div>
+          <div class="recipe-step">
+            <div class="rs-num">4</div>
+            <div class="rs-body">
+              <div><b>Plot'a Ek &amp; Büyüt</b></div>
+              <div class="rs-tag">Plot: Çiftçi NPC'sinden alınır. Cocaine tohumu (25702) plot'a ekle → <b>3 saat</b> sonra 2× Ham Cocaine (25512)</div>
+            </div>
+          </div>
+          <div class="recipe-step">
+            <div class="rs-num">5</div>
+            <div class="rs-body">
+              <div><b>Lab'da Kokain Yap</b> — Cocaine Lab</div>
+              <ul class="ing-list">
+                <li><span class="ing-name">2× Ham Cocaine (25512)</span><span class="ing-free">ücretsiz</span></li>
+                <li><span class="ing-name">2× Cloth</span><span class="ing-cost">1,000 ₺</span></li>
+              </ul>
+              <div class="rs-time">⏱ 60sn → 1× Cocaine (25803)</div>
+            </div>
+          </div>
+          <div class="recipe-step">
+            <div class="rs-num">6</div>
+            <div class="rs-body">
+              <div><b>BlackMarket'te Sat → Emlakçı'ya Git</b></div>
+              <div class="rs-tag">BM: 38,000 ₺ kara para → Emlakçı: ×0.60 → <b style="color:var(--accent)">Net: 15,960 ₺/cocaine</b></div>
+            </div>
+          </div>
+        </div>
+        <div class="kazanc-box">
+          <div class="kazanc-box-title">💰 Kazanç Bilgisi</div>
+          <ul class="kazanc-items">
+            <li>Cocaine satışı → <b>Kara Para</b> (BM: 38,000 ₺/adet)</li>
+            <li>Kara Para → Temiz Para (Emlakçı: %60 oranında ödeme)</li>
+            <li><b>Net kazanç:</b> BM fiyatının <b>%42'si</b> sana kalır → ~15,960 ₺/cocaine</li>
+            <li>📍 <b>Bölge:</b> Haritada işaretli sarı/kahve alan — <span class="g-cmd">/topla</span></li>
+          </ul>
+        </div>
+        <div class="g-imgs" style="margin-top:.8rem">
+          <img src="http://185.137.98.6/otdiger.png" alt="Koko bölgesi" onerror="this.style.display='none'">
+          <img src="http://185.137.98.6/ot2.png" alt="Tezgah" onerror="this.style.display='none'">
+          <img src="http://185.137.98.6/illegalmalzeme1.png" alt="Malzeme NPC" onerror="this.style.display='none'">
+        </div>
+        <p class="g-zoomhint">Resimlere tıkla → yakınlaştır</p>
+      </div>
+    </div>
+
+    <!-- METH NASIL YAPILIR -->
+    <div class="guide-card" id="gc-illegal-meth">
+      <div class="guide-card-head" onclick="toggleGuide('gc-illegal-meth')">
+        <div class="gch-icon">🔬</div>
+        <div class="gch-title">Meth Nasıl Yapılır?</div>
+        <div class="gch-badge badge-red">Meth → 55,000 ₺</div>
+        <div class="gch-arrow">▼</div>
+      </div>
+      <div class="guide-card-body">
+        <div class="info-box" style="background:rgba(255,51,85,.04);border-color:rgba(255,51,85,.2);margin-bottom:.8rem">
+          Meth Koko ve Ot'tan farklıdır. <b>Sahadan hiçbir şey toplamaya gerek yok.</b> Tüm malzemeler NPC'den satın alınır. "Plot" yerine <b>Meth Fridge</b> kullanılır (bu da NPC'den alınır).
+        </div>
+        <div class="recipe-steps">
+          <div class="recipe-step">
+            <div class="rs-num">1</div>
+            <div class="rs-body">
+              <div><b>Malzemeleri Satın Al</b></div>
+              <div class="rs-tag">İllegal Malzeme NPC'sinden: Pot. Permanganate, Acetone, HCl, Lye, Sod. Permanganate, Metal Pan</div>
+              <div class="rs-cost">Toplam malzeme: ~12,000 ₺/ham meth</div>
+            </div>
+          </div>
+          <div class="recipe-step">
+            <div class="rs-num">2</div>
+            <div class="rs-body">
+              <div><b>Meth Lab Al</b> (Çalışma Masası)</div>
+              <div class="rs-tag">Tezgah NPC'sinden (2. görsel) satın al — 7,500 ₺</div>
+            </div>
+          </div>
+          <div class="recipe-step">
+            <div class="rs-num">3</div>
+            <div class="rs-body">
+              <div><b>Gizli yere Kur &amp; "Yap" tarifinı işlet</b></div>
+              <ul class="ing-list">
+                <li><span class="ing-name">2× Pot. Permanganate + 2× Acetone + HCl + Lye + Sod. Perm. + Metal Pan</span><span class="ing-cost">12,000 ₺</span></li>
+              </ul>
+              <div class="rs-time">⏱ 300sn → 1× Ham Meth (25701)</div>
+              <div class="rs-cost">⚠ Metal Pan her seferinde tüketilir!</div>
+            </div>
+          </div>
+          <div class="recipe-step">
+            <div class="rs-num">4</div>
+            <div class="rs-body">
+              <div><b>Meth Fridge'e Koy (Büyüt)</b></div>
+              <div class="rs-tag">Meth Fridge: Tezgah NPC'sinden alınır — Plot işlevi görür</div>
+              <div class="rs-free">⭐ Bedava — 2 saat bekle → 2× Grown Meth (25805)</div>
+            </div>
+          </div>
+          <div class="recipe-step">
+            <div class="rs-num">5</div>
+            <div class="rs-body">
+              <div><b>"İşle" tarifinı çalıştir</b> — Meth Lab</div>
+              <ul class="ing-list">
+                <li><span class="ing-name">1× Grown Meth + 2× Cloth</span><span class="ing-cost">1,000 ₺</span></li>
+              </ul>
+              <div class="rs-time">⏱ 120sn → 1× Meth (25515)</div>
+            </div>
+          </div>
+          <div class="recipe-step">
+            <div class="rs-num">6</div>
+            <div class="rs-body">
+              <div><b>BlackMarket'te Sat → Emlakçı'ya Git</b></div>
+              <div class="rs-tag">BM: 55,000 ₺ kara para → Emlakçı: ×0.60 → <b style="color:var(--accent)">Net: ~10,100 ₺/meth (malzeme düşman)</b></div>
+            </div>
+          </div>
+        </div>
+        <div class="kazanc-box">
+          <div class="kazanc-box-title">💰 Kazanç Bilgisi</div>
+          <ul class="kazanc-items">
+            <li>En yüksek birim fiyat (BM: 55,000 ₺/adet)</li>
+            <li>Kara Para → Temiz Para (Emlakçı: %60 oranında ödeme)</li>
+            <li>Plot gerektirmez — <b>Meth Fridge</b> işleme merkezi görevini üstlenir</li>
+            <li>📍 <b>Bölge:</b> Sahaya çıkman gerekmez — tüm malzemeler NPC'den</li>
+          </ul>
+        </div>
+        <div class="g-imgs" style="margin-top:.8rem">
+          <img src="http://185.137.98.6/illegalmalzeme1.png" alt="Malzeme NPC" onerror="this.style.display='none'">
+          <img src="http://185.137.98.6/tezgah2.png" alt="Tezgah NPC" onerror="this.style.display='none'">
+        </div>
+        <p class="g-zoomhint">Resimlere tıkla → yakınlaştır</p>
+      </div>
+    </div>
+
+    <!-- ÖNEMLİ NOTLAR -->
+    <div class="guide-card open" id="gc-illegal-notes">
+      <div class="guide-card-head" onclick="toggleGuide('gc-illegal-notes')">
+        <div class="gch-icon">⚠️</div>
+        <div class="gch-title">Önemli Notlar</div>
+        <div class="gch-arrow">▼</div>
+      </div>
+      <div class="guide-card-body">
+        <div class="recipe-step"><div class="rs-num">!</div>
+          <div class="rs-body"><b style="color:var(--danger)">Metal Pan tek kullanım.</b> Her Meth "Yap" tarifinde 1 Metal Pan tüketilir. 10 slot için 10 Metal Pan (10,000 ₺) gerekir.</div>
+        </div>
+        <div class="recipe-step"><div class="rs-num">!</div>
+          <div class="rs-body"><b style="color:var(--danger)">Grinder tek kullanım.</b> Her "İşle" tarifinde 1 Grinder tüketilir. 10 slot için 10 Grinder (5,000 ₺) gerekir.</div>
+        </div>
+        <div class="recipe-step"><div class="rs-num">!</div>
+          <div class="rs-body"><b style="color:#ffcc00">Büyüme lab'dan bağımsız.</b> Bitki büyürken aynı anda lab'da başka şeyler yapabilirsin.</div>
+        </div>
+        <div class="recipe-step"><div class="rs-num">!</div>
+          <div class="rs-body"><b style="color:var(--accent2)">Lab kullanım hakkı.</b> Her lab 20 kullanım. Dolunca Hammer (500 ₺) ile tamir et.</div>
+        </div>
+        <div class="recipe-step"><div class="rs-num">!</div>
+          <div class="rs-body"><b style="color:var(--accent)">Para formülü.</b> BM Fiyatı × 0.70 × 0.60 = <b>%42 net kazanç.</b></div>
+        </div>
+        <div class="recipe-step"><div class="rs-num">!</div>
+          <div class="rs-body"><b style="color:#ffcc00">Plot nereden alınır?</b> <span style="cursor:pointer;text-decoration:underline;color:var(--accent2)" onclick="goBack();setTimeout(()=>selectRole('sunucu'),50);setTimeout(()=>{toggleGuide('gc-npc');setTimeout(()=>toggleGuide('gc-npc-ciftci'),100)},200)">Çiftçi NPC bakımı için tıkla → Sunucu Rehberi &gt; NPC'ler &gt; Çiftçi</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ÜRETİM BİLGİLERİ AYIRACI -->
+    <div style="display:flex;align-items:center;gap:.75rem;margin:1.6rem 0 1rem">
+      <div style="flex:1;height:1px;background:rgba(255,204,0,.2)"></div>
+      <div style="font-family:var(--fh);font-size:.68rem;letter-spacing:1.5px;color:#ffcc00">📖 ÜRETİM BİLGİLERİ</div>
+      <div style="flex:1;height:1px;background:rgba(255,204,0,.2)"></div>
+    </div>
+
     <!-- MALZEME FİYATLARI -->
-    <div class="guide-card open" id="gc-mat">
+    <div class="guide-card" id="gc-mat">
       <div class="guide-card-head" onclick="toggleGuide('gc-mat')">
         <div class="gch-icon">🛒</div>
         <div class="gch-title">Malzeme Alım Fiyatları</div>
@@ -766,208 +1749,143 @@
       </div>
     </div>
 
-    <!-- COCAINE -->
-    <div class="guide-card" id="gc-cocaine">
-      <div class="guide-card-head" onclick="toggleGuide('gc-cocaine')">
-        <div class="gch-icon">🌿</div>
-        <div class="gch-title">Cocaine &amp; Cocaine Brick</div>
-        <div class="gch-badge badge-green">38,000 ₺ / 950,000 ₺</div>
+    <!-- KAZANÇ ÖZETİ -->
+    <div class="guide-card" id="gc-kazanc">
+      <div class="guide-card-head" onclick="toggleGuide('gc-kazanc')">
+        <div class="gch-icon">💰</div>
+        <div class="gch-title">Kazanç Özeti</div>
+        <div class="gch-badge badge-green">%42 net formülü</div>
         <div class="gch-arrow">▼</div>
       </div>
       <div class="guide-card-body">
         <div class="info-box" style="margin-bottom:.8rem;background:rgba(0,255,136,.04);border-color:rgba(0,255,136,.2)">
-          <b>Bitki bedava!</b> Cocaine Plant (ID 25702) yere ekebilirsin, <b>3 saat</b> sonra toplayabilirsin.
-          Her bitkiden <b>2 adet Ham Cocaine (25512)</b> çıkar. 10 slot = 10 bitki = 20 ham cocaine.
+          Net kazanç = BM Fiyatı × <b>0.70</b> (BM kesintisi) × <b>0.60</b> (Emlakçı kesintisi) = BM fiyatının <b>%42'si</b>.<br>
+          Aşağıdaki tablo 10 ilaç slotu ile <b>12 saatlik doluluk</b> üzerine hesaplanmıştır.
         </div>
-        <div class="recipe-steps">
-          <div class="recipe-step">
-            <div class="rs-num">1</div>
-            <div class="rs-body">
-              <div><b>Ekim</b> — Cocaine Plant (25702) yere ek</div>
-              <div class="rs-free">⭐ Ücretsiz — 3 saat büyüme</div>
-              <div class="rs-tag">Sonuç: 2× Ham Cocaine (25512) per bitki</div>
-            </div>
+        <table class="mat-table">
+          <thead>
+            <tr><th>İlaç</th><th class="r">BM Fiyatı</th><th class="r">Net/Adet (%42)</th><th class="r">12h Hedef</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Cocaine</td>
+              <td class="r">38,000 ₺</td>
+              <td class="r" style="color:var(--accent)">15,960 ₺</td>
+              <td class="r" style="color:#ffcc00">~600,000 ₺</td>
+            </tr>
+            <tr>
+              <td>Meth</td>
+              <td class="r">55,000 ₺</td>
+              <td class="r" style="color:var(--accent)">23,100 ₺</td>
+              <td class="r" style="color:#ffcc00">~800,000 ₺</td>
+            </tr>
+            <tr>
+              <td>Joint</td>
+              <td class="r">30,000 ₺</td>
+              <td class="r" style="color:var(--accent)">12,600 ₺</td>
+              <td class="r" style="color:#ffcc00">~400,000 ₺</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="info-box" style="margin-top:.8rem;background:rgba(255,204,0,.04);border-color:rgba(255,204,0,.2)">
+          ⚠️ <b>Brick paketleme</b> doğrudan BM'ye gitmez; paketin toptan fiyatı ayrı hesaplanır. Brick değerleri yukarıdaki hesaplamaya dahil değildir.
+        </div>
+      </div>
+    </div>
+
+    <!-- BÖLGE BİLGİLERİ -->
+    <div class="guide-card" id="gc-bolge">
+      <div class="guide-card-head" onclick="toggleGuide('gc-bolge')">
+        <div class="gch-icon">🗺️</div>
+        <div class="gch-title">Bölge Bilgileri</div>
+        <div class="gch-badge badge-blue">Toplama &amp; Yetiştirme</div>
+        <div class="gch-arrow">▼</div>
+      </div>
+      <div class="guide-card-body">
+        <div class="recipe-step">
+          <div class="rs-num">🌿</div>
+          <div class="rs-body">
+            <b>Ot (Weed) Bölgesi</b>
+            <p style="margin:.3rem 0 0;font-size:.83rem;color:var(--dim)">Haritada işaretli yeşil bölgelerde yetişir. <b>/topla</b> komutu ile toplanır. Her bitki <b>3 saat</b> büyür ve toplandığında <b>2× Weed (25509)</b> verir.</p>
+            <img src="http://185.137.98.6/ot1.png" alt="Ot Bölgesi" class="g-img" style="margin-top:.5rem" onerror="this.style.display='none'">
           </div>
-          <div class="recipe-step">
-            <div class="rs-num">2</div>
-            <div class="rs-body">
-              <div><b>Kokain Yap</b> — Cocaine Lab'da</div>
-              <ul class="ing-list">
-                <li><span class="ing-name">2× Ham Cocaine (25512)</span><span class="ing-free">ücretsiz</span></li>
-                <li><span class="ing-name">2× Cloth (66)</span><span class="ing-cost">2 × 500 = 1,000 ₺</span></li>
-              </ul>
-              <div class="rs-time">⏱ 60 saniye | Sonuç: 1× Cocaine (25803)</div>
-            </div>
+        </div>
+        <div class="recipe-step">
+          <div class="rs-num">🍃</div>
+          <div class="rs-body">
+            <b>Koko (Cocaine Leaf) Bölgesi</b>
+            <p style="margin:.3rem 0 0;font-size:.83rem;color:var(--dim)">Haritada işaretli sarı/kahverengi bölgelerde yetişir. <b>/topla</b> komutu ile toplanır. Her bitki <b>3 saat</b> büyür ve toplandığında yaprak verir.</p>
+            <img src="http://185.137.98.6/otdiger.png" alt="Koko Bölgesi" class="g-img" style="margin-top:.5rem" onerror="this.style.display='none'">
           </div>
-          <div class="recipe-step">
-            <div class="rs-num">3</div>
-            <div class="rs-body">
-              <div style="color:var(--dim)">(Opsiyonel) <b>Paketle</b> → Cocaine Brick</div>
-              <ul class="ing-list">
-                <li><span class="ing-name">25× Cocaine (25803)</span><span class="ing-cost">üretim maliyeti</span></li>
-                <li><span class="ing-name">5× Kağıt (25511)</span><span class="ing-cost">5×(3×500) = 7,500 ₺</span></li>
-                <li><span class="ing-name">1× Bant (69)</span><span class="ing-cost">4×500+1×1,500 = 3,500 ₺</span></li>
-              </ul>
-              <div class="rs-time">⏱ 120 saniye | Sonuç: 1× Cocaine Brick (25513)</div>
-              <div class="rs-tag">Kağıt Tarifi: 3× Cloth → 1 Kağıt (3sn)</div>
-              <div class="rs-tag">Bant Tarifi: 4× Cloth + 1× Chemicals → 1 Bant (5sn)</div>
-            </div>
+        </div>
+        <div class="recipe-step">
+          <div class="rs-num">🔬</div>
+          <div class="rs-body">
+            <b>Meth — Tarla Yok</b>
+            <p style="margin:.3rem 0 0;font-size:.83rem;color:var(--dim)">Meth'in toplanacak bitkisi yoktur. Tüm kimyasallar <b>İllegal Malzeme NPC</b>'sinden satın alınır. Ham Meth zemіne bırakılarak <b>2 saat</b> büyür → 2× Grown Meth (25805).</p>
+          </div>
+        </div>
+        <div class="recipe-step">
+          <div class="rs-num">🌱</div>
+          <div class="rs-body">
+            <b>Plot (Tarla) Nerede?</b>
+            <p style="margin:.3rem 0 0;font-size:.83rem;color:var(--dim)">Bitki ekeceğin "plot" arazisi <b>Çiftçi NPC</b>'sinden satın alınır. Sunucu Rehberi → Çiftçi NPC bölümünde konumunu görebilirsin.</p>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- METH -->
-    <div class="guide-card" id="gc-meth">
-      <div class="guide-card-head" onclick="toggleGuide('gc-meth')">
-        <div class="gch-icon">🔬</div>
-        <div class="gch-title">Meth &amp; Meth Brick</div>
-        <div class="gch-badge badge-red">55,000 ₺ / 1,375,000 ₺</div>
+    <!-- NPC'LER BÖLÜMÜ AYIRACI -->
+    <div style="display:flex;align-items:center;gap:.75rem;margin:1.4rem 0 1rem">
+      <div style="flex:1;height:1px;background:rgba(255,51,85,.2)"></div>
+      <div style="font-family:var(--fh);font-size:.68rem;letter-spacing:1.5px;color:var(--danger)">🚨 İLLEGAL NPC'LER</div>
+      <div style="flex:1;height:1px;background:rgba(255,51,85,.2)"></div>
+    </div>
+
+    <!-- İLLEGAL MALZEME NPC -->
+    <div class="guide-card" id="gc-illegal-mat">
+      <div class="guide-card-head" onclick="toggleGuide('gc-illegal-mat')">
+        <div class="gch-icon">🧪</div>
+        <div class="gch-title">İllegal Malzeme NPC</div>
+        <div class="gch-badge badge-red">Kimyasal &amp; malzeme</div>
         <div class="gch-arrow">▼</div>
       </div>
       <div class="guide-card-body">
-        <div class="info-box" style="margin-bottom:.8rem;background:rgba(255,51,85,.04);border-color:rgba(255,51,85,.2)">
-          Meth'in <b>3 aşaması</b> var: Yap → Büyüt → İşle. Metal Pan <b>her craft'ta tüketilir</b>, her Yap için ayrı alman gerekir.
-          Her Ham Meth 2 saat büyüyerek <b>2 adet Grown Meth</b> verir.
-        </div>
-        <div class="recipe-steps">
-          <div class="recipe-step">
-            <div class="rs-num">1</div>
-            <div class="rs-body">
-              <div><b>Yap</b> — Meth Lab'da</div>
-              <ul class="ing-list">
-                <li><span class="ing-name">2× Potassium Permanganate (25503)</span><span class="ing-cost">2 × 2,000 = 4,000 ₺</span></li>
-                <li><span class="ing-name">2× Acetone (25500)</span><span class="ing-cost">2 × 1,500 = 3,000 ₺</span></li>
-                <li><span class="ing-name">1× Hydrochloric Acid (25501)</span><span class="ing-cost">1,500 ₺</span></li>
-                <li><span class="ing-name">1× Lye (25502)</span><span class="ing-cost">1,500 ₺</span></li>
-                <li><span class="ing-name">1× Sodium Permanganate (25504)</span><span class="ing-cost">1,000 ₺</span></li>
-                <li><span class="ing-name">1× Metal Pan (25514)</span><span class="ing-cost consume">1,000 ₺ (tüketilir!)</span></li>
-              </ul>
-              <div class="rs-time">⏱ 300 saniye | Toplam: 12,000 ₺ | Sonuç: 1× Ham Meth (25701)</div>
-            </div>
-          </div>
-          <div class="recipe-step">
-            <div class="rs-num">2</div>
-            <div class="rs-body">
-              <div><b>Büyüme</b> — Ham Meth'i zemine bırak</div>
-              <div class="rs-free">⭐ Bedava — sadece bekleme süresi</div>
-              <div class="rs-tag">⏱ 2 saat | Sonuç: 2× Grown Meth (25805) per Ham Meth</div>
-            </div>
-          </div>
-          <div class="recipe-step">
-            <div class="rs-num">3</div>
-            <div class="rs-body">
-              <div><b>İşle</b> — Meth Lab'da</div>
-              <ul class="ing-list">
-                <li><span class="ing-name">1× Grown Meth (25805)</span><span class="ing-cost">büyümeden geldi</span></li>
-                <li><span class="ing-name">2× Cloth (66)</span><span class="ing-cost">2 × 500 = 1,000 ₺</span></li>
-              </ul>
-              <div class="rs-time">⏱ 120 saniye | Sonuç: 1× Meth (25515)</div>
-            </div>
-          </div>
-          <div class="recipe-step">
-            <div class="rs-num">4</div>
-            <div class="rs-body">
-              <div style="color:var(--dim)">(Opsiyonel) <b>Paketle</b> → Meth Brick</div>
-              <ul class="ing-list">
-                <li><span class="ing-name">25× Meth (25515)</span><span class="ing-cost">üretim maliyeti</span></li>
-                <li><span class="ing-name">5× Kağıt (25511)</span><span class="ing-cost">5×(3×500) = 7,500 ₺</span></li>
-                <li><span class="ing-name">1× Bant (69)</span><span class="ing-cost">4×500+1×1,500 = 3,500 ₺</span></li>
-              </ul>
-              <div class="rs-time">⏱ 300 saniye | Sonuç: 1× Meth Brick (25516)</div>
-            </div>
-          </div>
-        </div>
+        <p style="font-size:.85rem;color:var(--dim);margin-bottom:.6rem">Meth ve Kokain üretimi için gereken kimyasallar (Acetone, HCl, Lye, Pot. Permanganate, Sod. Permanganate) bu NPC'den alınır.</p>
+        <img src="http://185.137.98.6/illegalmalzeme1.png" alt="İllegal Malzeme NPC" class="g-img" onerror="this.style.display='none'">
+        <p class="g-zoomhint">Resme tıkla → yakınlaştır</p>
       </div>
     </div>
 
-    <!-- JOINT -->
-    <div class="guide-card" id="gc-joint">
-      <div class="guide-card-head" onclick="toggleGuide('gc-joint')">
-        <div class="gch-icon">🌱</div>
-        <div class="gch-title">Joint &amp; Bag of Joints</div>
-        <div class="gch-badge badge-blue">30,000 ₺ / 150,000 ₺</div>
+    <!-- TEZGAHLAR NPC -->
+    <div class="guide-card" id="gc-tezgah">
+      <div class="guide-card-head" onclick="toggleGuide('gc-tezgah')">
+        <div class="gch-icon">🛠️</div>
+        <div class="gch-title">Tezgahlar NPC (Çalışma Masası)</div>
+        <div class="gch-badge badge-red">Lab satın al</div>
         <div class="gch-arrow">▼</div>
       </div>
       <div class="guide-card-body">
-        <div class="info-box" style="margin-bottom:.8rem;background:rgba(0,136,255,.04);border-color:rgba(0,136,255,.2)">
-          <b>Ot bedava!</b> Weed (ID 25700) yere ekebilirsin, <b>3 saat</b> sonra toplayabilirsin.
-          Her bitkiden <b>2 adet Weed (25509)</b> çıkar. Grinder <b>her İşle'de tüketilir</b>!
+        <p style="font-size:.84rem;color:var(--dim);margin-bottom:.5rem">Cocaine Lab, Weed Lab ve Meth Lab çalışma masaları bu NPC'den satın alınır.</p>
+        <div class="g-imgs">
+          <img src="http://185.137.98.6/tezgah1.png" alt="Tezgah 1" onerror="this.style.display='none'">
+          <img src="http://185.137.98.6/tezgah2.png" alt="Tezgah 2" onerror="this.style.display='none'">
+          <img src="http://185.137.98.6/tezgah3.png" alt="Tezgah 3" onerror="this.style.display='none'">
         </div>
-        <div class="recipe-steps">
-          <div class="recipe-step">
-            <div class="rs-num">1</div>
-            <div class="rs-body">
-              <div><b>Ekim</b> — Weed (25700) yere ek</div>
-              <div class="rs-free">⭐ Ücretsiz — 3 saat büyüme</div>
-              <div class="rs-tag">Sonuç: 2× Weed (25509) per bitki</div>
-            </div>
-          </div>
-          <div class="recipe-step">
-            <div class="rs-num">2</div>
-            <div class="rs-body">
-              <div><b>İşle</b> — Weed Lab'da</div>
-              <ul class="ing-list">
-                <li><span class="ing-name">1× Weed (25509)</span><span class="ing-free">ücretsiz</span></li>
-                <li><span class="ing-name">1× Grinder (25507)</span><span class="ing-cost consume">500 ₺ (tüketilir!)</span></li>
-              </ul>
-              <div class="rs-time">⏱ 60 saniye | Sonuç: 1× İşlenmiş Ot (25800)</div>
-            </div>
-          </div>
-          <div class="recipe-step">
-            <div class="rs-num">3</div>
-            <div class="rs-body">
-              <div><b>Joint Yap</b> — Weed Lab'da</div>
-              <ul class="ing-list">
-                <li><span class="ing-name">2× İşlenmiş Ot (25800)</span><span class="ing-cost">2× Grinder maliyeti</span></li>
-                <li><span class="ing-name">1× Kağıt (25511)</span><span class="ing-cost">3×500 = 1,500 ₺</span></li>
-              </ul>
-              <div class="rs-time">⏱ 60 saniye | Sonuç: 1× Joint (25801)</div>
-              <div class="rs-cost">Toplam malzeme/joint: 2×500 + 1,500 = 2,500 ₺</div>
-            </div>
-          </div>
-          <div class="recipe-step">
-            <div class="rs-num">4</div>
-            <div class="rs-body">
-              <div style="color:var(--dim)">(Opsiyonel) <b>Paketle</b> → Bag of Joints</div>
-              <ul class="ing-list">
-                <li><span class="ing-name">5× Joint (25801)</span><span class="ing-cost">üretim maliyeti</span></li>
-                <li><span class="ing-name">2× Cloth (66)</span><span class="ing-cost">2 × 500 = 1,000 ₺</span></li>
-              </ul>
-              <div class="rs-time">⏱ 120 saniye | Sonuç: 1× Bag of Joints (25508)</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ÖNEMLİ NOTLAR -->
-    <div class="guide-card open" id="gc-notes">
-      <div class="guide-card-head" onclick="toggleGuide('gc-notes')">
-        <div class="gch-icon">⚠️</div>
-        <div class="gch-title">Önemli Notlar</div>
-        <div class="gch-arrow">▼</div>
-      </div>
-      <div class="guide-card-body">
-        <div class="recipe-step"><div class="rs-num">!</div>
-          <div class="rs-body"><b style="color:var(--danger)">Metal Pan tek kullanım.</b> Her Meth "Yap" tarifinde 1 Metal Pan tüketilir. 10 slot için 10 Metal Pan (10,000 ₺) gerekir.</div>
-        </div>
-        <div class="recipe-step"><div class="rs-num">!</div>
-          <div class="rs-body"><b style="color:var(--danger)">Grinder tek kullanım.</b> Her "İşle" tarifinde 1 Grinder tüketilir. 10 slot için 10 Grinder (5,000 ₺) gerekir.</div>
-        </div>
-        <div class="recipe-step"><div class="rs-num">!</div>
-          <div class="rs-body"><b style="color:#ffcc00">Büyüme lab'dan bağımsız.</b> Bitki büyürken aynı anda labda başka şeyler yapabilirsin. Büyüme süresi lab süresini bloklamaz.</div>
-        </div>
-        <div class="recipe-step"><div class="rs-num">!</div>
-          <div class="rs-body"><b style="color:var(--accent2)">Lab kullanım hakkı.</b> Her lab 20 kullanım hakkına sahip. Dolan labı Hammer (500 ₺) ile tamir et → tekrar kullanılabilir hale gelir.</div>
-        </div>
-        <div class="recipe-step"><div class="rs-num">!</div>
-          <div class="rs-body"><b style="color:var(--accent)">Para kesintisi formülü.</b> BM Fiyatı × 0.70 × 0.60 = Net Kazanç. Yani BM fiyatının sadece <b>%42'si</b> sana kalır.</div>
-        </div>
+        <p class="g-zoomhint">Resimlere tıkla → yakınlaştır</p>
       </div>
     </div>
 
   </div>
+</div>
+
+<!-- ═══════════════════════ ARAÇ KATALOĞU ═══════════════════════ -->
+<div id="screen-arac" class="screen">
+  <div class="arac-topbar">
+    <button class="btn-back" onclick="goBack()">⟵ Geri</button>
+    <div class="arac-topbar-title">🚗 Araç Kataloğu</div>
+  </div>
+  <iframe id="arac-iframe" class="arac-iframe" src="about:blank" title="Araç Kataloğu"></iframe>
 </div>
 
 <!-- ═══════════════════════ SCRIPT ═══════════════════════ -->
@@ -999,21 +1917,68 @@
   }
 
   /* ── navigation ── */
-  function selectRole(role) {
+  function selectRole(role, fromIllegal) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById('screen-' + role).classList.add('active');
+    if (fromIllegal) {
+      document.querySelectorAll('[data-backto]').forEach(function(btn) {
+        if (['oyuncu','bm','emlak'].includes(role)) btn.setAttribute('data-backto', 'illegal');
+      });
+      window._illegalCalcBack = true;
+    }
     if (role === 'oyuncu') { buildPT('oyuncu'); calcOyuncu(); }
     if (role === 'bm')     { buildPT('bm');     calcBM(); }
     if (role === 'emlak')  { calcEmlak(); }
+    if (role === 'arac') {
+      var fr = document.getElementById('arac-iframe');
+      if (fr && (!fr.src || fr.src === 'about:blank' || fr.src.endsWith('about:blank'))) {
+        fr.src = 'carshop_catalog_v2.html';
+      }
+    }
   }
 
   function toggleGuide(id) {
     document.getElementById(id).classList.toggle('open');
   }
 
-  function goBack() {
+  /* ── LIGHTBOX ── */
+  function openLightbox(src) {
+    document.getElementById('lb-img').src = src;
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeLightbox();
+  });
+  document.addEventListener('click', function(e) {
+    if (e.target.matches('.g-imgs img, img.g-img')) {
+      e.stopPropagation();
+      openLightbox(e.target.src);
+    }
+  });
+
+  function goBack(toIllegal) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById('screen-role').classList.add('active');
+    var target = (toIllegal || window._illegalCalcBack) ? 'screen-illegal' : 'screen-role';
+    document.getElementById(target).classList.add('active');
+    window._illegalCalcBack = false;
+  }
+
+  function copyShopier(btn) {
+    var url = 'https://www.shopier.com/unrdevelopment/';
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(function() {
+        var orig = btn.textContent;
+        btn.textContent = '✓ Kopyalandı!';
+        setTimeout(function() { btn.textContent = orig; }, 2500);
+      }).catch(function() { prompt('URL\'yi kopyala:', url); });
+    } else {
+      prompt('URL\'yi kopyala:', url);
+    }
   }
 
   function clearInputs(prefix) {
@@ -1113,5 +2078,12 @@
     document.getElementById('pt-' + page).classList.toggle('open');
   }
 </script>
+
+<!-- ── FİXED SHOPİER ── -->
+<div class="shopier-fixed">
+  <a href="https://www.shopier.com/unrdevelopment/" target="_blank" rel="noopener noreferrer" class="shopier-fixed-btn">💎 Donate / Destek Ol</a>
+  <button class="shopier-fixed-tip" onclick="window.location.href='https://www.shopier.com/unrdevelopment/'">🔗 Pop-up engellendi mi? Tıkla</button>
+</div>
+
 </body>
 </html>
