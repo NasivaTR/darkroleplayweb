@@ -304,6 +304,106 @@
     .price-table td.blue  { color: var(--accent2); }
     .price-table td.dim   { color: var(--dim); }
 
+    /* ── GUIDE PAGE ── */
+    .guide-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 1.1rem;
+      overflow: hidden;
+    }
+    .guide-card-head {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      padding: .85rem 1.1rem;
+      cursor: pointer;
+      user-select: none;
+      transition: background .15s;
+    }
+    .guide-card-head:hover { background: rgba(255,255,255,.03); }
+    .gch-icon { font-size: 1.25rem; }
+    .gch-title { flex: 1; font-family: var(--fh); font-size: .9rem; font-weight: 700; }
+    .gch-badge {
+      font-size: .72rem;
+      padding: .18rem .55rem;
+      border-radius: 20px;
+      font-family: var(--fb);
+    }
+    .badge-green  { background: rgba(0,255,136,.12); color: var(--accent); }
+    .badge-red    { background: rgba(255,51,85,.12);  color: var(--danger); }
+    .badge-blue   { background: rgba(0,136,255,.12);  color: var(--accent2); }
+    .gch-arrow { color: var(--dim); font-size: .8rem; transition: transform .2s; }
+    .guide-card.open .gch-arrow { transform: rotate(180deg); }
+    .guide-card-body { display: none; padding: 0 1.1rem 1rem; }
+    .guide-card.open .guide-card-body { display: block; }
+
+    /* steps */
+    .recipe-steps { display: flex; flex-direction: column; gap: .35rem; margin-bottom: .9rem; }
+    .recipe-step {
+      display: flex;
+      gap: .7rem;
+      align-items: flex-start;
+      padding: .55rem .8rem;
+      background: var(--bg2);
+      border-radius: 7px;
+      font-size: .84rem;
+      line-height: 1.55;
+    }
+    .rs-num {
+      background: var(--border);
+      color: var(--dim);
+      border-radius: 4px;
+      min-width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .72rem;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .rs-body { flex: 1; }
+    .rs-tag  { color: var(--accent2); font-size: .78rem; }
+    .rs-free { color: #ffcc00; }
+    .rs-time { color: var(--dim); font-size: .78rem; }
+    .rs-cost { color: var(--danger); font-size: .78rem; }
+    .rs-out  { color: var(--accent); }
+
+    /* ingredient list */
+    .ing-list { margin: .3rem 0 0 0; padding: 0; list-style: none; }
+    .ing-list li {
+      display: flex;
+      justify-content: space-between;
+      padding: .2rem 0;
+      border-bottom: 1px solid rgba(42,42,58,.5);
+      font-size: .8rem;
+    }
+    .ing-list li:last-child { border-bottom: none; }
+    .ing-name { color: var(--text); }
+    .ing-cost { color: var(--danger); white-space: nowrap; }
+    .ing-free { color: #ffcc00; }
+
+    /* mat table */
+    .mat-table { width: 100%; border-collapse: collapse; font-size: .83rem; margin-top: .5rem; }
+    .mat-table th {
+      color: var(--dim); padding: .4rem .5rem;
+      text-align: left; border-bottom: 1px solid var(--border);
+      font-family: var(--fh); font-size: .7rem;
+    }
+    .mat-table td { padding: .38rem .5rem; border-bottom: 1px solid rgba(42,42,58,.5); }
+    .mat-table td.r { text-align: right; }
+    .mat-table td.note { color: var(--danger); font-size: .76rem; }
+    .mat-table .consume { color: var(--danger); }
+    .divider { border: none; border-top: 1px solid var(--border); margin: .75rem 0; }
+
+    .rehber-card { background: var(--bg3); border: 2px solid #4a3f00; border-radius: 14px;
+      padding: 2rem 1.25rem; cursor: pointer; text-align: center;
+      transition: transform .18s, box-shadow .18s, border-color .18s; user-select: none; }
+    .rehber-card:hover { transform: translateY(-4px); border-color: #ffcc00;
+      box-shadow: 0 0 22px rgba(255,204,0,.2); }
+    .rehber-card .role-name { color: #ffcc00; }
+
     /* ── RESPONSIVE ── */
     @media (max-width: 500px) {
       .drug-unit { display: none; }
@@ -343,6 +443,15 @@
         Oyuncunun kara parasını<br>
         normal paraya çevir.<br>
         Payını ve ödeyeceğini hesapla.
+      </div>
+    </div>
+    <div class="role-card rehber-card" onclick="selectRole('rehber')">
+      <div class="role-icon">📖</div>
+      <div class="role-name">Üretim Rehberi</div>
+      <div class="role-desc">
+        Malzeme fiyatları, tarif adımları,<br>
+        büyüme süreleri ve lab ekipmanı.<br>
+        <b>Ne, nasıl, kaça?</b>
       </div>
     </div>
   </div>
@@ -608,6 +717,259 @@
   </div>
 </div>
 
+<!-- ═══════════════════════ REHBER ═══════════════════════ -->
+<div id="screen-rehber" class="screen">
+  <div class="page-wrap">
+
+    <div class="page-header">
+      <div class="page-title" style="color:#ffcc00">📖 Üretim Rehberi</div>
+      <button class="btn-back" onclick="goBack()">⟵ Geri</button>
+    </div>
+
+    <!-- MALZEME FİYATLARI -->
+    <div class="guide-card open" id="gc-mat">
+      <div class="guide-card-head" onclick="toggleGuide('gc-mat')">
+        <div class="gch-icon">🛒</div>
+        <div class="gch-title">Malzeme Alım Fiyatları</div>
+        <div class="gch-badge badge-blue">9 malzeme</div>
+        <div class="gch-arrow">▼</div>
+      </div>
+      <div class="guide-card-body">
+        <table class="mat-table">
+          <thead>
+            <tr><th>Malzeme</th><th>ID</th><th class="r">Fiyat</th><th>Not</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Cloth</td><td class="dim">66</td><td class="r" style="color:var(--accent)">500 ₺</td><td></td></tr>
+            <tr><td>Chemicals</td><td class="dim">75</td><td class="r" style="color:var(--accent)">1,500 ₺</td><td></td></tr>
+            <tr><td>Sodium Permanganate</td><td class="dim">25504</td><td class="r" style="color:var(--accent)">1,000 ₺</td><td></td></tr>
+            <tr><td>Acetone</td><td class="dim">25500</td><td class="r" style="color:var(--accent)">1,500 ₺</td><td></td></tr>
+            <tr><td>Hydrochloric Acid</td><td class="dim">25501</td><td class="r" style="color:var(--accent)">1,500 ₺</td><td></td></tr>
+            <tr><td>Lye</td><td class="dim">25502</td><td class="r" style="color:var(--accent)">1,500 ₺</td><td></td></tr>
+            <tr><td>Grinder</td><td class="dim">25507</td><td class="r" style="color:var(--accent)">500 ₺</td><td class="consume">⚠ Tek kullanım</td></tr>
+            <tr><td>Potassium Permanganate</td><td class="dim">25503</td><td class="r" style="color:var(--accent)">2,000 ₺</td><td></td></tr>
+            <tr><td>Metal Pan</td><td class="dim">25514</td><td class="r" style="color:var(--accent)">1,000 ₺</td><td class="consume">⚠ Tek kullanım</td></tr>
+          </tbody>
+        </table>
+        <hr class="divider">
+        <table class="mat-table">
+          <thead>
+            <tr><th>Lab Ekipmanı</th><th>ID</th><th class="r">Fiyat</th><th>Not</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Cocaine Lab</td><td class="dim">25410</td><td class="r" style="color:var(--accent2)">2,500 ₺</td><td class="dim">20 kullanım</td></tr>
+            <tr><td>Weed Lab</td><td class="dim">25412</td><td class="r" style="color:var(--accent2)">5,000 ₺</td><td class="dim">20 kullanım</td></tr>
+            <tr><td>Meth Lab</td><td class="dim">25411</td><td class="r" style="color:var(--accent2)">7,500 ₺</td><td class="dim">20 kullanım</td></tr>
+            <tr><td>Hammer (Tamir)</td><td class="dim">138</td><td class="r" style="color:var(--accent2)">500 ₺</td><td class="dim">Lab tamiri</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- COCAINE -->
+    <div class="guide-card" id="gc-cocaine">
+      <div class="guide-card-head" onclick="toggleGuide('gc-cocaine')">
+        <div class="gch-icon">🌿</div>
+        <div class="gch-title">Cocaine &amp; Cocaine Brick</div>
+        <div class="gch-badge badge-green">38,000 ₺ / 950,000 ₺</div>
+        <div class="gch-arrow">▼</div>
+      </div>
+      <div class="guide-card-body">
+        <div class="info-box" style="margin-bottom:.8rem;background:rgba(0,255,136,.04);border-color:rgba(0,255,136,.2)">
+          <b>Bitki bedava!</b> Cocaine Plant (ID 25702) yere ekebilirsin, <b>3 saat</b> sonra toplayabilirsin.
+          Her bitkiden <b>2 adet Ham Cocaine (25512)</b> çıkar. 10 slot = 10 bitki = 20 ham cocaine.
+        </div>
+        <div class="recipe-steps">
+          <div class="recipe-step">
+            <div class="rs-num">1</div>
+            <div class="rs-body">
+              <div><b>Ekim</b> — Cocaine Plant (25702) yere ek</div>
+              <div class="rs-free">⭐ Ücretsiz — 3 saat büyüme</div>
+              <div class="rs-tag">Sonuç: 2× Ham Cocaine (25512) per bitki</div>
+            </div>
+          </div>
+          <div class="recipe-step">
+            <div class="rs-num">2</div>
+            <div class="rs-body">
+              <div><b>Kokain Yap</b> — Cocaine Lab'da</div>
+              <ul class="ing-list">
+                <li><span class="ing-name">2× Ham Cocaine (25512)</span><span class="ing-free">ücretsiz</span></li>
+                <li><span class="ing-name">2× Cloth (66)</span><span class="ing-cost">2 × 500 = 1,000 ₺</span></li>
+              </ul>
+              <div class="rs-time">⏱ 60 saniye | Sonuç: 1× Cocaine (25803)</div>
+            </div>
+          </div>
+          <div class="recipe-step">
+            <div class="rs-num">3</div>
+            <div class="rs-body">
+              <div style="color:var(--dim)">(Opsiyonel) <b>Paketle</b> → Cocaine Brick</div>
+              <ul class="ing-list">
+                <li><span class="ing-name">25× Cocaine (25803)</span><span class="ing-cost">üretim maliyeti</span></li>
+                <li><span class="ing-name">5× Kağıt (25511)</span><span class="ing-cost">5×(3×500) = 7,500 ₺</span></li>
+                <li><span class="ing-name">1× Bant (69)</span><span class="ing-cost">4×500+1×1,500 = 3,500 ₺</span></li>
+              </ul>
+              <div class="rs-time">⏱ 120 saniye | Sonuç: 1× Cocaine Brick (25513)</div>
+              <div class="rs-tag">Kağıt Tarifi: 3× Cloth → 1 Kağıt (3sn)</div>
+              <div class="rs-tag">Bant Tarifi: 4× Cloth + 1× Chemicals → 1 Bant (5sn)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- METH -->
+    <div class="guide-card" id="gc-meth">
+      <div class="guide-card-head" onclick="toggleGuide('gc-meth')">
+        <div class="gch-icon">🔬</div>
+        <div class="gch-title">Meth &amp; Meth Brick</div>
+        <div class="gch-badge badge-red">55,000 ₺ / 1,375,000 ₺</div>
+        <div class="gch-arrow">▼</div>
+      </div>
+      <div class="guide-card-body">
+        <div class="info-box" style="margin-bottom:.8rem;background:rgba(255,51,85,.04);border-color:rgba(255,51,85,.2)">
+          Meth'in <b>3 aşaması</b> var: Yap → Büyüt → İşle. Metal Pan <b>her craft'ta tüketilir</b>, her Yap için ayrı alman gerekir.
+          Her Ham Meth 2 saat büyüyerek <b>2 adet Grown Meth</b> verir.
+        </div>
+        <div class="recipe-steps">
+          <div class="recipe-step">
+            <div class="rs-num">1</div>
+            <div class="rs-body">
+              <div><b>Yap</b> — Meth Lab'da</div>
+              <ul class="ing-list">
+                <li><span class="ing-name">2× Potassium Permanganate (25503)</span><span class="ing-cost">2 × 2,000 = 4,000 ₺</span></li>
+                <li><span class="ing-name">2× Acetone (25500)</span><span class="ing-cost">2 × 1,500 = 3,000 ₺</span></li>
+                <li><span class="ing-name">1× Hydrochloric Acid (25501)</span><span class="ing-cost">1,500 ₺</span></li>
+                <li><span class="ing-name">1× Lye (25502)</span><span class="ing-cost">1,500 ₺</span></li>
+                <li><span class="ing-name">1× Sodium Permanganate (25504)</span><span class="ing-cost">1,000 ₺</span></li>
+                <li><span class="ing-name">1× Metal Pan (25514)</span><span class="ing-cost consume">1,000 ₺ (tüketilir!)</span></li>
+              </ul>
+              <div class="rs-time">⏱ 300 saniye | Toplam: 12,000 ₺ | Sonuç: 1× Ham Meth (25701)</div>
+            </div>
+          </div>
+          <div class="recipe-step">
+            <div class="rs-num">2</div>
+            <div class="rs-body">
+              <div><b>Büyüme</b> — Ham Meth'i zemine bırak</div>
+              <div class="rs-free">⭐ Bedava — sadece bekleme süresi</div>
+              <div class="rs-tag">⏱ 2 saat | Sonuç: 2× Grown Meth (25805) per Ham Meth</div>
+            </div>
+          </div>
+          <div class="recipe-step">
+            <div class="rs-num">3</div>
+            <div class="rs-body">
+              <div><b>İşle</b> — Meth Lab'da</div>
+              <ul class="ing-list">
+                <li><span class="ing-name">1× Grown Meth (25805)</span><span class="ing-cost">büyümeden geldi</span></li>
+                <li><span class="ing-name">2× Cloth (66)</span><span class="ing-cost">2 × 500 = 1,000 ₺</span></li>
+              </ul>
+              <div class="rs-time">⏱ 120 saniye | Sonuç: 1× Meth (25515)</div>
+            </div>
+          </div>
+          <div class="recipe-step">
+            <div class="rs-num">4</div>
+            <div class="rs-body">
+              <div style="color:var(--dim)">(Opsiyonel) <b>Paketle</b> → Meth Brick</div>
+              <ul class="ing-list">
+                <li><span class="ing-name">25× Meth (25515)</span><span class="ing-cost">üretim maliyeti</span></li>
+                <li><span class="ing-name">5× Kağıt (25511)</span><span class="ing-cost">5×(3×500) = 7,500 ₺</span></li>
+                <li><span class="ing-name">1× Bant (69)</span><span class="ing-cost">4×500+1×1,500 = 3,500 ₺</span></li>
+              </ul>
+              <div class="rs-time">⏱ 300 saniye | Sonuç: 1× Meth Brick (25516)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- JOINT -->
+    <div class="guide-card" id="gc-joint">
+      <div class="guide-card-head" onclick="toggleGuide('gc-joint')">
+        <div class="gch-icon">🌱</div>
+        <div class="gch-title">Joint &amp; Bag of Joints</div>
+        <div class="gch-badge badge-blue">30,000 ₺ / 150,000 ₺</div>
+        <div class="gch-arrow">▼</div>
+      </div>
+      <div class="guide-card-body">
+        <div class="info-box" style="margin-bottom:.8rem;background:rgba(0,136,255,.04);border-color:rgba(0,136,255,.2)">
+          <b>Ot bedava!</b> Weed (ID 25700) yere ekebilirsin, <b>3 saat</b> sonra toplayabilirsin.
+          Her bitkiden <b>2 adet Weed (25509)</b> çıkar. Grinder <b>her İşle'de tüketilir</b>!
+        </div>
+        <div class="recipe-steps">
+          <div class="recipe-step">
+            <div class="rs-num">1</div>
+            <div class="rs-body">
+              <div><b>Ekim</b> — Weed (25700) yere ek</div>
+              <div class="rs-free">⭐ Ücretsiz — 3 saat büyüme</div>
+              <div class="rs-tag">Sonuç: 2× Weed (25509) per bitki</div>
+            </div>
+          </div>
+          <div class="recipe-step">
+            <div class="rs-num">2</div>
+            <div class="rs-body">
+              <div><b>İşle</b> — Weed Lab'da</div>
+              <ul class="ing-list">
+                <li><span class="ing-name">1× Weed (25509)</span><span class="ing-free">ücretsiz</span></li>
+                <li><span class="ing-name">1× Grinder (25507)</span><span class="ing-cost consume">500 ₺ (tüketilir!)</span></li>
+              </ul>
+              <div class="rs-time">⏱ 60 saniye | Sonuç: 1× İşlenmiş Ot (25800)</div>
+            </div>
+          </div>
+          <div class="recipe-step">
+            <div class="rs-num">3</div>
+            <div class="rs-body">
+              <div><b>Joint Yap</b> — Weed Lab'da</div>
+              <ul class="ing-list">
+                <li><span class="ing-name">2× İşlenmiş Ot (25800)</span><span class="ing-cost">2× Grinder maliyeti</span></li>
+                <li><span class="ing-name">1× Kağıt (25511)</span><span class="ing-cost">3×500 = 1,500 ₺</span></li>
+              </ul>
+              <div class="rs-time">⏱ 60 saniye | Sonuç: 1× Joint (25801)</div>
+              <div class="rs-cost">Toplam malzeme/joint: 2×500 + 1,500 = 2,500 ₺</div>
+            </div>
+          </div>
+          <div class="recipe-step">
+            <div class="rs-num">4</div>
+            <div class="rs-body">
+              <div style="color:var(--dim)">(Opsiyonel) <b>Paketle</b> → Bag of Joints</div>
+              <ul class="ing-list">
+                <li><span class="ing-name">5× Joint (25801)</span><span class="ing-cost">üretim maliyeti</span></li>
+                <li><span class="ing-name">2× Cloth (66)</span><span class="ing-cost">2 × 500 = 1,000 ₺</span></li>
+              </ul>
+              <div class="rs-time">⏱ 120 saniye | Sonuç: 1× Bag of Joints (25508)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ÖNEMLİ NOTLAR -->
+    <div class="guide-card open" id="gc-notes">
+      <div class="guide-card-head" onclick="toggleGuide('gc-notes')">
+        <div class="gch-icon">⚠️</div>
+        <div class="gch-title">Önemli Notlar</div>
+        <div class="gch-arrow">▼</div>
+      </div>
+      <div class="guide-card-body">
+        <div class="recipe-step"><div class="rs-num">!</div>
+          <div class="rs-body"><b style="color:var(--danger)">Metal Pan tek kullanım.</b> Her Meth "Yap" tarifinde 1 Metal Pan tüketilir. 10 slot için 10 Metal Pan (10,000 ₺) gerekir.</div>
+        </div>
+        <div class="recipe-step"><div class="rs-num">!</div>
+          <div class="rs-body"><b style="color:var(--danger)">Grinder tek kullanım.</b> Her "İşle" tarifinde 1 Grinder tüketilir. 10 slot için 10 Grinder (5,000 ₺) gerekir.</div>
+        </div>
+        <div class="recipe-step"><div class="rs-num">!</div>
+          <div class="rs-body"><b style="color:#ffcc00">Büyüme lab'dan bağımsız.</b> Bitki büyürken aynı anda labda başka şeyler yapabilirsin. Büyüme süresi lab süresini bloklamaz.</div>
+        </div>
+        <div class="recipe-step"><div class="rs-num">!</div>
+          <div class="rs-body"><b style="color:var(--accent2)">Lab kullanım hakkı.</b> Her lab 20 kullanım hakkına sahip. Dolan labı Hammer (500 ₺) ile tamir et → tekrar kullanılabilir hale gelir.</div>
+        </div>
+        <div class="recipe-step"><div class="rs-num">!</div>
+          <div class="rs-body"><b style="color:var(--accent)">Para kesintisi formülü.</b> BM Fiyatı × 0.70 × 0.60 = Net Kazanç. Yani BM fiyatının sadece <b>%42'si</b> sana kalır.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 <!-- ═══════════════════════ SCRIPT ═══════════════════════ -->
 <script>
   const PRICES = {
@@ -643,6 +1005,10 @@
     if (role === 'oyuncu') { buildPT('oyuncu'); calcOyuncu(); }
     if (role === 'bm')     { buildPT('bm');     calcBM(); }
     if (role === 'emlak')  { calcEmlak(); }
+  }
+
+  function toggleGuide(id) {
+    document.getElementById(id).classList.toggle('open');
   }
 
   function goBack() {
