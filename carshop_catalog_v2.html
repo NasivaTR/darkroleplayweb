@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dark Roleplay — Araç Kataloğu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #08090d;
+  --bg2: #11131c;
+  --bg3: #181b27;
+  --bg4: #1f2330;
+  --border: #232838;
+  --border2: #2e344a;
+  --text1: #f0f2fa;
+  --text2: #9097b8;
+  --text3: #5a607c;
+  --accent: #6c9bff;
+  --accent2: #4f6dff;
+  --green: #3ecf8e;
+  --gold: #f4c647;
+  --purple: #b47cff;
+  --pink: #ff6cab;
+  --red: #ff5757;
+  --radius: 14px;
+  --radius-sm: 8px;
+  --font: 'Figtree', 'Segoe UI', system-ui, sans-serif;
+  --shadow-1: 0 6px 22px rgba(0,0,0,.4);
+  --shadow-2: 0 16px 48px rgba(0,0,0,.55);
+  --gradient-1: linear-gradient(135deg, #6c9bff 0%, #b47cff 50%, #ff6cab 100%);
+  --gradient-glow: radial-gradient(circle at top left, rgba(108,155,255,.18), transparent 60%);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body { height: 100%; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text1);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+/* Animated background blobs */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(700px 500px at 8% -10%, rgba(108,155,255,.10), transparent 60%),
+    radial-gradient(700px 500px at 100% 0%, rgba(180,124,255,.08), transparent 60%),
+    radial-gradient(800px 600px at 50% 110%, rgba(62,207,142,.06), transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.app {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.main-col {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+@media (max-width: 1024px) {
+  body { overflow: auto; }
+  .app { grid-template-columns: 1fr; height: auto; }
+  .main-col { height: auto; overflow: visible; }
+}
+
+/* ---- HEADER ---- */
+.header {
+  background: linear-gradient(180deg, rgba(17,19,28,.95), rgba(17,19,28,.85));
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 1.4rem .9rem;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(14px);
+  flex-shrink: 0;
+}
+
+.header-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: .85rem;
+  flex-wrap: wrap;
+}
+
+.logo-badge {
+  background: var(--gradient-1);
+  color: #fff;
+  font-weight: 800;
+  font-size: 11px;
+  letter-spacing: .12em;
+  padding: 5px 10px;
+  border-radius: 7px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(108,155,255,.35);
+}
+
+.header-title {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  flex: 1;
+  background: linear-gradient(90deg, #fff, #aab0d4);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Dealer toggle pill */
+.dealer-toggle {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: 22px;
+  padding: 6px 13px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text2);
+  user-select: none;
+  transition: all .2s;
+  flex-shrink: 0;
+}
+.dealer-toggle:hover { border-color: var(--purple); color: var(--purple); transform: translateY(-1px); }
+.dealer-toggle.active { border-color: var(--purple); color: var(--purple); background: rgba(180,124,255,.12); box-shadow: 0 0 0 3px rgba(180,124,255,.08); }
+.dealer-toggle .toggle-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--text3);
+  transition: all .2s;
+}
+.dealer-toggle.active .toggle-dot { background: var(--purple); box-shadow: 0 0 8px var(--purple); }
+
+.search-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+input[type=text], select {
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  color: var(--text1);
+  border-radius: var(--radius-sm);
+  padding: 9px 13px;
+  font-family: var(--font);
+  font-size: 13px;
+  outline: none;
+  transition: all .2s;
+}
+input[type=text] { flex: 1; min-width: 200px; }
+select { min-width: 140px; cursor: pointer; }
+input[type=text]:focus, select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(108,155,255,.15);
+}
+input::placeholder { color: var(--text3); }
+
+/* View toggle (grid/list) */
+.view-toggle {
+  display: inline-flex;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  padding: 3px;
+  gap: 2px;
+}
+.view-toggle button {
+  background: transparent;
+  border: none;
+  color: var(--text2);
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all .15s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.view-toggle button:hover { color: var(--text1); }
+.view-toggle button.active { background: var(--accent); color: #fff; box-shadow: 0 2px 8px rgba(108,155,255,.35); }
+
+/* ---- TABS ---- */
+.cat-tabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: .55rem 1.4rem .55rem;
+  border-bottom: 1px solid var(--border);
+  background: rgba(17,19,28,.6);
+  flex-shrink: 0;
+}
+
+.tab {
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 13px;
+  border: 1px solid var(--border2);
+  border-radius: 22px;
+  cursor: pointer;
+  color: var(--text2);
+  background: transparent;
+  transition: all .2s;
+  position: relative;
+}
+.tab:hover { background: var(--bg3); color: var(--text1); transform: translateY(-1px); }
+.tab.active {
+  background: var(--gradient-1);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 4px 14px rgba(108,155,255,.35);
+}
+.tab .count {
+  font-size: 10px;
+  background: rgba(0,0,0,.25);
+  padding: 1px 6px;
+  border-radius: 10px;
+  margin-left: 5px;
+}
+.tab.active .count { background: rgba(255,255,255,.22); }
+
+/* ---- BODY (scrollable) ---- */
+.body-wrap {
+  padding: 1.1rem 1.4rem 1.5rem;
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* ---- STATS ---- */
+.stats { display: flex; gap: 8px; margin-bottom: 1rem; flex-wrap: wrap; }
+.stat {
+  background: linear-gradient(180deg, var(--bg2), var(--bg3));
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: .6rem .95rem;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  transition: all .2s;
+}
+.stat:hover { border-color: var(--border2); transform: translateY(-1px); }
+.stat-val {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text1);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.stat-label { font-size: 11px; color: var(--text3); line-height: 1; text-transform: uppercase; letter-spacing: .05em; }
+
+/* ---- GRID ---- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 12px;
+}
+.grid.list-view {
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+/* ---- CARD (grid view) ---- */
+.card {
+  background: linear-gradient(180deg, var(--bg2), var(--bg3));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  transition: transform .25s cubic-bezier(.34,1.4,.64,1), border-color .2s, box-shadow .25s;
+  animation: fadeUp .4s cubic-bezier(.16,1,.3,1) backwards;
+}
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius);
+  padding: 1px;
+  background: var(--gradient-1);
+  -webkit-mask: linear-gradient(#000,#000) content-box, linear-gradient(#000,#000);
+  -webkit-mask-composite: xor;
+          mask: linear-gradient(#000,#000) content-box, linear-gradient(#000,#000);
+          mask-composite: exclude;
+  opacity: 0;
+  transition: opacity .25s;
+  pointer-events: none;
+  z-index: 1;
+}
+.card:hover { transform: translateY(-4px); box-shadow: var(--shadow-2); }
+.card:hover::before { opacity: 1; }
+.card.selected { box-shadow: var(--shadow-2); transform: translateY(-2px); }
+.card.selected::before { opacity: 1; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.car-img-wrap {
+  width: 100%;
+  height: 130px;
+  background: radial-gradient(circle at center, var(--bg4), var(--bg3));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+.car-img { width: 100%; height: 100%; object-fit: cover; transition: transform .35s cubic-bezier(.16,1,.3,1); }
+.card:hover .car-img { transform: scale(1.06); }
+
+/* speed-bar overlay on image */
+.speed-pill {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(62,207,142,.3);
+  color: var(--green);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 7px;
+  border-radius: 16px;
+  letter-spacing: .03em;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.card-body { padding: .8rem; }
+.card-name {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text1);
+  margin-bottom: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.01em;
+}
+
+.card-meta-row { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 8px; }
+.badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 20px;
+  letter-spacing: .02em;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.badge-shop { background: rgba(108,155,255,.14); color: var(--accent); border: 1px solid rgba(108,155,255,.22); }
+.badge-speed { background: rgba(62,207,142,.12); color: var(--green); border: 1px solid rgba(62,207,142,.2); }
+.badge-cost { background: rgba(244,198,71,.1); color: var(--gold); border: 1px solid rgba(244,198,71,.2); }
+.badge-dealer { background: rgba(180,124,255,.12); color: var(--purple); border: 1px solid rgba(180,124,255,.22); }
+
+.dealer-cost-badge { display: none; }
+.show-dealer .dealer-cost-badge { display: inline-flex; }
+
+.color-strip { display: flex; gap: 4px; flex-wrap: wrap; }
+.dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,.12);
+  flex-shrink: 0;
+  transition: transform .15s;
+}
+.dot:hover { transform: scale(1.35); z-index: 2; }
+
+/* ---- CARD (list view) ---- */
+.grid.list-view .card {
+  display: grid;
+  grid-template-columns: 90px 1fr auto;
+  align-items: center;
+  gap: 14px;
+  padding: 0;
+}
+.grid.list-view .car-img-wrap { height: 70px; width: 90px; border-radius: var(--radius) 0 0 var(--radius); }
+.grid.list-view .speed-pill { display: none; }
+.grid.list-view .card-body { padding: .6rem 1rem .6rem 0; display: flex; align-items: center; gap: 14px; flex: 1; min-width: 0; }
+.grid.list-view .card-name { margin-bottom: 0; flex: 1; min-width: 0; }
+.grid.list-view .card-meta-row { margin-bottom: 0; }
+.grid.list-view .color-strip { padding-right: 1rem; }
+
+/* ---- EMPTY ---- */
+.empty {
+  grid-column: 1/-1;
+  padding: 4rem 2rem;
+  text-align: center;
+  color: var(--text3);
+  font-size: 14px;
+}
+.empty-icon { font-size: 40px; margin-bottom: 12px; opacity: .5; }
+
+/* ---- SIDE PANEL (monitor) ---- */
+.side-panel {
+  background: linear-gradient(180deg, var(--bg2), #0c0e15);
+  border-left: 1px solid var(--border);
+  height: 100vh;
+  overflow-y: auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.side-panel::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 220px;
+  background: var(--gradient-glow);
+  pointer-events: none;
+}
+
+@media (max-width: 1024px) {
+  .side-panel {
+    position: fixed;
+    inset: auto 0 0 0;
+    height: 78vh;
+    border-left: none;
+    border-top: 1px solid var(--border);
+    border-radius: 18px 18px 0 0;
+    transform: translateY(100%);
+    transition: transform .3s cubic-bezier(.34,1.4,.64,1);
+    z-index: 100;
+    box-shadow: 0 -16px 48px rgba(0,0,0,.6);
+  }
+  .side-panel.open { transform: translateY(0); }
+}
+
+.panel-empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  color: var(--text3);
+  gap: 10px;
+}
+.panel-empty-icon { font-size: 48px; opacity: .35; }
+.panel-empty-title { font-size: 14px; font-weight: 700; color: var(--text2); }
+.panel-empty-sub { font-size: 12px; max-width: 220px; line-height: 1.5; }
+
+.panel-content { display: none; flex-direction: column; flex: 1; }
+.panel-content.show { display: flex; animation: panelIn .3s cubic-bezier(.16,1,.3,1); }
+@keyframes panelIn { from { opacity: 0; transform: translateX(8px); } to { opacity: 1; transform: translateX(0); } }
+
+.panel-img-wrap { position: relative; height: 200px; background: var(--bg3); flex-shrink: 0; overflow: hidden; }
+.panel-img-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 50%, rgba(8,9,13,.85) 100%);
+  pointer-events: none;
+}
+.panel-img { width: 100%; height: 100%; object-fit: cover; }
+.panel-img-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 56px; opacity: .25; }
+.panel-close {
+  position: absolute;
+  top: 10px; right: 10px;
+  background: rgba(0,0,0,.5);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,.1);
+  color: #fff;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  transition: all .2s;
+  z-index: 5;
+}
+.panel-close:hover { background: rgba(255,87,87,.7); }
+@media (max-width: 1024px) { .panel-close { display: flex; } }
+
+.panel-body { padding: 1.2rem 1.3rem 1.5rem; flex: 1; }
+.panel-title { font-size: 21px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 8px; line-height: 1.2; }
+.panel-badges { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1rem; }
+
+.panel-meta { background: rgba(255,255,255,.02); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 12px; font-size: 12px; color: var(--text2); margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; }
+.panel-meta strong { color: var(--text1); font-weight: 600; }
+
+/* cost section */
+.cost-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 1.1rem;
+}
+.cost-box {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: .7rem .9rem;
+  position: relative;
+  overflow: hidden;
+}
+.cost-box::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--accent-glow, transparent);
+  opacity: .15;
+  pointer-events: none;
+}
+.cost-box.gold { --accent-glow: radial-gradient(circle at 100% 0%, rgba(244,198,71,.5), transparent 70%); }
+.cost-box.purple { --accent-glow: radial-gradient(circle at 100% 0%, rgba(180,124,255,.5), transparent 70%); }
+.cost-box-label { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text3); margin-bottom: 5px; }
+.cost-box-val { font-size: 17px; font-weight: 800; letter-spacing: -0.02em; }
+.cost-box-val.gold { color: var(--gold); }
+.cost-box-val.purple { color: var(--purple); }
+
+.dealer-cost-box { display: none; }
+.show-dealer .dealer-cost-box { display: block; }
+
+/* ---- TABLE ---- */
+.section-label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+.id-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.id-table thead th {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--text3);
+  text-align: left;
+  padding: 0 0 8px;
+  border-bottom: 1px solid var(--border);
+}
+.id-table tbody tr { border-bottom: 1px solid var(--border); transition: background .15s; }
+.id-table tbody tr:last-child { border-bottom: none; }
+.id-table tbody tr:hover { background: rgba(255,255,255,.03); }
+.id-table td { padding: 8px 4px; color: var(--text2); }
+
+.swatch-cell { display: flex; align-items: center; gap: 9px; }
+.swatch { width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,.18); flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,0,0,.35); }
+.color-name { color: var(--text1); font-weight: 500; }
+.id-code {
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  color: var(--accent);
+  background: rgba(108,155,255,.1);
+  border: 1px solid rgba(108,155,255,.2);
+  padding: 3px 9px;
+  border-radius: 5px;
+  cursor: pointer;
+  user-select: all;
+  transition: all .15s;
+  font-weight: 600;
+}
+.id-code:hover { background: rgba(108,155,255,.22); transform: translateY(-1px); }
+.id-code.copied { background: rgba(62,207,142,.2); color: var(--green); border-color: rgba(62,207,142,.4); }
+.rgb-val { font-size: 11px; color: var(--text3); font-family: 'Courier New', monospace; }
+
+/* ---- SCROLLBAR ---- */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #3a4160; }
+
+/* mobile overlay backdrop */
+.panel-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.5);
+  backdrop-filter: blur(2px);
+  z-index: 99;
+  opacity: 0;
+  transition: opacity .25s;
+}
+.panel-backdrop.open { display: block; opacity: 1; }
+@media (min-width: 1025px) { .panel-backdrop { display: none !important; } }
+
+/* tooltip / copy feedback */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--bg4);
+  border: 1px solid var(--border2);
+  color: var(--text1);
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: var(--shadow-2);
+  opacity: 0;
+  transition: all .25s cubic-bezier(.34,1.4,.64,1);
+  z-index: 300;
+  pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast::before { content: '✓'; color: var(--green); margin-right: 7px; font-weight: 800; }
+
+/* ---- DATA STATUS ---- */
+.data-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  color: var(--text2);
+  user-select: none;
+  cursor: default;
+  transition: all .25s;
+}
+.data-status .data-status-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--text3);
+  transition: all .25s;
+}
+.data-status.loading .data-status-dot { background: var(--accent); animation: pulse 1.2s ease-in-out infinite; }
+.data-status.ok      { color: var(--green);  border-color: rgba(62,207,142,.35);  background: rgba(62,207,142,.08); }
+.data-status.ok      .data-status-dot { background: var(--green); box-shadow: 0 0 8px var(--green); }
+.data-status.warn    { color: var(--gold);   border-color: rgba(244,198,71,.35);  background: rgba(244,198,71,.08); cursor: pointer; }
+.data-status.warn    .data-status-dot { background: var(--gold); box-shadow: 0 0 8px var(--gold); }
+.data-status.error   { color: var(--red);    border-color: rgba(255,87,87,.35);   background: rgba(255,87,87,.08); cursor: pointer; }
+.data-status.error   .data-status-dot { background: var(--red);  box-shadow: 0 0 8px var(--red);  }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: .4; transform: scale(.7); }
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- MAIN COLUMN -->
+  <div class="main-col">
+    <!-- HEADER -->
+    <div class="header">
+      <div class="header-top">
+        <span class="logo-badge">DR</span>
+        <span class="header-title">Dark Roleplay — Araç Kataloğu</span>
+        <span class="data-status" id="dataStatus" title="Veri kaynağı">
+          <span class="data-status-dot"></span>
+          <span class="data-status-text">Yükleniyor…</span>
+        </span>
+        <button class="dealer-toggle" id="reloadBtn" onclick="loadXmlData(true)" title="XML'i yeniden yükle" style="padding:6px 10px">
+          ⟳
+        </button>
+        <button class="dealer-toggle" id="dealerToggle" onclick="toggleDealer()">
+          <span class="toggle-dot"></span>
+          Dealer Fiyatları
+        </button>
+      </div>
+      <div class="search-row">
+        <input type="text" id="search" placeholder="🔍  Araç adı veya ID ara…">
+        <select id="shopFilter">
+          <option value="">Tüm Mağazalar</option>
+          <option value="1">Dark Roleplay</option>
+          <option value="2">Dark Gemi</option>
+          <option value="3">Dark Hava Araçları</option>
+        </select>
+        <select id="sortFilter" title="Sıralama">
+          <option value="default">Varsayılan</option>
+          <option value="speed-desc">⚡ Hız: Yüksek → Düşük</option>
+          <option value="speed-asc">⚡ Hız: Düşük → Yüksek</option>
+          <option value="cost-desc">💰 Fiyat: Yüksek → Düşük</option>
+          <option value="cost-asc">💰 Fiyat: Düşük → Yüksek</option>
+          <option value="name-asc">🔤 İsim: A → Z</option>
+          <option value="name-desc">🔤 İsim: Z → A</option>
+        </select>
+        <div class="view-toggle" role="tablist" aria-label="Görünüm">
+          <button id="viewGrid" class="active" onclick="setView('grid')" title="Izgara">▦ Izgara</button>
+          <button id="viewList" onclick="setView('list')" title="Liste">☰ Liste</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="cat-tabs" id="catTabs"></div>
+
+    <!-- BODY -->
+    <div class="body-wrap">
+      <div class="stats" id="stats"></div>
+      <div class="grid" id="grid"></div>
+    </div>
+  </div>
+
+  <!-- SIDE PANEL (monitor) -->
+  <aside class="side-panel" id="sidePanel">
+    <!-- Empty state -->
+    <div class="panel-empty" id="panelEmpty">
+      <div class="panel-empty-icon">🚗</div>
+      <div class="panel-empty-title">Bir araç seçin</div>
+      <div class="panel-empty-sub">Sol taraftan bir araca tıklayın, detaylar burada gösterilsin.</div>
+    </div>
+
+    <!-- Filled content -->
+    <div class="panel-content" id="panelContent">
+      <div class="panel-img-wrap">
+        <button class="panel-close" onclick="closePanel()" aria-label="Kapat">✕</button>
+        <img id="mImg" class="panel-img" src="" alt=""
+          onerror="this.style.display='none';document.getElementById('mImgFallback').style.display='flex'">
+        <div id="mImgFallback" class="panel-img-placeholder" style="display:none">🚗</div>
+      </div>
+      <div class="panel-body">
+        <div class="panel-title" id="mTitle"></div>
+        <div class="panel-badges" id="mBadges"></div>
+
+        <div class="panel-meta" id="mMeta"></div>
+
+        <div class="cost-row">
+          <div class="cost-box gold">
+            <div class="cost-box-label">Satış Fiyatı</div>
+            <div class="cost-box-val gold" id="mCost"></div>
+          </div>
+          <div class="cost-box purple dealer-cost-box" id="mDealerBox">
+            <div class="cost-box-label">Dealer Fiyatı</div>
+            <div class="cost-box-val purple" id="mDealerCost"></div>
+          </div>
+        </div>
+
+        <div class="section-label">Renkler & ID'ler</div>
+        <table class="id-table">
+          <thead>
+            <tr>
+              <th style="width:42%">Renk</th>
+              <th style="width:28%">ID</th>
+              <th>RGB</th>
+            </tr>
+          </thead>
+          <tbody id="mList"></tbody>
+        </table>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<div class="panel-backdrop" id="panelBackdrop" onclick="closePanel()"></div>
+<div class="toast" id="toast">Kopyalandı</div>
+<input type="file" id="xmlFileInput" accept=".xml" style="display:none">
+
+
+<script>
+/* ============================================================
+   CONFIG — Dealer toggle başlangıç durumu
+   true = açık göster, false = gizli
+============================================================ */
+let showDealer = true;
+
+/* ============================================================
+   VERİ — XML'den alınan tüm araç bilgileri (DealerCost dahil)
+============================================================ */
+const COLOR_HEX = {
+  Black:'#1c1c1c', Blue:'#2266cc', Green:'#1a8c3a', Red:'#cc2222',
+  Orange:'#f07f00', Yellow:'#e8c000', White:'#eeeeee', Purple:'#7a2f9a',
+  Gray:'#888888', Brown:'#7a3a12', Desert:'#c8a870', Livery:'#9966cc'
+};
+
+const SHOPS = { 1:'Dark Roleplay', 2:'Dark Gemi', 3:'Dark Hava Araçları' };
+
+/* RAW: aynı klasördeki CarShopUI.configuration.xml dosyasından yüklenir.
+   Eğer fetch başarısız olursa (file:// kısıtlamaları, vb.) aşağıdaki
+   gömülü veri yedek olarak kullanılır. */
+let RAW = [
+  /* ===== SHOP 1 -  ===== */
+  /* -- Sedan -- */
+  {name:'Smart Fortwo', icon:'http://185.137.98.6/Smart Fortwo.png', shopId:1, cat:'Sedan', cost:70000, dealerCost:49000, speed:72, cars:[{id:'50042',color:'Black',rgb:'0, 0, 0'},{id:'50042',color:'Blue',rgb:'0, 102, 204'},{id:'50042',color:'Green',rgb:'0, 153, 0'},{id:'50042',color:'Red',rgb:'204, 0, 0'},{id:'50042',color:'Orange',rgb:'255, 128, 0'},{id:'50042',color:'Purple',rgb:'128, 0, 128'},{id:'50042',color:'White',rgb:'255, 255, 255'},{id:'50042',color:'Yellow',rgb:'255, 221, 0'},{id:'50042',color:'Gray',rgb:'128, 128, 128'},{id:'50042',color:'Brown',rgb:'139, 69, 19'},{id:'50042',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Abram Town Car', icon:'http://185.137.98.6/Abram Town Car.png', shopId:1, cat:'Sedan', cost:93000, dealerCost:65100, speed:85, cars:[{id:'36230',color:'Black'},{id:'36231',color:'Blue'},{id:'36232',color:'Green'},{id:'36233',color:'Orange'},{id:'36234',color:'Purple'},{id:'36235',color:'Red'},{id:'36236',color:'White'},{id:'36237',color:'Yellow'}]},
+  {name:'Dodge Charger R/T', icon:'http://185.137.98.6/Dodge Charger R T.png', shopId:1, cat:'Sedan', cost:99000, dealerCost:69300, speed:88, cars:[{id:'50041',color:'Black',rgb:'0, 0, 0'},{id:'50041',color:'Blue',rgb:'0, 102, 204'},{id:'50041',color:'Green',rgb:'0, 153, 0'},{id:'50041',color:'Red',rgb:'204, 0, 0'},{id:'50041',color:'Orange',rgb:'255, 128, 0'},{id:'50041',color:'Purple',rgb:'128, 0, 128'},{id:'50041',color:'White',rgb:'255, 255, 255'},{id:'50041',color:'Yellow',rgb:'255, 221, 0'},{id:'50041',color:'Gray',rgb:'128, 128, 128'},{id:'50041',color:'Brown',rgb:'139, 69, 19'},{id:'50041',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'WMB E30', icon:'http://185.137.98.6/WMB E30.png', shopId:1, cat:'Sedan', cost:99000, dealerCost:69300, speed:88, cars:[{id:'36740',color:'Black'},{id:'36741',color:'Blue'},{id:'36742',color:'Green'},{id:'36743',color:'Orange'},{id:'36744',color:'Purple'},{id:'36745',color:'Red'},{id:'36746',color:'White'},{id:'36747',color:'Yellow'}]},
+  {name:'Abarth 500', icon:'http://185.137.98.6/Abarth 500.png', shopId:1, cat:'Sedan', cost:102000, dealerCost:71400, speed:90, cars:[{id:'50022',color:'Black',rgb:'0, 0, 0'},{id:'50022',color:'Blue',rgb:'0, 102, 204'},{id:'50022',color:'Green',rgb:'0, 153, 0'},{id:'50022',color:'Red',rgb:'204, 0, 0'},{id:'50022',color:'Orange',rgb:'255, 128, 0'},{id:'50022',color:'Purple',rgb:'128, 0, 128'},{id:'50022',color:'White',rgb:'255, 255, 255'},{id:'50022',color:'Yellow',rgb:'255, 221, 0'},{id:'50022',color:'Gray',rgb:'128, 128, 128'},{id:'50022',color:'Brown',rgb:'139, 69, 19'},{id:'50022',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Dahon CRX', icon:'http://185.137.98.6/Dahon CRX.png', shopId:1, cat:'Sedan', cost:102000, dealerCost:71400, speed:90, cars:[{id:'36440',color:'Black'},{id:'36441',color:'Blue'},{id:'36442',color:'Green'},{id:'36443',color:'Orange'},{id:'36444',color:'Purple'},{id:'36445',color:'Red'},{id:'36446',color:'White'},{id:'36447',color:'Yellow'}]},
+  {name:'Toyota Corolla GTS', icon:'http://185.137.98.6/Toyota Corolla GTS.png', shopId:1, cat:'Sedan', cost:102000, dealerCost:71400, speed:90, cars:[{id:'50000',color:'Black',rgb:'0, 0, 0'},{id:'50000',color:'Blue',rgb:'0, 102, 204'},{id:'50000',color:'Green',rgb:'0, 153, 0'},{id:'50000',color:'Red',rgb:'204, 0, 0'},{id:'50000',color:'Orange',rgb:'255, 128, 0'},{id:'50000',color:'Purple',rgb:'128, 0, 128'},{id:'50000',color:'White',rgb:'255, 255, 255'},{id:'50000',color:'Yellow',rgb:'255, 221, 0'},{id:'50000',color:'Gray',rgb:'128, 128, 128'},{id:'50000',color:'Brown',rgb:'139, 69, 19'},{id:'50000',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Crown', icon:'http://185.137.98.6/crown.png', shopId:1, cat:'Sedan', cost:106000, dealerCost:74200, speed:92, cars:[{id:'13410',color:'Black'},{id:'13411',color:'Blue'},{id:'13412',color:'Green'},{id:'13413',color:'Orange'},{id:'13414',color:'Red'},{id:'13415',color:'White'},{id:'13416',color:'Yellow'}]},
+  {name:'Viechy Monte Carlo', icon:'http://185.137.98.6/Viechy Monte Carlo.png', shopId:1, cat:'Sedan', cost:109000, dealerCost:76300, speed:94, cars:[{id:'36880',color:'Black'},{id:'36881',color:'Blue'},{id:'36882',color:'Green'},{id:'36883',color:'Orange'},{id:'36884',color:'Purple'},{id:'36885',color:'Red'},{id:'36886',color:'White'},{id:'36887',color:'Yellow'}]},
+  {name:'Peugeot 206 GTI', icon:'http://185.137.98.6/Peugeot 206 GTI.png', shopId:1, cat:'Sedan', cost:113000, dealerCost:79100, speed:96, cars:[{id:'50044',color:'Black',rgb:'0, 0, 0'},{id:'50044',color:'Blue',rgb:'0, 102, 204'},{id:'50044',color:'Green',rgb:'0, 153, 0'},{id:'50044',color:'Red',rgb:'204, 0, 0'},{id:'50044',color:'Orange',rgb:'255, 128, 0'},{id:'50044',color:'Purple',rgb:'128, 0, 128'},{id:'50044',color:'White',rgb:'255, 255, 255'},{id:'50044',color:'Yellow',rgb:'255, 221, 0'},{id:'50044',color:'Gray',rgb:'128, 128, 128'},{id:'50044',color:'Brown',rgb:'139, 69, 19'},{id:'50044',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Aston Martin DB5', icon:'http://185.137.98.6/Aston Martin DB5.png', shopId:1, cat:'Sedan', cost:120000, dealerCost:84000, speed:100, cars:[{id:'50028',color:'Black',rgb:'0, 0, 0'},{id:'50028',color:'Blue',rgb:'0, 102, 204'},{id:'50028',color:'Green',rgb:'0, 153, 0'},{id:'50028',color:'Red',rgb:'204, 0, 0'},{id:'50028',color:'Orange',rgb:'255, 128, 0'},{id:'50028',color:'Purple',rgb:'128, 0, 128'},{id:'50028',color:'White',rgb:'255, 255, 255'},{id:'50028',color:'Yellow',rgb:'255, 221, 0'},{id:'50028',color:'Gray',rgb:'128, 128, 128'},{id:'50028',color:'Brown',rgb:'139, 69, 19'},{id:'50028',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Honda Integra Type R', icon:'http://185.137.98.6/Honda Integra Type R.png', shopId:1, cat:'Sedan', cost:120000, dealerCost:84000, speed:100, cars:[{id:'50043',color:'Black',rgb:'0, 0, 0'},{id:'50043',color:'Blue',rgb:'0, 102, 204'},{id:'50043',color:'Green',rgb:'0, 153, 0'},{id:'50043',color:'Red',rgb:'204, 0, 0'},{id:'50043',color:'Orange',rgb:'255, 128, 0'},{id:'50043',color:'Purple',rgb:'128, 0, 128'},{id:'50043',color:'White',rgb:'255, 255, 255'},{id:'50043',color:'Yellow',rgb:'255, 221, 0'},{id:'50043',color:'Gray',rgb:'128, 128, 128'},{id:'50043',color:'Brown',rgb:'139, 69, 19'},{id:'50043',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Folkswagon Golf', icon:'http://185.137.98.6/Folkswagon Golf.png', shopId:1, cat:'Sedan', cost:122000, dealerCost:85400, speed:101, cars:[{id:'39730',color:'Black',rgb:'0, 0, 0'},{id:'39730',color:'Blue',rgb:'0, 102, 204'},{id:'39730',color:'Green',rgb:'0, 153, 0'},{id:'39730',color:'Red',rgb:'204, 0, 0'},{id:'39730',color:'Orange',rgb:'255, 128, 0'},{id:'39730',color:'Purple',rgb:'128, 0, 128'},{id:'39730',color:'White',rgb:'255, 255, 255'},{id:'39730',color:'Yellow',rgb:'255, 221, 0'},{id:'39730',color:'Gray',rgb:'128, 128, 128'},{id:'39730',color:'Brown',rgb:'139, 69, 19'},{id:'39730',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Soda Superb', icon:'http://185.137.98.6/Soda Superb.png', shopId:1, cat:'Sedan', cost:126000, dealerCost:88200, speed:103, cars:[{id:'39680',color:'Black',rgb:'0, 0, 0'},{id:'39680',color:'Blue',rgb:'0, 102, 204'},{id:'39680',color:'Green',rgb:'0, 153, 0'},{id:'39680',color:'Red',rgb:'204, 0, 0'},{id:'39680',color:'Orange',rgb:'255, 128, 0'},{id:'39680',color:'Purple',rgb:'128, 0, 128'},{id:'39680',color:'White',rgb:'255, 255, 255'},{id:'39680',color:'Yellow',rgb:'255, 221, 0'},{id:'39680',color:'Gray',rgb:'128, 128, 128'},{id:'39680',color:'Brown',rgb:'139, 69, 19'},{id:'39680',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Taurus', icon:'http://185.137.98.6/taurus.png', shopId:1, cat:'Sedan', cost:126000, dealerCost:88200, speed:103, cars:[{id:'13520',color:'Black'},{id:'13521',color:'Blue'},{id:'13522',color:'Green'},{id:'13523',color:'Orange'},{id:'13524',color:'Red'},{id:'13525',color:'White'},{id:'13526',color:'Yellow'}]},
+  {name:'Tyoda Celica', icon:'http://185.137.98.6/Tyoda Celica.png', shopId:1, cat:'Sedan', cost:127000, dealerCost:88900, speed:104, cars:[{id:'39320',color:'Black',rgb:'0, 0, 0'},{id:'39320',color:'Blue',rgb:'0, 102, 204'},{id:'39320',color:'Green',rgb:'0, 153, 0'},{id:'39320',color:'Red',rgb:'204, 0, 0'},{id:'39320',color:'Orange',rgb:'255, 128, 0'},{id:'39320',color:'Purple',rgb:'128, 0, 128'},{id:'39320',color:'White',rgb:'255, 255, 255'},{id:'39320',color:'Yellow',rgb:'255, 221, 0'},{id:'39320',color:'Gray',rgb:'128, 128, 128'},{id:'39320',color:'Brown',rgb:'139, 69, 19'},{id:'39320',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Doge Charger', icon:'http://185.137.98.6/Doge Charger.png', shopId:1, cat:'Sedan', cost:129000, dealerCost:90300, speed:105, cars:[{id:'39010',color:'Black',rgb:'0, 0, 0'},{id:'39010',color:'Blue',rgb:'0, 102, 204'},{id:'39010',color:'Green',rgb:'0, 153, 0'},{id:'39010',color:'Red',rgb:'204, 0, 0'},{id:'39010',color:'Orange',rgb:'255, 128, 0'},{id:'39010',color:'Purple',rgb:'128, 0, 128'},{id:'39010',color:'White',rgb:'255, 255, 255'},{id:'39010',color:'Yellow',rgb:'255, 221, 0'},{id:'39010',color:'Gray',rgb:'128, 128, 128'},{id:'39010',color:'Brown',rgb:'139, 69, 19'},{id:'39010',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Ford Mustang Fastback 1967', icon:'http://185.137.98.6/Ford Mustang Fastback 1967.png', shopId:1, cat:'Sedan', cost:133000, dealerCost:93100, speed:107, cars:[{id:'50027',color:'Black',rgb:'0, 0, 0'},{id:'50027',color:'Blue',rgb:'0, 102, 204'},{id:'50027',color:'Green',rgb:'0, 153, 0'},{id:'50027',color:'Red',rgb:'204, 0, 0'},{id:'50027',color:'Orange',rgb:'255, 128, 0'},{id:'50027',color:'Purple',rgb:'128, 0, 128'},{id:'50027',color:'White',rgb:'255, 255, 255'},{id:'50027',color:'Yellow',rgb:'255, 221, 0'},{id:'50027',color:'Gray',rgb:'128, 128, 128'},{id:'50027',color:'Brown',rgb:'139, 69, 19'},{id:'50027',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Plymouth Hemi \'Cuda', icon:'http://185.137.98.6/Plymouth Hemi \'Cuda.png', shopId:1, cat:'Sedan', cost:136000, dealerCost:95200, speed:109, cars:[{id:'50045',color:'Black',rgb:'0, 0, 0'},{id:'50045',color:'Blue',rgb:'0, 102, 204'},{id:'50045',color:'Green',rgb:'0, 153, 0'},{id:'50045',color:'Red',rgb:'204, 0, 0'},{id:'50045',color:'Orange',rgb:'255, 128, 0'},{id:'50045',color:'Purple',rgb:'128, 0, 128'},{id:'50045',color:'White',rgb:'255, 255, 255'},{id:'50045',color:'Yellow',rgb:'255, 221, 0'},{id:'50045',color:'Gray',rgb:'128, 128, 128'},{id:'50045',color:'Brown',rgb:'139, 69, 19'},{id:'50045',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Dahon Accord', icon:'http://185.137.98.6/Dahon Accord.png', shopId:1, cat:'Sedan', cost:138000, dealerCost:96600, speed:110, cars:[{id:'39000',color:'Black',rgb:'0, 0, 0'},{id:'39000',color:'Blue',rgb:'0, 102, 204'},{id:'39000',color:'Green',rgb:'0, 153, 0'},{id:'39000',color:'Red',rgb:'204, 0, 0'},{id:'39000',color:'Orange',rgb:'255, 128, 0'},{id:'39000',color:'Purple',rgb:'128, 0, 128'},{id:'39000',color:'White',rgb:'255, 255, 255'},{id:'39000',color:'Yellow',rgb:'255, 221, 0'},{id:'39000',color:'Gray',rgb:'128, 128, 128'},{id:'39000',color:'Brown',rgb:'139, 69, 19'},{id:'39000',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Tesla', icon:'http://185.137.98.6/tesla.png', shopId:1, cat:'Sedan', cost:138000, dealerCost:96600, speed:110, cars:[{id:'13530',color:'Black'},{id:'13531',color:'Blue'},{id:'13532',color:'Green'},{id:'13533',color:'Orange'},{id:'13534',color:'Red'},{id:'13535',color:'White'},{id:'13536',color:'Yellow'}]},
+  {name:'VVL Sedan', icon:'http://185.137.98.6/VVL Sedan.png', shopId:1, cat:'Sedan', cost:140000, dealerCost:98000, speed:111, cars:[{id:'39440',color:'Black',rgb:'0, 0, 0'},{id:'39440',color:'Blue',rgb:'0, 102, 204'},{id:'39440',color:'Green',rgb:'0, 153, 0'},{id:'39440',color:'Red',rgb:'204, 0, 0'},{id:'39440',color:'Orange',rgb:'255, 128, 0'},{id:'39440',color:'Purple',rgb:'128, 0, 128'},{id:'39440',color:'White',rgb:'255, 255, 255'},{id:'39440',color:'Yellow',rgb:'255, 221, 0'},{id:'39440',color:'Gray',rgb:'128, 128, 128'},{id:'39440',color:'Brown',rgb:'139, 69, 19'},{id:'39440',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Nissan Silvia S15', icon:'http://185.137.98.6/Nissan Silvia S15.png', shopId:1, cat:'Sedan', cost:144000, dealerCost:100800, speed:113, cars:[{id:'50046',color:'Black',rgb:'0, 0, 0'},{id:'50046',color:'Blue',rgb:'0, 102, 204'},{id:'50046',color:'Green',rgb:'0, 153, 0'},{id:'50046',color:'Red',rgb:'204, 0, 0'},{id:'50046',color:'Orange',rgb:'255, 128, 0'},{id:'50046',color:'Purple',rgb:'128, 0, 128'},{id:'50046',color:'White',rgb:'255, 255, 255'},{id:'50046',color:'Yellow',rgb:'255, 221, 0'},{id:'50046',color:'Gray',rgb:'128, 128, 128'},{id:'50046',color:'Brown',rgb:'139, 69, 19'},{id:'50046',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'WMB M440i', icon:'http://185.137.98.6/WMB M440i.png', shopId:1, cat:'Sedan', cost:144000, dealerCost:100800, speed:113, cars:[{id:'36140',color:'Black'},{id:'36141',color:'Blue'},{id:'36142',color:'Green'},{id:'36143',color:'Orange'},{id:'36144',color:'Purple'},{id:'36145',color:'Red'},{id:'36146',color:'White'},{id:'36147',color:'Yellow'}]},
+  {name:'WMB Z4 Shooting Brake', icon:'http://185.137.98.6/WMB Z4 Shooting Brake.png', shopId:1, cat:'Sedan', cost:144000, dealerCost:100800, speed:113, cars:[{id:'36730',color:'Black'},{id:'36731',color:'Blue'},{id:'36732',color:'Green'},{id:'36733',color:'Orange'},{id:'36734',color:'Purple'},{id:'36735',color:'Red'},{id:'36736',color:'White'},{id:'36737',color:'Yellow'}]},
+  {name:'Firebird', icon:'http://185.137.98.6/firebird.png', shopId:1, cat:'Sedan', cost:145000, dealerCost:101500, speed:114, cars:[{id:'13610',color:'Black'},{id:'13611',color:'Blue'},{id:'13612',color:'Green'},{id:'13613',color:'Orange'},{id:'13614',color:'Red'},{id:'13615',color:'White'},{id:'13616',color:'Yellow'}]},
+  {name:'Royce Phantom', icon:'http://185.137.98.6/Royce Phantom.png', shopId:1, cat:'Sedan', cost:147000, dealerCost:102900, speed:115, cars:[{id:'36390',color:'Black'},{id:'36391',color:'Blue'},{id:'36392',color:'Green'},{id:'36393',color:'Orange'},{id:'36394',color:'Purple'},{id:'36395',color:'Red'},{id:'36396',color:'White'},{id:'36397',color:'Yellow'}]},
+  {name:'Audi S5', icon:'http://185.137.98.6/Audi S5.png', shopId:1, cat:'Sedan', cost:151000, dealerCost:105700, speed:117, cars:[{id:'50010',color:'Black',rgb:'0, 0, 0'},{id:'50010',color:'Blue',rgb:'0, 102, 204'},{id:'50010',color:'Green',rgb:'0, 153, 0'},{id:'50010',color:'Red',rgb:'204, 0, 0'},{id:'50010',color:'Orange',rgb:'255, 128, 0'},{id:'50010',color:'Purple',rgb:'128, 0, 128'},{id:'50010',color:'White',rgb:'255, 255, 255'},{id:'50010',color:'Yellow',rgb:'255, 221, 0'},{id:'50010',color:'Gray',rgb:'128, 128, 128'},{id:'50010',color:'Brown',rgb:'139, 69, 19'},{id:'50010',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Rolls Wraith', icon:'http://185.137.98.6/Rolls Wraith.png', shopId:1, cat:'Sedan', cost:151000, dealerCost:105700, speed:117, cars:[{id:'36720',color:'Black'},{id:'36721',color:'Blue'},{id:'36722',color:'Green'},{id:'36723',color:'Orange'},{id:'36724',color:'Purple'},{id:'36725',color:'Red'},{id:'36726',color:'White'},{id:'36727',color:'Yellow'}]},
+  {name:'Shimitsubi Evolution', icon:'http://185.137.98.6/Shimitsubi Evolution.png', shopId:1, cat:'Sedan', cost:160000, dealerCost:112000, speed:122, cars:[{id:'39210',color:'Black',rgb:'0, 0, 0'},{id:'39210',color:'Blue',rgb:'0, 102, 204'},{id:'39210',color:'Green',rgb:'0, 153, 0'},{id:'39210',color:'Red',rgb:'204, 0, 0'},{id:'39210',color:'Orange',rgb:'255, 128, 0'},{id:'39210',color:'Purple',rgb:'128, 0, 128'},{id:'39210',color:'White',rgb:'255, 255, 255'},{id:'39210',color:'Yellow',rgb:'255, 221, 0'},{id:'39210',color:'Gray',rgb:'128, 128, 128'},{id:'39210',color:'Brown',rgb:'139, 69, 19'},{id:'39210',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Mazda MX5 ND', icon:'http://185.137.98.6/Mazda MX5 ND.png', shopId:1, cat:'Sedan', cost:165000, dealerCost:115500, speed:125, cars:[{id:'50025',color:'Black',rgb:'0, 0, 0'},{id:'50025',color:'Blue',rgb:'0, 102, 204'},{id:'50025',color:'Green',rgb:'0, 153, 0'},{id:'50025',color:'Red',rgb:'204, 0, 0'},{id:'50025',color:'Orange',rgb:'255, 128, 0'},{id:'50025',color:'Purple',rgb:'128, 0, 128'},{id:'50025',color:'White',rgb:'255, 255, 255'},{id:'50025',color:'Yellow',rgb:'255, 221, 0'},{id:'50025',color:'Gray',rgb:'128, 128, 128'},{id:'50025',color:'Brown',rgb:'139, 69, 19'},{id:'50025',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'WMB 3.0 CSL Hommage', icon:'http://185.137.98.6/WMB 3.0 CSL Hommage.png', shopId:1, cat:'Sedan', cost:165000, dealerCost:115500, speed:125, cars:[{id:'36620',color:'Black'},{id:'36621',color:'Blue'},{id:'36622',color:'Green'},{id:'36623',color:'Orange'},{id:'36624',color:'Purple'},{id:'36625',color:'Red'},{id:'36626',color:'White'},{id:'36627',color:'Yellow'}]},
+  {name:'Aw-D RS6', icon:'http://185.137.98.6/Aw-D RS6.png', shopId:1, cat:'Sedan', cost:174000, dealerCost:121800, speed:130, cars:[{id:'36590',color:'Black'},{id:'36591',color:'Blue'},{id:'36592',color:'Green'},{id:'36593',color:'Orange'},{id:'36594',color:'Purple'},{id:'36595',color:'Red'},{id:'36596',color:'White'},{id:'36597',color:'Yellow'}]},
+  {name:'Aw-D RS7', icon:'http://185.137.98.6/Aw-D RS7.png', shopId:1, cat:'Sedan', cost:174000, dealerCost:121800, speed:130, cars:[{id:'36360',color:'Black'},{id:'36361',color:'Blue'},{id:'36362',color:'Green'},{id:'36363',color:'Orange'},{id:'36364',color:'Purple'},{id:'36365',color:'Red'},{id:'36366',color:'White'},{id:'36367',color:'Yellow'}]},
+  {name:'VVL Coupe', icon:'http://185.137.98.6/VVL Coupe.png', shopId:1, cat:'Sedan', cost:183000, dealerCost:128100, speed:135, cars:[{id:'39450',color:'Black',rgb:'0, 0, 0'},{id:'39450',color:'Blue',rgb:'0, 102, 204'},{id:'39450',color:'Green',rgb:'0, 153, 0'},{id:'39450',color:'Red',rgb:'204, 0, 0'},{id:'39450',color:'Orange',rgb:'255, 128, 0'},{id:'39450',color:'Purple',rgb:'128, 0, 128'},{id:'39450',color:'White',rgb:'255, 255, 255'},{id:'39450',color:'Yellow',rgb:'255, 221, 0'},{id:'39450',color:'Gray',rgb:'128, 128, 128'},{id:'39450',color:'Brown',rgb:'139, 69, 19'},{id:'39450',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Pioneer Two', icon:'http://185.137.98.6/Pioneer Two.png', shopId:1, cat:'Sedan', cost:192000, dealerCost:134400, speed:140, cars:[{id:'39750',color:'Black',rgb:'0, 0, 0'},{id:'39750',color:'Blue',rgb:'0, 102, 204'},{id:'39750',color:'Green',rgb:'0, 153, 0'},{id:'39750',color:'Red',rgb:'204, 0, 0'},{id:'39750',color:'Orange',rgb:'255, 128, 0'},{id:'39750',color:'Purple',rgb:'128, 0, 128'},{id:'39750',color:'White',rgb:'255, 255, 255'},{id:'39750',color:'Yellow',rgb:'255, 221, 0'},{id:'39750',color:'Gray',rgb:'128, 128, 128'},{id:'39750',color:'Brown',rgb:'139, 69, 19'},{id:'39750',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'VVL Sedan W-ART', icon:'http://185.137.98.6/VVL Sedan W-ART.png', shopId:1, cat:'Sedan', cost:210000, dealerCost:147000, speed:150, cars:[{id:'39490',color:'Black',rgb:'0, 0, 0'},{id:'39490',color:'Blue',rgb:'0, 102, 204'},{id:'39490',color:'Green',rgb:'0, 153, 0'},{id:'39490',color:'Red',rgb:'204, 0, 0'},{id:'39490',color:'Orange',rgb:'255, 128, 0'},{id:'39490',color:'Purple',rgb:'128, 0, 128'},{id:'39490',color:'White',rgb:'255, 255, 255'},{id:'39490',color:'Yellow',rgb:'255, 221, 0'},{id:'39490',color:'Gray',rgb:'128, 128, 128'},{id:'39490',color:'Brown',rgb:'139, 69, 19'},{id:'39490',color:'Desert',rgb:'214, 188, 139'}]},
+  /* -- Commercial -- */
+  {name:'Express', icon:'http://185.137.98.6/express.png', shopId:1, cat:'Commercial', cost:45000, dealerCost:31500, speed:80, cars:[{id:'13430',color:'Black'},{id:'13431',color:'Blue'},{id:'13432',color:'Green'},{id:'13433',color:'Orange'},{id:'13434',color:'Red'},{id:'13435',color:'White'},{id:'13436',color:'Yellow'}]},
+  {name:'Sprinter', icon:'http://185.137.98.6/sprinter.png', shopId:1, cat:'Commercial', cost:45000, dealerCost:31500, speed:80, cars:[{id:'13490',color:'Black'},{id:'13491',color:'Blue'},{id:'13492',color:'Green'},{id:'13493',color:'Orange'},{id:'13494',color:'Red'},{id:'13495',color:'White'},{id:'13496',color:'Yellow'}]},
+  {name:'Hors E-350', icon:'http://185.137.98.6/Hors E-350.png', shopId:1, cat:'Commercial', cost:55000, dealerCost:38500, speed:85, cars:[{id:'39180',color:'Black',rgb:'0, 0, 0'},{id:'39180',color:'Blue',rgb:'0, 102, 204'},{id:'39180',color:'Green',rgb:'0, 153, 0'},{id:'39180',color:'Red',rgb:'204, 0, 0'},{id:'39180',color:'Orange',rgb:'255, 128, 0'},{id:'39180',color:'Purple',rgb:'128, 0, 128'},{id:'39180',color:'White',rgb:'255, 255, 255'},{id:'39180',color:'Yellow',rgb:'255, 221, 0'},{id:'39180',color:'Gray',rgb:'128, 128, 128'},{id:'39180',color:'Brown',rgb:'139, 69, 19'},{id:'39180',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Hors F-100', icon:'http://185.137.98.6/Hors F100.png', shopId:1, cat:'Commercial', cost:55000, dealerCost:38500, speed:85, cars:[{id:'39570',color:'Black',rgb:'0, 0, 0'},{id:'39570',color:'Blue',rgb:'0, 102, 204'},{id:'39570',color:'Green',rgb:'0, 153, 0'},{id:'39570',color:'Red',rgb:'204, 0, 0'},{id:'39570',color:'Orange',rgb:'255, 128, 0'},{id:'39570',color:'Purple',rgb:'128, 0, 128'},{id:'39570',color:'White',rgb:'255, 255, 255'},{id:'39570',color:'Yellow',rgb:'255, 221, 0'},{id:'39570',color:'Gray',rgb:'128, 128, 128'},{id:'39570',color:'Brown',rgb:'139, 69, 19'},{id:'39570',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'VVL Van', icon:'http://185.137.98.6/vvlvan.png', shopId:1, cat:'Commercial', cost:55000, dealerCost:38500, speed:85, cars:[{id:'39410',color:'Black',rgb:'0, 0, 0'},{id:'39410',color:'Blue',rgb:'0, 102, 204'},{id:'39410',color:'Green',rgb:'0, 153, 0'},{id:'39410',color:'Red',rgb:'204, 0, 0'},{id:'39410',color:'Orange',rgb:'255, 128, 0'},{id:'39410',color:'Purple',rgb:'128, 0, 128'},{id:'39410',color:'White',rgb:'255, 255, 255'},{id:'39410',color:'Yellow',rgb:'255, 221, 0'},{id:'39410',color:'Gray',rgb:'128, 128, 128'},{id:'39410',color:'Brown',rgb:'139, 69, 19'},{id:'39410',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Mern Sprinter', icon:'http://185.137.98.6/Mern Sprinter.png', shopId:1, cat:'Commercial', cost:62000, dealerCost:43400, speed:89, cars:[{id:'39140',color:'Black',rgb:'0, 0, 0'},{id:'39140',color:'Blue',rgb:'0, 102, 204'},{id:'39140',color:'Green',rgb:'0, 153, 0'},{id:'39140',color:'Red',rgb:'204, 0, 0'},{id:'39140',color:'Orange',rgb:'255, 128, 0'},{id:'39140',color:'Purple',rgb:'128, 0, 128'},{id:'39140',color:'White',rgb:'255, 255, 255'},{id:'39140',color:'Yellow',rgb:'255, 221, 0'},{id:'39140',color:'Gray',rgb:'128, 128, 128'},{id:'39140',color:'Brown',rgb:'139, 69, 19'},{id:'39140',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Viechy Moov', icon:'http://185.137.98.6/Viechy Moov.png', shopId:1, cat:'Commercial', cost:85000, dealerCost:59500, speed:101, cars:[{id:'39530',color:'Black',rgb:'0, 0, 0'},{id:'39530',color:'Blue',rgb:'0, 102, 204'},{id:'39530',color:'Green',rgb:'0, 153, 0'},{id:'39530',color:'Red',rgb:'204, 0, 0'},{id:'39530',color:'Orange',rgb:'255, 128, 0'},{id:'39530',color:'Purple',rgb:'128, 0, 128'},{id:'39530',color:'White',rgb:'255, 255, 255'},{id:'39530',color:'Yellow',rgb:'255, 221, 0'},{id:'39530',color:'Gray',rgb:'128, 128, 128'},{id:'39530',color:'Brown',rgb:'139, 69, 19'},{id:'39530',color:'Desert',rgb:'214, 188, 139'}]},
+  /* -- SUV / Off-road -- */
+  {name:'Yeet Wrangler', icon:'http://185.137.98.6/yeetwarg.png', shopId:1, cat:'SUV / Off-road', cost:75000, dealerCost:52500, speed:89, cars:[{id:'39130',color:'Black',rgb:'0, 0, 0'},{id:'39130',color:'Blue',rgb:'0, 102, 204'},{id:'39130',color:'Green',rgb:'0, 153, 0'},{id:'39130',color:'Red',rgb:'204, 0, 0'},{id:'39130',color:'Orange',rgb:'255, 128, 0'},{id:'39130',color:'Purple',rgb:'128, 0, 128'},{id:'39130',color:'White',rgb:'255, 255, 255'},{id:'39130',color:'Yellow',rgb:'255, 221, 0'},{id:'39130',color:'Gray',rgb:'128, 128, 128'},{id:'39130',color:'Brown',rgb:'139, 69, 19'},{id:'39130',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'VVL OffRoader', icon:'http://185.137.98.6/VVL OffRoader.png', shopId:1, cat:'SUV / Off-road', cost:89000, dealerCost:62300, speed:93, cars:[{id:'39470',color:'Black',rgb:'0, 0, 0'},{id:'39470',color:'Blue',rgb:'0, 102, 204'},{id:'39470',color:'Green',rgb:'0, 153, 0'},{id:'39470',color:'Red',rgb:'204, 0, 0'},{id:'39470',color:'Orange',rgb:'255, 128, 0'},{id:'39470',color:'Purple',rgb:'128, 0, 128'},{id:'39470',color:'White',rgb:'255, 255, 255'},{id:'39470',color:'Yellow',rgb:'255, 221, 0'},{id:'39470',color:'Gray',rgb:'128, 128, 128'},{id:'39470',color:'Brown',rgb:'139, 69, 19'},{id:'39470',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Tahoe', icon:'http://185.137.98.6/thoe.png', shopId:1, cat:'SUV / Off-road', cost:99000, dealerCost:69300, speed:96, cars:[{id:'13510',color:'Black'},{id:'13511',color:'Blue'},{id:'13512',color:'Green'},{id:'13513',color:'Orange'},{id:'13514',color:'Red'},{id:'13515',color:'White'},{id:'13516',color:'Yellow'}]},
+  {name:'Hors Explorer', icon:'http://185.137.98.6/Hors Explorer.png', shopId:1, cat:'SUV / Off-road', cost:102000, dealerCost:71400, speed:97, cars:[{id:'39040',color:'Black',rgb:'0, 0, 0'},{id:'39040',color:'Blue',rgb:'0, 102, 204'},{id:'39040',color:'Green',rgb:'0, 153, 0'},{id:'39040',color:'Red',rgb:'204, 0, 0'},{id:'39040',color:'Orange',rgb:'255, 128, 0'},{id:'39040',color:'Purple',rgb:'128, 0, 128'},{id:'39040',color:'White',rgb:'255, 255, 255'},{id:'39040',color:'Yellow',rgb:'255, 221, 0'},{id:'39040',color:'Gray',rgb:'128, 128, 128'},{id:'39040',color:'Brown',rgb:'139, 69, 19'},{id:'39040',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Raptor', icon:'http://185.137.98.6/raptor.png', shopId:1, cat:'SUV / Off-road', cost:102000, dealerCost:71400, speed:97, cars:[{id:'13460',color:'Black'},{id:'13461',color:'Blue'},{id:'13462',color:'Green'},{id:'13463',color:'Orange'},{id:'13464',color:'Red'},{id:'13465',color:'White'},{id:'13466',color:'Yellow'}]},
+  {name:'VVL SUV', icon:'http://185.137.98.6/vvlsuv.png', shopId:1, cat:'SUV / Off-road', cost:102000, dealerCost:71400, speed:97, cars:[{id:'39400',color:'Black',rgb:'0, 0, 0'},{id:'39400',color:'Blue',rgb:'0, 102, 204'},{id:'39400',color:'Green',rgb:'0, 153, 0'},{id:'39400',color:'Red',rgb:'204, 0, 0'},{id:'39400',color:'Orange',rgb:'255, 128, 0'},{id:'39400',color:'Purple',rgb:'128, 0, 128'},{id:'39400',color:'White',rgb:'255, 255, 255'},{id:'39400',color:'Yellow',rgb:'255, 221, 0'},{id:'39400',color:'Gray',rgb:'128, 128, 128'},{id:'39400',color:'Brown',rgb:'139, 69, 19'},{id:'39400',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Escalade', icon:'http://185.137.98.6/escalade.png', shopId:1, cat:'SUV / Off-road', cost:113000, dealerCost:79100, speed:100, cars:[{id:'13420',color:'Black'},{id:'13421',color:'Blue'},{id:'13422',color:'Green'},{id:'13423',color:'Orange'},{id:'13424',color:'Red'},{id:'13425',color:'White'},{id:'13426',color:'Yellow'}]},
+  {name:'Rover', icon:'http://185.137.98.6/range.png', shopId:1, cat:'SUV / Off-road', cost:113000, dealerCost:79100, speed:100, cars:[{id:'13480',color:'Black'},{id:'13481',color:'Blue'},{id:'13482',color:'Green'},{id:'13483',color:'Orange'},{id:'13484',color:'Red'},{id:'13485',color:'White'},{id:'13486',color:'Yellow'}]},
+  {name:'Hors Puma', icon:'http://185.137.98.6/Hors Puma.png', shopId:1, cat:'SUV / Off-road', cost:116000, dealerCost:81200, speed:101, cars:[{id:'39650',color:'Black'},{id:'39651',color:'Blue'},{id:'39652',color:'Green'},{id:'39653',color:'Orange'},{id:'39654',color:'Purple'},{id:'39655',color:'Red'},{id:'39656',color:'White'},{id:'39657',color:'Yellow'}]},
+  {name:'Viechy Tahoe', icon:'http://185.137.98.6/Viechy Tahoe.png', shopId:1, cat:'SUV / Off-road', cost:116000, dealerCost:81200, speed:101, cars:[{id:'39190',color:'Black',rgb:'0, 0, 0'},{id:'39190',color:'Blue',rgb:'0, 102, 204'},{id:'39190',color:'Green',rgb:'0, 153, 0'},{id:'39190',color:'Red',rgb:'204, 0, 0'},{id:'39190',color:'Orange',rgb:'255, 128, 0'},{id:'39190',color:'Purple',rgb:'128, 0, 128'},{id:'39190',color:'White',rgb:'255, 255, 255'},{id:'39190',color:'Yellow',rgb:'255, 221, 0'},{id:'39190',color:'Gray',rgb:'128, 128, 128'},{id:'39190',color:'Brown',rgb:'139, 69, 19'},{id:'39190',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Hors F-150', icon:'http://185.137.98.6/Hors F-150.png', shopId:1, cat:'SUV / Off-road', cost:119000, dealerCost:83300, speed:102, cars:[{id:'39720',color:'Black'},{id:'39721',color:'Blue'},{id:'39722',color:'Green'},{id:'39723',color:'Orange'},{id:'39724',color:'Purple'},{id:'39725',color:'Red'},{id:'39726',color:'White'},{id:'39727',color:'Yellow'}]},
+  {name:'Viechy Silverado HD', icon:'http://185.137.98.6/Viechy Silverado HD.png', shopId:1, cat:'SUV / Off-road', cost:119000, dealerCost:83300, speed:102, cars:[{id:'39710',color:'Black',rgb:'0, 0, 0'},{id:'39710',color:'Blue',rgb:'0, 102, 204'},{id:'39710',color:'Green',rgb:'0, 153, 0'},{id:'39710',color:'Red',rgb:'204, 0, 0'},{id:'39710',color:'Orange',rgb:'255, 128, 0'},{id:'39710',color:'Purple',rgb:'128, 0, 128'},{id:'39710',color:'White',rgb:'255, 255, 255'},{id:'39710',color:'Yellow',rgb:'255, 221, 0'},{id:'39710',color:'Gray',rgb:'128, 128, 128'},{id:'39710',color:'Brown',rgb:'139, 69, 19'},{id:'39710',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Dear Volvo', icon:'http://185.137.98.6/volvo.png', shopId:1, cat:'SUV / Off-road', cost:126000, dealerCost:88200, speed:104, cars:[{id:'13540',color:'Black'},{id:'13541',color:'Blue'},{id:'13542',color:'Green'},{id:'13543',color:'Orange'},{id:'13544',color:'Red'},{id:'13545',color:'White'},{id:'13546',color:'Yellow'}]},
+  {name:'Rizz R1S', icon:'http://185.137.98.6/Rizz R1S.png', shopId:1, cat:'SUV / Off-road', cost:130000, dealerCost:91000, speed:105, cars:[{id:'39390',color:'Black',rgb:'0, 0, 0'},{id:'39390',color:'Blue',rgb:'0, 102, 204'},{id:'39390',color:'Green',rgb:'0, 153, 0'},{id:'39390',color:'Red',rgb:'204, 0, 0'},{id:'39390',color:'Orange',rgb:'255, 128, 0'},{id:'39390',color:'Purple',rgb:'128, 0, 128'},{id:'39390',color:'White',rgb:'255, 255, 255'},{id:'39390',color:'Yellow',rgb:'255, 221, 0'},{id:'39390',color:'Gray',rgb:'128, 128, 128'},{id:'39390',color:'Brown',rgb:'139, 69, 19'},{id:'39390',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Rizz R1T', icon:'http://185.137.98.6/Rizz R1T.png', shopId:1, cat:'SUV / Off-road', cost:130000, dealerCost:91000, speed:105, cars:[{id:'39610',color:'Black',rgb:'0, 0, 0'},{id:'39610',color:'Blue',rgb:'0, 102, 204'},{id:'39610',color:'Green',rgb:'0, 153, 0'},{id:'39610',color:'Red',rgb:'204, 0, 0'},{id:'39610',color:'Orange',rgb:'255, 128, 0'},{id:'39610',color:'Purple',rgb:'128, 0, 128'},{id:'39610',color:'White',rgb:'255, 255, 255'},{id:'39610',color:'Yellow',rgb:'255, 221, 0'},{id:'39610',color:'Gray',rgb:'128, 128, 128'},{id:'39610',color:'Brown',rgb:'139, 69, 19'},{id:'39610',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Mern G-Wagon G65', icon:'http://185.137.98.6/Mern G-Wagon G65.png', shopId:1, cat:'SUV / Off-road', cost:147000, dealerCost:102900, speed:110, cars:[{id:'36310',color:'Black'},{id:'36311',color:'Blue'},{id:'36312',color:'Green'},{id:'36313',color:'Orange'},{id:'36314',color:'Purple'},{id:'36315',color:'Red'},{id:'36316',color:'White'},{id:'36317',color:'Yellow'}]},
+  {name:'Pioneer SandRacer', icon:'http://185.137.98.6/Pioneer SandRacer.png', shopId:1, cat:'SUV / Off-road', cost:188000, dealerCost:131600, speed:122, cars:[{id:'36810',color:'Black'},{id:'36811',color:'Blue'},{id:'36812',color:'Green'},{id:'36813',color:'Orange'},{id:'36814',color:'Purple'},{id:'36815',color:'Red'},{id:'36816',color:'White'},{id:'36817',color:'Yellow'},{id:'36818',color:'Brown'}]},
+  {name:'Ranch Rider Sport', icon:'http://185.137.98.6/Ranch Rider Sport.png', shopId:1, cat:'SUV / Off-road', cost:215000, dealerCost:150500, speed:130, cars:[{id:'39560',color:'Black',rgb:'0, 0, 0'},{id:'39560',color:'Blue',rgb:'0, 102, 204'},{id:'39560',color:'Green',rgb:'0, 153, 0'},{id:'39560',color:'Red',rgb:'204, 0, 0'},{id:'39560',color:'Orange',rgb:'255, 128, 0'},{id:'39560',color:'Purple',rgb:'128, 0, 128'},{id:'39560',color:'White',rgb:'255, 255, 255'},{id:'39560',color:'Yellow',rgb:'255, 221, 0'},{id:'39560',color:'Gray',rgb:'128, 128, 128'},{id:'39560',color:'Brown',rgb:'139, 69, 19'},{id:'39560',color:'Desert',rgb:'214, 188, 139'}]},
+  /* -- Sports -- */
+  {name:'Hyunight N69', icon:'http://185.137.98.6/Hyunight N69.png', shopId:1, cat:'Sports', cost:175000, dealerCost:122500, speed:106, cars:[{id:'39690',color:'Black'},{id:'39691',color:'Blue'},{id:'39692',color:'Green'},{id:'39693',color:'Orange'},{id:'39694',color:'Purple'},{id:'39695',color:'Red'},{id:'39696',color:'White'},{id:'39697',color:'Yellow'}]},
+  {name:'Hors Cobra', icon:'http://185.137.98.6/Hors Cobra.png', shopId:1, cat:'Sports', cost:232000, dealerCost:162400, speed:110, cars:[{id:'36010',color:'Black'},{id:'36011',color:'Blue'},{id:'36012',color:'Green'},{id:'36013',color:'Orange'},{id:'36014',color:'Purple'},{id:'36015',color:'Red'},{id:'36016',color:'White'},{id:'36017',color:'Yellow'}]},
+  {name:'R32', icon:'http://185.137.98.6/r32.png', shopId:1, cat:'Sports', cost:331000, dealerCost:231700, speed:117, cars:[{id:'13670',color:'Black'},{id:'13671',color:'Blue'},{id:'13672',color:'Green'},{id:'13673',color:'Orange'},{id:'13674',color:'Red'},{id:'13675',color:'White'},{id:'13676',color:'Yellow'},{id:'13713',color:'Livery'}]},
+  {name:'R34', icon:'http://185.137.98.6/skyline.png', shopId:1, cat:'Sports', cost:331000, dealerCost:231700, speed:117, cars:[{id:'13440',color:'Black'},{id:'13441',color:'Blue'},{id:'13442',color:'Green'},{id:'13443',color:'Orange'},{id:'13444',color:'Red'},{id:'13445',color:'White'},{id:'13446',color:'Yellow'}]},
+  {name:'Aw-D RS E-tron', icon:'http://185.137.98.6/Aw-D RS E-tron.png', shopId:1, cat:'Sports', cost:445000, dealerCost:311500, speed:125, cars:[{id:'39090',color:'Black',rgb:'0, 0, 0'},{id:'39090',color:'Blue',rgb:'0, 102, 204'},{id:'39090',color:'Green',rgb:'0, 153, 0'},{id:'39090',color:'Red',rgb:'204, 0, 0'},{id:'39090',color:'Orange',rgb:'255, 128, 0'},{id:'39090',color:'Purple',rgb:'128, 0, 128'},{id:'39090',color:'White',rgb:'255, 255, 255'},{id:'39090',color:'Yellow',rgb:'255, 221, 0'},{id:'39090',color:'Gray',rgb:'128, 128, 128'},{id:'39090',color:'Brown',rgb:'139, 69, 19'},{id:'39090',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'R35', icon:'http://185.137.98.6/skylinenew.png', shopId:1, cat:'Sports', cost:459000, dealerCost:321300, speed:126, cars:[{id:'13450',color:'Black'},{id:'13451',color:'Blue'},{id:'13452',color:'Green'},{id:'13453',color:'Orange'},{id:'13454',color:'Red'},{id:'13455',color:'White'},{id:'13456',color:'Yellow'}]},
+  {name:'Cavallo F40', icon:'http://185.137.98.6/Cavallo F40.png', shopId:1, cat:'Sports', cost:516000, dealerCost:361200, speed:130, cars:[{id:'36300',color:'Black'},{id:'36301',color:'Blue'},{id:'36302',color:'Green'},{id:'36303',color:'Orange'},{id:'36304',color:'Purple'},{id:'36305',color:'Red'},{id:'36306',color:'White'},{id:'36307',color:'Yellow'}]},
+  {name:'Cavallo F8', icon:'http://185.137.98.6/Cavallo F8.png', shopId:1, cat:'Sports', cost:516000, dealerCost:361200, speed:130, cars:[{id:'36570',color:'Black'},{id:'36571',color:'Blue'},{id:'36572',color:'Green'},{id:'36573',color:'Orange'},{id:'36574',color:'Purple'},{id:'36575',color:'Red'},{id:'36576',color:'White'},{id:'36577',color:'Yellow'}]},
+  {name:'Chevrolet Corvette C5', icon:'http://185.137.98.6/Chevrolet Corvette C5.png', shopId:1, cat:'Sports', cost:516000, dealerCost:361200, speed:130, cars:[{id:'50011',color:'Black',rgb:'0, 0, 0'},{id:'50011',color:'Blue',rgb:'0, 102, 204'},{id:'50011',color:'Green',rgb:'0, 153, 0'},{id:'50011',color:'Red',rgb:'204, 0, 0'},{id:'50011',color:'Orange',rgb:'255, 128, 0'},{id:'50011',color:'Purple',rgb:'128, 0, 128'},{id:'50011',color:'White',rgb:'255, 255, 255'},{id:'50011',color:'Yellow',rgb:'255, 221, 0'},{id:'50011',color:'Gray',rgb:'128, 128, 128'},{id:'50011',color:'Brown',rgb:'139, 69, 19'},{id:'50011',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'WMB M1', icon:'http://185.137.98.6/WMB M1.png', shopId:1, cat:'Sports', cost:516000, dealerCost:361200, speed:130, cars:[{id:'36270',color:'Black'},{id:'36271',color:'Blue'},{id:'36272',color:'Green'},{id:'36273',color:'Orange'},{id:'36274',color:'Purple'},{id:'36275',color:'Red'},{id:'36276',color:'White'},{id:'36277',color:'Yellow'}]},
+  {name:'DeLauren Alpha 5', icon:'http://185.137.98.6/DeLauren Alpha 5.png', shopId:1, cat:'Sports', cost:530000, dealerCost:371000, speed:131, cars:[{id:'39080',color:'Black',rgb:'0, 0, 0'},{id:'39080',color:'Blue',rgb:'0, 102, 204'},{id:'39080',color:'Green',rgb:'0, 153, 0'},{id:'39080',color:'Red',rgb:'204, 0, 0'},{id:'39080',color:'Orange',rgb:'255, 128, 0'},{id:'39080',color:'Purple',rgb:'128, 0, 128'},{id:'39080',color:'White',rgb:'255, 255, 255'},{id:'39080',color:'Yellow',rgb:'255, 221, 0'},{id:'39080',color:'Gray',rgb:'128, 128, 128'},{id:'39080',color:'Brown',rgb:'139, 69, 19'},{id:'39080',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Lamborgine Countach', icon:'http://185.137.98.6/Lamborgine Countach.png', shopId:1, cat:'Sports', cost:558000, dealerCost:390600, speed:133, cars:[{id:'39060',color:'Black'},{id:'39061',color:'Blue'},{id:'39062',color:'Green'},{id:'39063',color:'Orange'},{id:'39064',color:'Purple'},{id:'39065',color:'Red'},{id:'39066',color:'White'},{id:'39067',color:'Yellow'}]},
+  {name:'WMB M3 F80', icon:'http://185.137.98.6/WMB M3 F80.png', shopId:1, cat:'Sports', cost:558000, dealerCost:390600, speed:133, cars:[{id:'36490',color:'Black'},{id:'36491',color:'Blue'},{id:'36492',color:'Green'},{id:'36493',color:'Orange'},{id:'36494',color:'Purple'},{id:'36495',color:'Red'},{id:'36496',color:'White'},{id:'36497',color:'Yellow'}]},
+  {name:'Shimitsubi Evolution XVIII V-ART', icon:'http://185.137.98.6/Shimitsubi Evolution XVIII V-ART.png', shopId:1, cat:'Sports', cost:572000, dealerCost:400400, speed:134, cars:[{id:'39260',color:'Black',rgb:'0, 0, 0'},{id:'39260',color:'Blue',rgb:'0, 102, 204'},{id:'39260',color:'Green',rgb:'0, 153, 0'},{id:'39260',color:'Red',rgb:'204, 0, 0'},{id:'39260',color:'Orange',rgb:'255, 128, 0'},{id:'39260',color:'Purple',rgb:'128, 0, 128'},{id:'39260',color:'White',rgb:'255, 255, 255'},{id:'39260',color:'Yellow',rgb:'255, 221, 0'},{id:'39260',color:'Gray',rgb:'128, 128, 128'},{id:'39260',color:'Brown',rgb:'139, 69, 19'},{id:'39260',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Hors Mustang', icon:'http://185.137.98.6/Hors Mustang.png', shopId:1, cat:'Sports', cost:586000, dealerCost:410200, speed:135, cars:[{id:'39740',color:'Black'},{id:'39741',color:'Blue'},{id:'39742',color:'Green'},{id:'39743',color:'Orange'},{id:'39744',color:'Purple'},{id:'39745',color:'Red'},{id:'39746',color:'White'},{id:'39747',color:'Yellow'}]},
+  {name:'Piech "Singer" DLS', icon:'http://185.137.98.6/Piech Singer DLS.png', shopId:1, cat:'Sports', cost:586000, dealerCost:410200, speed:135, cars:[{id:'36050',color:'Black'},{id:'36051',color:'Blue'},{id:'36052',color:'Green'},{id:'36053',color:'Orange'},{id:'36054',color:'Purple'},{id:'36055',color:'Red'},{id:'36056',color:'White'},{id:'36057',color:'Yellow'}]},
+  {name:'Shimitsubi 3000GT', icon:'http://185.137.98.6/Shimitsubi 3000GT.png', shopId:1, cat:'Sports', cost:586000, dealerCost:410200, speed:135, cars:[{id:'39200',color:'Black',rgb:'0, 0, 0'},{id:'39200',color:'Blue',rgb:'0, 102, 204'},{id:'39200',color:'Green',rgb:'0, 153, 0'},{id:'39200',color:'Red',rgb:'204, 0, 0'},{id:'39200',color:'Orange',rgb:'255, 128, 0'},{id:'39200',color:'Purple',rgb:'128, 0, 128'},{id:'39200',color:'White',rgb:'255, 255, 255'},{id:'39200',color:'Yellow',rgb:'255, 221, 0'},{id:'39200',color:'Gray',rgb:'128, 128, 128'},{id:'39200',color:'Brown',rgb:'139, 69, 19'},{id:'39200',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'WMB 316i W-ART', icon:'http://185.137.98.6/WMB 316i W-ART.png', shopId:1, cat:'Sports', cost:643000, dealerCost:450100, speed:139, cars:[{id:'39540',color:'Black',rgb:'0, 0, 0'},{id:'39540',color:'Blue',rgb:'0, 102, 204'},{id:'39540',color:'Green',rgb:'0, 153, 0'},{id:'39540',color:'Red',rgb:'204, 0, 0'},{id:'39540',color:'Orange',rgb:'255, 128, 0'},{id:'39540',color:'Purple',rgb:'128, 0, 128'},{id:'39540',color:'White',rgb:'255, 255, 255'},{id:'39540',color:'Yellow',rgb:'255, 221, 0'},{id:'39540',color:'Gray',rgb:'128, 128, 128'},{id:'39540',color:'Brown',rgb:'139, 69, 19'},{id:'39540',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Bendlee Continental', icon:'http://185.137.98.6/Bendlee Continental.png', shopId:1, cat:'Sports', cost:657000, dealerCost:459900, speed:140, cars:[{id:'39660',color:'Black'},{id:'39661',color:'Blue'},{id:'39662',color:'Green'},{id:'39663',color:'Orange'},{id:'39664',color:'Purple'},{id:'39665',color:'Red'},{id:'39666',color:'White'},{id:'39667',color:'Yellow'}]},
+  {name:'Cavallo Testarrosa', icon:'http://185.137.98.6/Cavallo Testarrosa.png', shopId:1, cat:'Sports', cost:686000, dealerCost:480200, speed:142, cars:[{id:'39620',color:'Black',rgb:'0, 0, 0'},{id:'39620',color:'Blue',rgb:'0, 102, 204'},{id:'39620',color:'Green',rgb:'0, 153, 0'},{id:'39620',color:'Red',rgb:'204, 0, 0'},{id:'39620',color:'Orange',rgb:'255, 128, 0'},{id:'39620',color:'Purple',rgb:'128, 0, 128'},{id:'39620',color:'White',rgb:'255, 255, 255'},{id:'39620',color:'Yellow',rgb:'255, 221, 0'},{id:'39620',color:'Gray',rgb:'128, 128, 128'},{id:'39620',color:'Brown',rgb:'139, 69, 19'},{id:'39620',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Mercedes SLS AMG', icon:'http://185.137.98.6/Mercedes SLS AMG.png', shopId:1, cat:'Sports', cost:714000, dealerCost:499800, speed:144, cars:[{id:'50013',color:'Black',rgb:'0, 0, 0'},{id:'50013',color:'Blue',rgb:'0, 102, 204'},{id:'50013',color:'Green',rgb:'0, 153, 0'},{id:'50013',color:'Red',rgb:'204, 0, 0'},{id:'50013',color:'Orange',rgb:'255, 128, 0'},{id:'50013',color:'Purple',rgb:'128, 0, 128'},{id:'50013',color:'White',rgb:'255, 255, 255'},{id:'50013',color:'Yellow',rgb:'255, 221, 0'},{id:'50013',color:'Gray',rgb:'128, 128, 128'},{id:'50013',color:'Brown',rgb:'139, 69, 19'},{id:'50013',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Austin Martin Victor', icon:'http://185.137.98.6/Austin Martin Victor.png', shopId:1, cat:'Sports', cost:728000, dealerCost:509600, speed:145, cars:[{id:'36580',color:'Black'},{id:'36581',color:'Blue'},{id:'36582',color:'Green'},{id:'36583',color:'Orange'},{id:'36584',color:'Purple'},{id:'36585',color:'Red'},{id:'36586',color:'White'},{id:'36587',color:'Yellow'}]},
+  {name:'Rimacci Chiron', icon:'http://185.137.98.6/Rimacci Chiron.png', shopId:1, cat:'Sports', cost:771000, dealerCost:539700, speed:148, cars:[{id:'36560',color:'Black'},{id:'36561',color:'Blue'},{id:'36562',color:'Green'},{id:'36563',color:'Orange'},{id:'36564',color:'Purple'},{id:'36565',color:'Red'},{id:'36566',color:'White'},{id:'36567',color:'Yellow'}]},
+  {name:'WMB Z4', icon:'http://185.137.98.6/WMB Z4.png', shopId:1, cat:'Sports', cost:870000, dealerCost:609000, speed:155, cars:[{id:'39050',color:'Black',rgb:'0, 0, 0'},{id:'39050',color:'Blue',rgb:'0, 102, 204'},{id:'39050',color:'Green',rgb:'0, 153, 0'},{id:'39050',color:'Red',rgb:'204, 0, 0'},{id:'39050',color:'Orange',rgb:'255, 128, 0'},{id:'39050',color:'Purple',rgb:'128, 0, 128'},{id:'39050',color:'White',rgb:'255, 255, 255'},{id:'39050',color:'Yellow',rgb:'255, 221, 0'},{id:'39050',color:'Gray',rgb:'128, 128, 128'},{id:'39050',color:'Brown',rgb:'139, 69, 19'},{id:'39050',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Chevrolet Camaro Z28', icon:'http://185.137.98.6/Chevrolet Camaro Z28.png', shopId:1, cat:'Sports', cost:884000, dealerCost:618800, speed:156, cars:[{id:'50037',color:'Black',rgb:'0, 0, 0'},{id:'50037',color:'Blue',rgb:'0, 102, 204'},{id:'50037',color:'Green',rgb:'0, 153, 0'},{id:'50037',color:'Red',rgb:'204, 0, 0'},{id:'50037',color:'Orange',rgb:'255, 128, 0'},{id:'50037',color:'Purple',rgb:'128, 0, 128'},{id:'50037',color:'White',rgb:'255, 255, 255'},{id:'50037',color:'Yellow',rgb:'255, 221, 0'},{id:'50037',color:'Gray',rgb:'128, 128, 128'},{id:'50037',color:'Brown',rgb:'139, 69, 19'},{id:'50037',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Lexus LFA', icon:'http://185.137.98.6/Lexus LFA.png', shopId:1, cat:'Sports', cost:913000, dealerCost:639100, speed:158, cars:[{id:'50053',color:'Black',rgb:'0, 0, 0'},{id:'50053',color:'Blue',rgb:'0, 102, 204'},{id:'50053',color:'Green',rgb:'0, 153, 0'},{id:'50053',color:'Red',rgb:'204, 0, 0'},{id:'50053',color:'Orange',rgb:'255, 128, 0'},{id:'50053',color:'Purple',rgb:'128, 0, 128'},{id:'50053',color:'White',rgb:'255, 255, 255'},{id:'50053',color:'Yellow',rgb:'255, 221, 0'},{id:'50053',color:'Gray',rgb:'128, 128, 128'},{id:'50053',color:'Brown',rgb:'139, 69, 19'},{id:'50053',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Nissan Skyline R-34 GT-R Nismo Z-Tune', icon:'http://185.137.98.6/Nissan Skyline R-34 GT-R Nismo Z-Tune.png', shopId:1, cat:'Sports', cost:913000, dealerCost:639100, speed:158, cars:[{id:'50050',color:'Black',rgb:'0, 0, 0'},{id:'50050',color:'Blue',rgb:'0, 102, 204'},{id:'50050',color:'Green',rgb:'0, 153, 0'},{id:'50050',color:'Red',rgb:'204, 0, 0'},{id:'50050',color:'Orange',rgb:'255, 128, 0'},{id:'50050',color:'Purple',rgb:'128, 0, 128'},{id:'50050',color:'White',rgb:'255, 255, 255'},{id:'50050',color:'Yellow',rgb:'255, 221, 0'},{id:'50050',color:'Gray',rgb:'128, 128, 128'},{id:'50050',color:'Brown',rgb:'139, 69, 19'},{id:'50050',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Doge Challenger', icon:'http://185.137.98.6/Doge Challenger.png', shopId:1, cat:'Sports', cost:941000, dealerCost:658700, speed:160, cars:[{id:'39150',color:'Black',rgb:'0, 0, 0'},{id:'39150',color:'Blue',rgb:'0, 102, 204'},{id:'39150',color:'Green',rgb:'0, 153, 0'},{id:'39150',color:'Red',rgb:'204, 0, 0'},{id:'39150',color:'Orange',rgb:'255, 128, 0'},{id:'39150',color:'Purple',rgb:'128, 0, 128'},{id:'39150',color:'White',rgb:'255, 255, 255'},{id:'39150',color:'Yellow',rgb:'255, 221, 0'},{id:'39150',color:'Gray',rgb:'128, 128, 128'},{id:'39150',color:'Brown',rgb:'139, 69, 19'},{id:'39150',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Lamborgine Huracan', icon:'http://185.137.98.6/Lamborgine Huracan.png', shopId:1, cat:'Sports', cost:941000, dealerCost:658700, speed:160, cars:[{id:'39230',color:'Black',rgb:'0, 0, 0'},{id:'39230',color:'Blue',rgb:'0, 102, 204'},{id:'39230',color:'Green',rgb:'0, 153, 0'},{id:'39230',color:'Red',rgb:'204, 0, 0'},{id:'39230',color:'Orange',rgb:'255, 128, 0'},{id:'39230',color:'Purple',rgb:'128, 0, 128'},{id:'39230',color:'White',rgb:'255, 255, 255'},{id:'39230',color:'Yellow',rgb:'255, 221, 0'},{id:'39230',color:'Gray',rgb:'128, 128, 128'},{id:'39230',color:'Brown',rgb:'139, 69, 19'},{id:'39230',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Mclarry 720s', icon:'http://185.137.98.6/Mclarry 720s.png', shopId:1, cat:'Sports', cost:941000, dealerCost:658700, speed:160, cars:[{id:'39640',color:'Black',rgb:'0, 0, 0'},{id:'39640',color:'Blue',rgb:'0, 102, 204'},{id:'39640',color:'Green',rgb:'0, 153, 0'},{id:'39640',color:'Red',rgb:'204, 0, 0'},{id:'39640',color:'Orange',rgb:'255, 128, 0'},{id:'39640',color:'Purple',rgb:'128, 0, 128'},{id:'39640',color:'White',rgb:'255, 255, 255'},{id:'39640',color:'Yellow',rgb:'255, 221, 0'},{id:'39640',color:'Gray',rgb:'128, 128, 128'},{id:'39640',color:'Brown',rgb:'139, 69, 19'},{id:'39640',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Nissan 370Z Nismo', icon:'http://185.137.98.6/Nissan 370Z Nismo.png', shopId:1, cat:'Sports', cost:941000, dealerCost:658700, speed:160, cars:[{id:'50032',color:'Black',rgb:'0, 0, 0'},{id:'50032',color:'Blue',rgb:'0, 102, 204'},{id:'50032',color:'Green',rgb:'0, 153, 0'},{id:'50032',color:'Red',rgb:'204, 0, 0'},{id:'50032',color:'Orange',rgb:'255, 128, 0'},{id:'50032',color:'Purple',rgb:'128, 0, 128'},{id:'50032',color:'White',rgb:'255, 255, 255'},{id:'50032',color:'Yellow',rgb:'255, 221, 0'},{id:'50032',color:'Gray',rgb:'128, 128, 128'},{id:'50032',color:'Brown',rgb:'139, 69, 19'},{id:'50032',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Marussia B2', icon:'http://185.137.98.6/Marussia B2.png', shopId:1, cat:'Sports', cost:955000, dealerCost:668500, speed:161, cars:[{id:'50016',color:'Black',rgb:'0, 0, 0'},{id:'50016',color:'Blue',rgb:'0, 102, 204'},{id:'50016',color:'Green',rgb:'0, 153, 0'},{id:'50016',color:'Red',rgb:'204, 0, 0'},{id:'50016',color:'Orange',rgb:'255, 128, 0'},{id:'50016',color:'Purple',rgb:'128, 0, 128'},{id:'50016',color:'White',rgb:'255, 255, 255'},{id:'50016',color:'Yellow',rgb:'255, 221, 0'},{id:'50016',color:'Gray',rgb:'128, 128, 128'},{id:'50016',color:'Brown',rgb:'139, 69, 19'},{id:'50016',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Nissan Z', icon:'http://185.137.98.6/Nissan Z.png', shopId:1, cat:'Sports', cost:955000, dealerCost:668500, speed:161, cars:[{id:'50012',color:'Black',rgb:'0, 0, 0'},{id:'50012',color:'Blue',rgb:'0, 102, 204'},{id:'50012',color:'Green',rgb:'0, 153, 0'},{id:'50012',color:'Red',rgb:'204, 0, 0'},{id:'50012',color:'Orange',rgb:'255, 128, 0'},{id:'50012',color:'Purple',rgb:'128, 0, 128'},{id:'50012',color:'White',rgb:'255, 255, 255'},{id:'50012',color:'Yellow',rgb:'255, 221, 0'},{id:'50012',color:'Gray',rgb:'128, 128, 128'},{id:'50012',color:'Brown',rgb:'139, 69, 19'},{id:'50012',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'VVL Roadster', icon:'http://185.137.98.6/VVL Roadster.png', shopId:1, cat:'Sports', cost:955000, dealerCost:668500, speed:161, cars:[{id:'39460',color:'Black',rgb:'0, 0, 0'},{id:'39460',color:'Blue',rgb:'0, 102, 204'},{id:'39460',color:'Green',rgb:'0, 153, 0'},{id:'39460',color:'Red',rgb:'204, 0, 0'},{id:'39460',color:'Orange',rgb:'255, 128, 0'},{id:'39460',color:'Purple',rgb:'128, 0, 128'},{id:'39460',color:'White',rgb:'255, 255, 255'},{id:'39460',color:'Yellow',rgb:'255, 221, 0'},{id:'39460',color:'Gray',rgb:'128, 128, 128'},{id:'39460',color:'Brown',rgb:'139, 69, 19'},{id:'39460',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Dodge Viper GTS 1999', icon:'http://185.137.98.6/Dodge Viper GTS 1999.png', shopId:1, cat:'Sports', cost:970000, dealerCost:679000, speed:162, cars:[{id:'50034',color:'Black',rgb:'0, 0, 0'},{id:'50034',color:'Blue',rgb:'0, 102, 204'},{id:'50034',color:'Green',rgb:'0, 153, 0'},{id:'50034',color:'Red',rgb:'204, 0, 0'},{id:'50034',color:'Orange',rgb:'255, 128, 0'},{id:'50034',color:'Purple',rgb:'128, 0, 128'},{id:'50034',color:'White',rgb:'255, 255, 255'},{id:'50034',color:'Yellow',rgb:'255, 221, 0'},{id:'50034',color:'Gray',rgb:'128, 128, 128'},{id:'50034',color:'Brown',rgb:'139, 69, 19'},{id:'50034',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Viechy Corvette', icon:'http://185.137.98.6/Viechy Corvette.png', shopId:1, cat:'Sports', cost:984000, dealerCost:688800, speed:163, cars:[{id:'39220',color:'Black',rgb:'0, 0, 0'},{id:'39220',color:'Blue',rgb:'0, 102, 204'},{id:'39220',color:'Green',rgb:'0, 153, 0'},{id:'39220',color:'Red',rgb:'204, 0, 0'},{id:'39220',color:'Orange',rgb:'255, 128, 0'},{id:'39220',color:'Purple',rgb:'128, 0, 128'},{id:'39220',color:'White',rgb:'255, 255, 255'},{id:'39220',color:'Yellow',rgb:'255, 221, 0'},{id:'39220',color:'Gray',rgb:'128, 128, 128'},{id:'39220',color:'Brown',rgb:'139, 69, 19'},{id:'39220',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'VVL Coupe W-ART', icon:'http://185.137.98.6/VVL Coupe W-ART.png', shopId:1, cat:'Sports', cost:998000, dealerCost:698600, speed:164, cars:[{id:'39480',color:'Black',rgb:'0, 0, 0'},{id:'39480',color:'Blue',rgb:'0, 102, 204'},{id:'39480',color:'Green',rgb:'0, 153, 0'},{id:'39480',color:'Red',rgb:'204, 0, 0'},{id:'39480',color:'Orange',rgb:'255, 128, 0'},{id:'39480',color:'Purple',rgb:'128, 0, 128'},{id:'39480',color:'White',rgb:'255, 255, 255'},{id:'39480',color:'Yellow',rgb:'255, 221, 0'},{id:'39480',color:'Gray',rgb:'128, 128, 128'},{id:'39480',color:'Brown',rgb:'139, 69, 19'},{id:'39480',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Ferrari LaFerrari', icon:'http://185.137.98.6/Ferrari LaFerrari.png', shopId:1, cat:'Sports', cost:1012000, dealerCost:708400, speed:165, cars:[{id:'50020',color:'Black',rgb:'0, 0, 0'},{id:'50020',color:'Blue',rgb:'0, 102, 204'},{id:'50020',color:'Green',rgb:'0, 153, 0'},{id:'50020',color:'Red',rgb:'204, 0, 0'},{id:'50020',color:'Orange',rgb:'255, 128, 0'},{id:'50020',color:'Purple',rgb:'128, 0, 128'},{id:'50020',color:'White',rgb:'255, 255, 255'},{id:'50020',color:'Yellow',rgb:'255, 221, 0'},{id:'50020',color:'Gray',rgb:'128, 128, 128'},{id:'50020',color:'Brown',rgb:'139, 69, 19'},{id:'50020',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Austin Martin Vantage', icon:'http://185.137.98.6/austin.png', shopId:1, cat:'Sports', cost:1055000, dealerCost:738500, speed:168, cars:[{id:'39100',color:'Black',rgb:'0, 0, 0'},{id:'39100',color:'Blue',rgb:'0, 102, 204'},{id:'39100',color:'Green',rgb:'0, 153, 0'},{id:'39100',color:'Red',rgb:'204, 0, 0'},{id:'39100',color:'Orange',rgb:'255, 128, 0'},{id:'39100',color:'Purple',rgb:'128, 0, 128'},{id:'39100',color:'White',rgb:'255, 255, 255'},{id:'39100',color:'Yellow',rgb:'255, 221, 0'},{id:'39100',color:'Gray',rgb:'128, 128, 128'},{id:'39100',color:'Brown',rgb:'139, 69, 19'},{id:'39100',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Koeniggseg CCX', icon:'http://185.137.98.6/Koeniggseg CCX.png', shopId:1, cat:'Sports', cost:1055000, dealerCost:738500, speed:168, cars:[{id:'50057',color:'Black',rgb:'0, 0, 0'},{id:'50057',color:'Blue',rgb:'0, 102, 204'},{id:'50057',color:'Green',rgb:'0, 153, 0'},{id:'50057',color:'Red',rgb:'204, 0, 0'},{id:'50057',color:'Orange',rgb:'255, 128, 0'},{id:'50057',color:'Purple',rgb:'128, 0, 128'},{id:'50057',color:'White',rgb:'255, 255, 255'},{id:'50057',color:'Yellow',rgb:'255, 221, 0'},{id:'50057',color:'Gray',rgb:'128, 128, 128'},{id:'50057',color:'Brown',rgb:'139, 69, 19'},{id:'50057',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Mercedes C63 AMG Black Series', icon:'http://185.137.98.6/Mercedes C63 AMG Black Series.png', shopId:1, cat:'Sports', cost:1069000, dealerCost:748300, speed:169, cars:[{id:'50056',color:'Black',rgb:'0, 0, 0'},{id:'50056',color:'Blue',rgb:'0, 102, 204'},{id:'50056',color:'Green',rgb:'0, 153, 0'},{id:'50056',color:'Red',rgb:'204, 0, 0'},{id:'50056',color:'Orange',rgb:'255, 128, 0'},{id:'50056',color:'Purple',rgb:'128, 0, 128'},{id:'50056',color:'White',rgb:'255, 255, 255'},{id:'50056',color:'Yellow',rgb:'255, 221, 0'},{id:'50056',color:'Gray',rgb:'128, 128, 128'},{id:'50056',color:'Brown',rgb:'139, 69, 19'},{id:'50056',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Chevrolet Corvette C7 ZR1', icon:'http://185.137.98.6/Chevrolet%20Corvette%20C7%20ZR1.png', shopId:1, cat:'Sports', cost:1083000, dealerCost:0, speed:170, cars:[{id:'50014',color:'Black',rgb:'0, 0, 0'},{id:'50014',color:'Blue',rgb:'0, 102, 204'},{id:'50014',color:'Green',rgb:'0, 153, 0'},{id:'50014',color:'Red',rgb:'204, 0, 0'},{id:'50014',color:'Orange',rgb:'255, 128, 0'},{id:'50014',color:'Purple',rgb:'128, 0, 128'},{id:'50014',color:'White',rgb:'255, 255, 255'},{id:'50014',color:'Yellow',rgb:'255, 221, 0'},{id:'50014',color:'Gray',rgb:'128, 128, 128'},{id:'50014',color:'Brown',rgb:'139, 69, 19'},{id:'50014',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Acura NSX 2016 Tuning', icon:'http://185.137.98.6/Acura%20NSX%202016%20Tuning.png', shopId:1, cat:'Sports', cost:1111000, dealerCost:0, speed:172, cars:[{id:'50036',color:'Black',rgb:'0, 0, 0'},{id:'50036',color:'Blue',rgb:'0, 102, 204'},{id:'50036',color:'Green',rgb:'0, 153, 0'},{id:'50036',color:'Red',rgb:'204, 0, 0'},{id:'50036',color:'Orange',rgb:'255, 128, 0'},{id:'50036',color:'Purple',rgb:'128, 0, 128'},{id:'50036',color:'White',rgb:'255, 255, 255'},{id:'50036',color:'Yellow',rgb:'255, 221, 0'},{id:'50036',color:'Gray',rgb:'128, 128, 128'},{id:'50036',color:'Brown',rgb:'139, 69, 19'},{id:'50036',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Ford GT (Gen 2)', icon:'http://185.137.98.6/Ford%20GT%20(Gen%202).png', shopId:1, cat:'Sports', cost:1154000, dealerCost:0, speed:175, cars:[{id:'50054',color:'Black',rgb:'0, 0, 0'},{id:'50054',color:'Blue',rgb:'0, 102, 204'},{id:'50054',color:'Green',rgb:'0, 153, 0'},{id:'50054',color:'Red',rgb:'204, 0, 0'},{id:'50054',color:'Orange',rgb:'255, 128, 0'},{id:'50054',color:'Purple',rgb:'128, 0, 128'},{id:'50054',color:'White',rgb:'255, 255, 255'},{id:'50054',color:'Yellow',rgb:'255, 221, 0'},{id:'50054',color:'Gray',rgb:'128, 128, 128'},{id:'50054',color:'Brown',rgb:'139, 69, 19'},{id:'50054',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Ferrari F430 Scuderia', icon:'http://185.137.98.6/Ferrari%20F430%20Scuderia.png', shopId:1, cat:'Sports', cost:1225000, dealerCost:0, speed:180, cars:[{id:'50038',color:'Black',rgb:'0, 0, 0'},{id:'50038',color:'Blue',rgb:'0, 102, 204'},{id:'50038',color:'Green',rgb:'0, 153, 0'},{id:'50038',color:'Red',rgb:'204, 0, 0'},{id:'50038',color:'Orange',rgb:'255, 128, 0'},{id:'50038',color:'Purple',rgb:'128, 0, 128'},{id:'50038',color:'White',rgb:'255, 255, 255'},{id:'50038',color:'Yellow',rgb:'255, 221, 0'},{id:'50038',color:'Gray',rgb:'128, 128, 128'},{id:'50038',color:'Brown',rgb:'139, 69, 19'},{id:'50038',color:'Desert',rgb:'214, 188, 139'}]},
+  /* -- Diger -- */
+  {name:'Shimitsubi Montero', icon:'http://185.137.98.6/Shimitsubi Montero.png', shopId:1, cat:'Diger', cost:100000, dealerCost:70000, speed:105, cars:[{id:'39520',color:'Black',rgb:'0, 0, 0'},{id:'39520',color:'Blue',rgb:'0, 102, 204'},{id:'39520',color:'Green',rgb:'0, 153, 0'},{id:'39520',color:'Red',rgb:'204, 0, 0'},{id:'39520',color:'Orange',rgb:'255, 128, 0'},{id:'39520',color:'Purple',rgb:'128, 0, 128'},{id:'39520',color:'White',rgb:'255, 255, 255'},{id:'39520',color:'Yellow',rgb:'255, 221, 0'},{id:'39520',color:'Gray',rgb:'128, 128, 128'},{id:'39520',color:'Brown',rgb:'139, 69, 19'},{id:'39520',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Viechy El Camino', icon:'http://185.137.98.6/Viechy El Camino.png', shopId:1, cat:'Diger', cost:110000, dealerCost:77000, speed:105, cars:[{id:'39330',color:'Black',rgb:'0, 0, 0'},{id:'39330',color:'Blue',rgb:'0, 102, 204'},{id:'39330',color:'Green',rgb:'0, 153, 0'},{id:'39330',color:'Red',rgb:'204, 0, 0'},{id:'39330',color:'Orange',rgb:'255, 128, 0'},{id:'39330',color:'Purple',rgb:'128, 0, 128'},{id:'39330',color:'White',rgb:'255, 255, 255'},{id:'39330',color:'Yellow',rgb:'255, 221, 0'},{id:'39330',color:'Gray',rgb:'128, 128, 128'},{id:'39330',color:'Brown',rgb:'139, 69, 19'},{id:'39330',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'VVL Hatchback', icon:'http://185.137.98.6/VVL Hatchback.png', shopId:1, cat:'Diger', cost:120000, dealerCost:84000, speed:113, cars:[{id:'39430',color:'Black',rgb:'0, 0, 0'},{id:'39430',color:'Blue',rgb:'0, 102, 204'},{id:'39430',color:'Green',rgb:'0, 153, 0'},{id:'39430',color:'Red',rgb:'204, 0, 0'},{id:'39430',color:'Orange',rgb:'255, 128, 0'},{id:'39430',color:'Purple',rgb:'128, 0, 128'},{id:'39430',color:'White',rgb:'255, 255, 255'},{id:'39430',color:'Yellow',rgb:'255, 221, 0'},{id:'39430',color:'Gray',rgb:'128, 128, 128'},{id:'39430',color:'Brown',rgb:'139, 69, 19'},{id:'39430',color:'Desert',rgb:'214, 188, 139'}]},
+  {name:'Supra', icon:'http://185.137.98.6/supra.png', shopId:1, cat:'Diger', cost:195000, dealerCost:136500, speed:118, cars:[{id:'13500',color:'Black'},{id:'13501',color:'Blue'},{id:'13502',color:'Green'},{id:'13503',color:'Orange'},{id:'13504',color:'Red'},{id:'13505',color:'White'},{id:'13506',color:'Yellow'}]},
+  {name:'Tyoda Celica W-ART', icon:'http://185.137.98.6/Tyoda Celica W-ART.png', shopId:1, cat:'Diger', cost:150000, dealerCost:105000, speed:131, cars:[{id:'39670',color:'Black',rgb:'0, 0, 0'},{id:'39670',color:'Blue',rgb:'0, 102, 204'},{id:'39670',color:'Green',rgb:'0, 153, 0'},{id:'39670',color:'Red',rgb:'204, 0, 0'},{id:'39670',color:'Orange',rgb:'255, 128, 0'},{id:'39670',color:'Purple',rgb:'128, 0, 128'},{id:'39670',color:'White',rgb:'255, 255, 255'},{id:'39670',color:'Yellow',rgb:'255, 221, 0'},{id:'39670',color:'Gray',rgb:'128, 128, 128'},{id:'39670',color:'Brown',rgb:'139, 69, 19'},{id:'39670',color:'Desert',rgb:'214, 188, 139'}]},
+  /* ===== SHOP 2 -  ===== */
+  /* -- Tüm Gemiler -- */
+  {name:'Regal LS2', icon:'https://i.hizliresim.com/m2jk4bi.png', shopId:2, cat:'Tüm Gemiler', cost:100000, dealerCost:0, speed:100, cars:[{id:'46556',color:'Black'},{id:'46557',color:'Blue'},{id:'46558',color:'Green'},{id:'46559',color:'Orange'},{id:'46560',color:'Purple'},{id:'46561',color:'Red'},{id:'46562',color:'White'},{id:'46563',color:'Yellow'}]},
+  {name:'Zodiac Nautic Pro', icon:'http://185.137.98.6/Darkrp.png', shopId:2, cat:'Tüm Gemiler', cost:100000, dealerCost:0, speed:100, cars:[{id:'46542',color:'Black'}]},
+  /* ===== SHOP 3 -  ===== */
+  /* -- Helikopterler -- */
+  {name:'Airbus H160', icon:'https://i.hizliresim.com/m2jk4bi.png', shopId:3, cat:'Helikopterler', cost:1005000, dealerCost:0, speed:100, cars:[{id:'46531',color:'Black'},{id:'46532',color:'Blue'},{id:'46533',color:'Green'},{id:'46534',color:'Orange'},{id:'46535',color:'Purple'},{id:'46536',color:'Red'},{id:'46537',color:'White'},{id:'46538',color:'Yellow'}]},
+  {name:'Alouette II', icon:'https://i.hizliresim.com/m2jk4bi.png', shopId:3, cat:'Helikopterler', cost:1000000, dealerCost:0, speed:100, cars:[{id:'46566',color:'Green'}]},
+];
+
+/* ============================================================
+   YARDIMCI FONKSİYONLAR
+============================================================ */
+function dotColor(c) {
+  if (c.rgb) { const p = c.rgb.split(','); return `rgb(${p[0]},${p[1]},${p[2]})`; }
+  return COLOR_HEX[c.color] || '#666';
+}
+
+function fmt(n) { return '$' + n.toLocaleString('tr-TR'); }
+
+function applyDealerState() {
+  const el = document.getElementById('dealerToggle');
+  if (showDealer) {
+    document.body.classList.add('show-dealer');
+    el.classList.add('active');
+  } else {
+    document.body.classList.remove('show-dealer');
+    el.classList.remove('active');
+  }
+}
+
+function toggleDealer() {
+  showDealer = !showDealer;
+  applyDealerState();
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(() => t.classList.remove('show'), 1600);
+}
+
+/* ============================================================
+   STATE
+============================================================ */
+let activeCat = 'all';
+let activeView = 'grid';
+let activeSort = 'default';
+let selectedKey = null; // unique key of selected car (name + shopId)
+
+function carKey(r) { return r.shopId + '|' + r.name; }
+
+/* ============================================================
+   TABS & FILTER
+============================================================ */
+function getCatCounts(shopId) {
+  const counts = new Map();
+  const order = [];
+  RAW.forEach(r => {
+    if (shopId && r.shopId !== shopId) return;
+    if (!counts.has(r.cat)) { counts.set(r.cat, 0); order.push(r.cat); }
+    counts.set(r.cat, counts.get(r.cat) + 1);
+  });
+  return order.map(c => ({ name: c, count: counts.get(c) }));
+}
+
+function buildTabs() {
+  const shopId = parseInt(document.getElementById('shopFilter').value) || 0;
+  const cats = getCatCounts(shopId);
+  const totalCount = cats.reduce((a,c) => a + c.count, 0);
+  const tabs = document.getElementById('catTabs');
+  tabs.innerHTML = '';
+  const all = document.createElement('button');
+  all.className = 'tab' + (activeCat === 'all' ? ' active' : '');
+  all.innerHTML = `Tümü <span class="count">${totalCount}</span>`;
+  all.onclick = () => { activeCat = 'all'; render(); };
+  tabs.appendChild(all);
+  cats.forEach(c => {
+    const b = document.createElement('button');
+    b.className = 'tab' + (activeCat === c.name ? ' active' : '');
+    b.innerHTML = `${c.name} <span class="count">${c.count}</span>`;
+    b.onclick = () => { activeCat = c.name; render(); };
+    tabs.appendChild(b);
+  });
+}
+
+function filtered() {
+  const q = document.getElementById('search').value.toLowerCase().trim();
+  const shopId = parseInt(document.getElementById('shopFilter').value) || 0;
+  let list = RAW.filter(r => {
+    if (shopId && r.shopId !== shopId) return false;
+    if (activeCat !== 'all' && r.cat !== activeCat) return false;
+    if (q) {
+      const idMatch = r.cars.some(c => c.id.includes(q));
+      if (!r.name.toLowerCase().includes(q) && !idMatch) return false;
+    }
+    return true;
+  });
+
+  switch (activeSort) {
+    case 'speed-desc': list = [...list].sort((a,b) => b.speed - a.speed); break;
+    case 'speed-asc':  list = [...list].sort((a,b) => a.speed - b.speed); break;
+    case 'cost-desc':  list = [...list].sort((a,b) => b.cost - a.cost); break;
+    case 'cost-asc':   list = [...list].sort((a,b) => a.cost - b.cost); break;
+    case 'name-asc':   list = [...list].sort((a,b) => a.name.localeCompare(b.name, 'tr')); break;
+    case 'name-desc':  list = [...list].sort((a,b) => b.name.localeCompare(a.name, 'tr')); break;
+  }
+  return list;
+}
+
+/* ============================================================
+   VIEW TOGGLE
+============================================================ */
+function setView(v) {
+  activeView = v;
+  document.getElementById('viewGrid').classList.toggle('active', v === 'grid');
+  document.getElementById('viewList').classList.toggle('active', v === 'list');
+  document.getElementById('grid').classList.toggle('list-view', v === 'list');
+}
+
+/* ============================================================
+   RENDER
+============================================================ */
+function render() {
+  buildTabs();
+  const data = filtered();
+  const totalIds = data.reduce((a, r) => a + r.cars.length, 0);
+  const avgCost = data.length ? Math.round(data.reduce((a,r)=>a+r.cost,0) / data.length) : 0;
+  const avgSpeed = data.length ? Math.round(data.reduce((a,r)=>a+r.speed,0) / data.length) : 0;
+
+  document.getElementById('stats').innerHTML = `
+    <div class="stat"><span class="stat-val">${data.length}</span><span class="stat-label">araç</span></div>
+    <div class="stat"><span class="stat-val">${totalIds}</span><span class="stat-label">toplam ID</span></div>
+    <div class="stat"><span class="stat-val">${new Set(data.map(r => r.cat)).size}</span><span class="stat-label">kategori</span></div>
+    ${data.length ? `<div class="stat"><span class="stat-val">${fmt(avgCost)}</span><span class="stat-label">ort. fiyat</span></div>` : ''}
+    ${data.length ? `<div class="stat"><span class="stat-val">${avgSpeed}</span><span class="stat-label">ort. km/s</span></div>` : ''}
+  `;
+
+  if (!data.length) {
+    document.getElementById('grid').innerHTML = `
+      <div class="empty">
+        <div class="empty-icon">🔍</div>
+        <div>Sonuç bulunamadı</div>
+      </div>`;
+    return;
+  }
+
+  document.getElementById('grid').innerHTML = data.map((r, i) => {
+    const isSel = selectedKey === carKey(r);
+    const dotsHtml = r.cars.slice(0, 12).map(c =>
+      `<div class="dot" title="${c.color} — ID: ${c.id}" style="background:${dotColor(c)}"></div>`
+    ).join('') + (r.cars.length > 12 ? `<div class="dot" style="background:var(--bg4);color:var(--text3);font-size:9px;display:flex;align-items:center;justify-content:center;font-weight:700">+${r.cars.length - 12}</div>` : '');
+    return `
+    <div class="card${isSel ? ' selected' : ''}" data-key="${carKey(r)}" style="animation-delay:${Math.min(i*22, 600)}ms" onclick="selectCar('${carKey(r).replace(/'/g, "\\'")}')">
+      <div class="car-img-wrap">
+        <img class="car-img" src="${r.icon}" alt="${r.name}" loading="lazy" onerror="this.style.display='none'">
+        <span class="speed-pill">⚡ ${r.speed}</span>
+      </div>
+      <div class="card-body">
+        <div class="card-name" title="${r.name}">${r.name}</div>
+        <div class="card-meta-row">
+          <span class="badge badge-shop">${SHOPS[r.shopId]}</span>
+          <span class="badge badge-cost">${fmt(r.cost)}</span>
+          ${r.dealerCost > 0 ? `<span class="badge badge-dealer dealer-cost-badge">🏪 ${fmt(r.dealerCost)}</span>` : ''}
+        </div>
+        <div class="color-strip">${dotsHtml}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ============================================================
+   SIDE PANEL (Monitor)
+============================================================ */
+function selectCar(key) {
+  const r = RAW.find(x => carKey(x) === key);
+  if (!r) return;
+  selectedKey = key;
+
+  const mImg = document.getElementById('mImg');
+  const mFb  = document.getElementById('mImgFallback');
+  mImg.style.display = 'block'; mFb.style.display = 'none';
+  mImg.src = r.icon;
+
+  document.getElementById('mTitle').textContent = r.name;
+
+  document.getElementById('mBadges').innerHTML = `
+    <span class="badge badge-shop">${SHOPS[r.shopId]}</span>
+    <span class="badge badge-speed">⚡ ${r.speed} km/s</span>
+    <span class="badge" style="background:rgba(255,255,255,.06);color:var(--text2);border:1px solid var(--border2)">${r.cat}</span>
+  `;
+
+  document.getElementById('mMeta').innerHTML = `
+    <strong>${r.cars.length}</strong> renk seçeneği &nbsp;·&nbsp; Kategori: <strong>${r.cat}</strong>
+  `;
+
+  document.getElementById('mCost').textContent = fmt(r.cost);
+  document.getElementById('mDealerCost').textContent = r.dealerCost > 0 ? fmt(r.dealerCost) : 'Yok';
+
+  document.getElementById('mList').innerHTML = r.cars.map((c, idx) => {
+    const bg = dotColor(c);
+    const rgbTxt = c.rgb ? c.rgb : '—';
+    return `<tr>
+      <td><div class="swatch-cell">
+        <div class="swatch" style="background:${bg}"></div>
+        <span class="color-name">${c.color}</span>
+      </div></td>
+      <td><span class="id-code" data-id="${c.id}" data-idx="${idx}" onclick="copyId(this)" title="Kopyala">${c.id}</span></td>
+      <td class="rgb-val">${rgbTxt}</td>
+    </tr>`;
+  }).join('');
+
+  // Show panel content + on mobile, slide in
+  document.getElementById('panelEmpty').style.display = 'none';
+  document.getElementById('panelContent').classList.add('show');
+  document.getElementById('sidePanel').classList.add('open');
+  document.getElementById('panelBackdrop').classList.add('open');
+
+  // mark selected card
+  document.querySelectorAll('.card.selected').forEach(el => el.classList.remove('selected'));
+  const card = document.querySelector(`.card[data-key="${key.replace(/"/g, '\\"')}"]`);
+  if (card) card.classList.add('selected');
+}
+
+function closePanel() {
+  document.getElementById('sidePanel').classList.remove('open');
+  document.getElementById('panelBackdrop').classList.remove('open');
+}
+
+function copyId(el) {
+  const id = el.dataset.id;
+  navigator.clipboard?.writeText(id).then(() => {
+    el.classList.add('copied');
+    showToast('ID kopyalandı: ' + id);
+    setTimeout(() => el.classList.remove('copied'), 900);
+  }).catch(() => {
+    showToast('Kopyalama başarısız');
+  });
+}
+
+/* ============================================================
+   EVENTS
+============================================================ */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closePanel();
+  if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {
+    e.preventDefault();
+    document.getElementById('search').focus();
+  }
+});
+document.getElementById('shopFilter').addEventListener('change', () => { activeCat = 'all'; render(); });
+document.getElementById('search').addEventListener('input', render);
+document.getElementById('sortFilter').addEventListener('change', e => { activeSort = e.target.value; render(); });
+
+/* ============================================================
+   XML LOADER — aynı klasördeki CarShopUI.configuration.xml dosyasını okur
+============================================================ */
+const XML_FILE = 'http://185.137.98.6/CarShopUI.configuration.xml';
+
+function setDataStatus(state, text, clickable) {
+  const el = document.getElementById('dataStatus');
+  el.classList.remove('loading', 'ok', 'warn', 'error');
+  if (state) el.classList.add(state);
+  el.querySelector('.data-status-text').textContent = text;
+  el.onclick = clickable ? () => document.getElementById('xmlFileInput').click() : null;
+  el.title = clickable ? 'Tıkla: XML dosyasını manuel seç' : 'Veri kaynağı';
+}
+
+function parseXmlString(xmlText) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(xmlText, 'application/xml');
+  const err = doc.querySelector('parsererror');
+  if (err) throw new Error('XML ayrıştırma hatası');
+
+  const SHOP_NAME_MAP = {};
+  const cats = {}; // "shopId|carName" -> categoryName
+  const out = [];
+
+  const shops = doc.querySelectorAll('Config > CarShops > CarShopName');
+  shops.forEach(shop => {
+    const shopId = parseInt(shop.querySelector(':scope > Id')?.textContent || '0', 10);
+    const shopName = shop.querySelector(':scope > Name')?.textContent?.trim() || ('Shop ' + shopId);
+    SHOP_NAME_MAP[shopId] = shopName;
+
+    // Kategori haritası
+    shop.querySelectorAll(':scope > Categories > Category').forEach(cat => {
+      const catName = cat.querySelector(':scope > Name')?.textContent?.trim() || 'Diger';
+      cat.querySelectorAll(':scope > CarTypeNames > CarTypeName').forEach(n => {
+        cats[shopId + '|' + n.textContent.trim()] = catName;
+      });
+    });
+
+    // CarType'ları topla
+    shop.querySelectorAll(':scope > Cars > CarType').forEach(ct => {
+      const name   = ct.querySelector(':scope > Name')?.textContent?.trim() || '';
+      const icon   = ct.querySelector(':scope > IconURL')?.textContent?.trim() || '';
+      const cost   = parseInt(ct.querySelector(':scope > Cost')?.textContent || '0', 10);
+      const dealer = parseInt(ct.querySelector(':scope > DealercCost')?.textContent || '0', 10);
+      const speed  = parseInt(ct.querySelector(':scope > TopSpeed')?.textContent || '0', 10);
+      const cat    = cats[shopId + '|' + name] || 'Diger';
+
+      const carNodes = ct.querySelectorAll(':scope > Cars > Car');
+      const cars = [];
+      carNodes.forEach(c => {
+        const id    = c.querySelector(':scope > Id')?.textContent?.trim() || '';
+        const color = c.querySelector(':scope > Color')?.textContent?.trim() || '';
+        const rgb   = c.querySelector(':scope > ColorRGB')?.textContent?.trim();
+        const entry = { id, color };
+        if (rgb) entry.rgb = rgb;
+        cars.push(entry);
+      });
+
+      out.push({ name, icon, shopId, cat, cost, dealerCost: dealer, speed, cars });
+    });
+  });
+
+  return { data: out, shops: SHOP_NAME_MAP };
+}
+
+function applyParsedData(parsed) {
+  RAW = parsed.data;
+  // SHOPS sözlüğünü XML'den güncelle (sadece anahtar varsa)
+  Object.keys(parsed.shops).forEach(k => { SHOPS[k] = parsed.shops[k]; });
+  // shopFilter <option> metinlerini güncelle
+  const sf = document.getElementById('shopFilter');
+  Array.from(sf.options).forEach(opt => {
+    const id = parseInt(opt.value, 10);
+    if (id && parsed.shops[id]) opt.textContent = parsed.shops[id];
+  });
+  activeCat = 'all';
+  selectedKey = null;
+  document.getElementById('panelEmpty').style.display = '';
+  document.getElementById('panelContent').classList.remove('show');
+  render();
+}
+
+async function loadXmlData(manualReload) {
+  setDataStatus('loading', 'XML yükleniyor…', false);
+  try {
+    // file:// üzerinde fetch genelde başarısız olur — yine de dene
+    const url = XML_FILE + (manualReload ? ('?t=' + Date.now()) : '');
+    const res = await fetch(url, { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const txt = await res.text();
+    const parsed = parseXmlString(txt);
+    applyParsedData(parsed);
+    setDataStatus('ok', `XML: ${parsed.data.length} araç`, false);
+    if (manualReload) showToast('XML yeniden yüklendi');
+  } catch (err) {
+    console.warn('[CarShop] XML otomatik yüklenemedi:', err);
+    setDataStatus('warn', 'Gömülü veri (XML için tıkla)', true);
+    if (manualReload) showToast('XML yüklenemedi: ' + err.message);
+  }
+}
+
+document.getElementById('xmlFileInput').addEventListener('change', async ev => {
+  const file = ev.target.files && ev.target.files[0];
+  if (!file) return;
+  setDataStatus('loading', 'Dosya okunuyor…', false);
+  try {
+    const txt = await file.text();
+    const parsed = parseXmlString(txt);
+    applyParsedData(parsed);
+    setDataStatus('ok', `${file.name} (${parsed.data.length} araç)`, false);
+    showToast('XML yüklendi: ' + file.name);
+  } catch (err) {
+    setDataStatus('error', 'Hatalı XML — tekrar dene', true);
+    showToast('Hata: ' + err.message);
+  }
+  ev.target.value = '';
+});
+
+/* init */
+applyDealerState();
+render();              // önce gömülü veri ile çiz (anında görünür)
+loadXmlData(false);    // sonra XML'i yüklemeyi dene
+</script>
+</body>
+</html>
